@@ -31,7 +31,7 @@ interface Props<RecordType> {
   actionColumnProps?: ColumnType<RecordType>
 }
 
-function RestTable<RecordType extends Dictionary<unknown>>({
+function CustomTable<RecordType extends Dictionary<unknown>>({
   dataSource,
   columns,
   loading,
@@ -113,8 +113,8 @@ function RestTable<RecordType extends Dictionary<unknown>>({
 {
   /* <Pagination currentPage={currentPage} onChange={onChange} pageSize={pageSize} total={total} /> */
 }
-RestTable.defaultProps = {
+CustomTable.defaultProps = {
   primaryKey: 'ID'
 }
 
-export default RestTable
+export default CustomTable

@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import RestTable from 'src/components/common/RestTable'
+import CustomTable from 'src/components/common/CustomTable'
+import { EVENTS } from 'src/data/events.dummy'
 import AdminGuard from 'src/guard/AdminGuard'
+import { Event } from 'src/types/events.type'
 
 const columns = [
   {
@@ -20,17 +21,6 @@ const columns = [
     title: 'Status'
   }
 ]
-type Event = {
-  id: string
-  name: string
-  location: string
-  status: boolean
-}
-
-const formatData: Event[] = [
-  { id: '1', name: 'Info Session', location: 'Da Nang', status: true },
-  { id: '2', name: 'Info Session2', location: 'Da Nang', status: true }
-]
 
 export default function Events() {
   const setSelectedItem = (item: Event) => {
@@ -45,10 +35,10 @@ export default function Events() {
 
   return (
     <AdminGuard>
-      <RestTable<Event>
+      <CustomTable<Event>
         columns={columns}
         currentPage={1}
-        dataSource={formatData}
+        dataSource={EVENTS}
         onDelete={handleDelete}
         onEdit={setSelectedItem}
         pageSize={10}
