@@ -1,10 +1,9 @@
 import { useRoutes } from 'react-router-dom'
-import PATH_URL from './shared/path'
+import PATH_URL, { PRIVATE_ROUTE } from './shared/path'
 import PrivateRoute from './routes/PrivateRoutes'
 
 // component
 import Home from './pages/Home'
-import Events from './pages/Admin/Events'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function useRouteElements() {
@@ -14,17 +13,17 @@ export default function useRouteElements() {
       element: <Home />
     },
     {
-      path: PATH_URL.events,
-      element: (
-        <PrivateRoute>
-          <Events />
-        </PrivateRoute>
-      )
-    },
-    {
       path: '*',
       element: <NotFoundPage />
-    }
+    },
+    ...PRIVATE_ROUTE.map((item) => ({
+      path: item.path,
+      element: (
+        <PrivateRoute>
+          <item.component />
+        </PrivateRoute>
+      )
+    }))
   ])
   return routeElements
 }
