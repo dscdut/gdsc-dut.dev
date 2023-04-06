@@ -114,7 +114,7 @@ function CustomTable<RecordType extends Dictionary<unknown>>({
   /* <Pagination currentPage={currentPage} onChange={onChange} pageSize={pageSize} total={total} /> */
 }
 CustomTable.defaultProps = {
-  primaryKey: 'ID'
+  primaryKey: 'id'
 }
 
 export default CustomTable

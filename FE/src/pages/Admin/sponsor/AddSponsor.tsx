@@ -1,33 +1,47 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useSearchParams, useNavigate } from 'react-router-dom'
+import { Button, Card, Col, Form, Input, Row, Typography } from 'antd'
+import { FormInstance, useForm } from 'antd/es/form/Form'
+import { Store } from 'antd/es/form/interface'
+
+// config / constant
 import { ERROR_MESSAGE, urlRegex } from 'src/shared/constant'
 import PATH_URL from 'src/shared/path'
+import { FieldData } from 'src/interface'
 
-import { Button, Card, Col, Form, Input, Row, Typography, Upload } from 'antd'
+// custom hooks
+import { useResponsive } from 'src/shared/hook'
+
+// component
 import HeaderPage from 'src/components/common/HeaderPage'
+import ImageUpload from 'src/components/common/ImageUpload'
 import AdminGuard from 'src/guard/AdminGuard'
 
+// css
 import styles from './styles.module.scss'
-import { useResponsive } from 'src/shared/hook'
-import { UploadOutlined } from '@ant-design/icons'
 
 export default function CreateSponsor() {
+  const navigate = useNavigate()
+  let [searchParams, setSearchParams] = useSearchParams()
   const { isDesktop } = useResponsive()
+  const uploadRef = useRef<any>(null)
+  const formRef = useRef<FormInstance<Store>>(null)
+  const [fieldsData, setFieldsData] = useState<FieldData[]>([])
+  const [idSponsor, setIdSponsor] = useState<string>()
+  const [form] = useForm()
 
-  const handlePreviewImg = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event)
-    const imageEl: any = document.getElementById('preview-image')
-    let file: any = event.target.files ? event.target.files[0] : null
-    if (file && imageEl) {
-      const reader = new FileReader()
-      reader.onload = function () {
-        imageEl.src = reader.result
-        imageEl.style.display = 'block'
-      }
-      reader.onerror = function () {
-        imageEl.style.display = 'none'
-      }
-      reader.readAsDataURL(file)
+  useEffect(() => {
+    const id = searchParams.get('id')
+    if (id) {
+      // call API
+      setIdSponsor(id)
+    } else {
+      navigate(`${PATH_URL.sponsors}/form`, { replace: true })
     }
+  }, [])
+
+  const onSubmit = (value: any) => {
+    console.log(value)
   }
 
   return (
@@ -39,17 +53,24 @@ export default function CreateSponsor() {
             title: <Link to={PATH_URL.sponsors}>Sponsors</Link>
           },
           {
-            title: <Link to={`${PATH_URL.sponsors}/create`}>Add Sponsor</Link>
+            title: (
+              <Link to={`${PATH_URL.sponsors}/form${idSponsor ? `?id=${idSponsor}` : ''}`}>
+                {' '}
+                {idSponsor ? 'Edit Sponsor' : 'Add New Sponsor'}
+              </Link>
+            )
           }
         ]}
       />
       <Card>
         <Row className='mb-2'>
-          <Typography.Title level={4} className='mb my-0'>
-            Add New Sponsor
+          <Typography.Title level={4} className='!my-0'>
+            {idSponsor ? 'Edit Sponsor' : 'Add New Sponsor'}
           </Typography.Title>
         </Row>
         <Form
+          fields={fieldsData}
+          form={form}
           className={styles.formWrapper}
           name='sponsorForm'
           layout={isDesktop ? 'horizontal' : 'vertical'}
@@ -57,25 +78,18 @@ export default function CreateSponsor() {
           wrapperCol={{ span: 24 }}
           rootClassName='mx-auto'
           style={{ maxWidth: 900 }}
-          // {/* onFinish={onFinish}
-          // onFinishFailed={onFinishFailed} */}
+          onFinish={onSubmit}
           autoComplete='off'
+          onFieldsChange={(_, allFields) => setFieldsData(allFields)}
         >
-          <Form.Item label='Avatar' name='image' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
-            <div className='ant-form-item-control-input-content'>
-              <input accept='image/*' type='file' id='sponsorForm_image' onChange={handlePreviewImg} />
-            </div>
-            <div className='ant-form-item-control-input-content'>
-              <img
-                id='preview-image'
-                src='#'
-                alt='Sponsor avatar'
-                width='200px'
-                height='200px'
-                style={{ objectFit: 'cover', display: 'none' }}
-              />
-            </div>
-          </Form.Item>
+          <ImageUpload
+            ref={uploadRef}
+            label='Avatar'
+            name='image'
+            rules={[{ required: true, message: ERROR_MESSAGE.required }]}
+            form={form}
+            fieldsData={fieldsData}
+          />
           <Form.Item label='Name' name='name' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
             <Input />
           </Form.Item>
@@ -94,18 +108,23 @@ export default function CreateSponsor() {
           <Form.Item label='Button' className={styles['form-item__label--invisible']}>
             <Row align='middle' justify='center' gutter={[16, 16]}>
               <Col>
-                <Button type='default' htmlType='reset'>
+                <Button
+                  type='default'
+                  htmlType='reset'
+                  onClick={(event) => {
+                    uploadRef?.current?.onReset()
+                  }}
+                >
                   Clear
                 </Button>
               </Col>
               <Col>
                 <Button type='primary' htmlType='submit'>
-                  Submit
+                  {idSponsor ? 'Edit' : 'Submit'}
                 </Button>
               </Col>
             </Row>
           </Form.Item>
-          {/* </Row> */}
         </Form>
       </Card>
     </AdminGuard>

@@ -24,9 +24,11 @@ const defaultProps = {
 
 export default function HeaderPage({ title, breadcrumbList, hasCreateBtn, onCreate }: HeaderPageProps = defaultProps) {
   return (
-    <Row align='middle' justify='space-between' className='mx-1 mb-4'>
+    <Row align='middle' justify='space-between' className='mx-1 mb-4 mt-2'>
       <Col span={24}>
-        <Typography.Title level={4}>{title}</Typography.Title>
+        <Typography.Title level={4} className='my-0'>
+          {title}
+        </Typography.Title>
       </Col>
       <Col>
         <Breadcrumb items={breadcrumbList} />

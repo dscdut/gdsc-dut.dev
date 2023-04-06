@@ -28,5 +28,12 @@ export const SIZEBAR_OPTIONS = [
 
 export const ERROR_MESSAGE = {
   required: 'This field is required.',
-  invalid: 'This field is invalid.'
+  invalid: 'This field is invalid.',
+  invalidImage: 'Uploaded file is not a valid image. Only JPG, PNG files are allowed.'
 }
+
+export const TOOLTIP_MESSAGE = {
+  image: 'Only JPG, PNG files are allowed.'
+}
+
+export const IMAGE_FILETYPE = 'image/png, image/jpeg'

@@ -53,7 +53,7 @@ export default function Sponsors() {
         ]}
         hasCreateBtn
         onCreate={() => {
-          navigate(`${PATH_URL.sponsors}/create`)
+          navigate(`${PATH_URL.sponsors}/form`)
         }}
       />
       <CustomTable<Event>

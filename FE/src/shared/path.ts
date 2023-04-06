@@ -1,7 +1,3 @@
-// component
-import Events from 'src/pages/Admin/Events'
-import { AddSponsor, Sponsors } from 'src/pages/Admin/sponsor'
-
 // contanst url
 const PATH_URL = {
   home: '/',
@@ -13,18 +9,18 @@ const PATH_URL = {
 } as const
 
 // private routes (path, component)
-export const PRIVATE_ROUTE: { path: string; component: React.FC }[] = [
+export const PRIVATE_ROUTE: { path: string; element: () => Promise<any> }[] = [
   {
     path: PATH_URL.sponsors,
-    component: Sponsors
+    element: () => import('src/pages/Admin/sponsor/Sponsors')
   },
   {
-    path: `${PATH_URL.sponsors}/create`,
-    component: AddSponsor
+    path: `${PATH_URL.sponsors}/form`,
+    element: () => import('src/pages/Admin/sponsor/AddSponsor')
   },
   {
     path: PATH_URL.events,
-    component: Events
+    element: () => import('src/pages/Admin/Events')
   }
 ]
 
