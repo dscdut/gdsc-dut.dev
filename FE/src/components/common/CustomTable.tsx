@@ -3,7 +3,7 @@ import { Button, Card, Row, Space, Table } from 'antd'
 import type { ColumnsType, ColumnType } from 'antd/lib/table'
 import type { TableLayout } from 'rc-table/lib/interface'
 import type { ReactNode } from 'react'
-import FormAction from './FormAction'
+import ConfirmModal from './ConfirmModal'
 import { isBoolean } from 'lodash'
 import { Dictionary } from 'src/interface/app'
 
@@ -16,7 +16,7 @@ interface Props<RecordType> {
   onDelete?: (id: string) => void
   exportExcelBtn?: React.ReactNode
   onRow?: (data: RecordType, index?: number) => React.HTMLAttributes<HTMLElement>
-  primaryKey?: string
+  primaryKey: string
   actions?: ColumnType<RecordType> | boolean
   pageSize?: number
   currentPage?: number
@@ -60,7 +60,7 @@ function CustomTable<RecordType extends Dictionary<unknown>>({
       newColumns.push({
         key: 'action',
         render: (row: RecordType) => (
-          <FormAction
+          <ConfirmModal
             deleteAction={{
               ...deleteAction
             }}
@@ -114,7 +114,7 @@ function CustomTable<RecordType extends Dictionary<unknown>>({
   /* <Pagination currentPage={currentPage} onChange={onChange} pageSize={pageSize} total={total} /> */
 }
 CustomTable.defaultProps = {
-  primaryKey: 'ID'
+  primaryKey: 'id'
 }
 
 export default CustomTable

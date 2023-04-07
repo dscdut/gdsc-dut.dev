@@ -1,6 +1,10 @@
+import { Breadcrumb, Button, Col, Row, Typography } from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
 import CustomTable from 'src/components/common/CustomTable'
+import HeaderPage from 'src/components/common/HeaderPage'
 import { EVENTS } from 'src/data/events.dummy'
 import AdminGuard from 'src/guard/AdminGuard'
+import PATH_URL from 'src/shared/path'
 import { Event } from 'src/types/events.type'
 
 const columns = [
@@ -22,7 +26,9 @@ const columns = [
   }
 ]
 
-export default function Events() {
+export default function Sponsors() {
+  const navigate = useNavigate()
+
   const setSelectedItem = (item: Event) => {
     console.log(item)
   }
@@ -35,6 +41,21 @@ export default function Events() {
 
   return (
     <AdminGuard>
+      <HeaderPage
+        title='Sponsors'
+        breadcrumbList={[
+          {
+            title: <Link to={PATH_URL.sponsors}>Sponsors</Link>
+          },
+          {
+            title: <Link to={PATH_URL.sponsors}>Sponsors List</Link>
+          }
+        ]}
+        hasCreateBtn
+        onCreate={() => {
+          navigate(`${PATH_URL.sponsors}/form`)
+        }}
+      />
       <CustomTable<Event>
         columns={columns}
         currentPage={1}
@@ -45,7 +66,6 @@ export default function Events() {
         total={40}
         onChange={onChange}
         loading={false}
-        primaryKey='id'
       />
     </AdminGuard>
   )
