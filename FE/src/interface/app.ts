@@ -11,7 +11,7 @@ export type ValidValue<T> = Exclude<T, null | undefined | 0 | '' | false>
 export const BooleanFilter = <T>(x: T): x is ValidValue<T> => Boolean(x)
 export type LazyLoadElement<T> = () => Promise<{ default: React.ComponentType<T> }>
 
-export interface IRoute<T = string> {
+export interface Route<T = string> {
   path: string
   element: LazyLoadElement<T>
 }

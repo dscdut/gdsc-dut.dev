@@ -3,7 +3,7 @@ import PATH_URL, { PRIVATE_ROUTE } from './shared/path'
 
 // component
 import { Suspense, lazy } from 'react'
-import { IRoute } from './interface/app'
+import { Route } from './interface/app'
 import NotFoundPage from './pages/NotFoundPage'
 import PrivateRoute from './routes/PrivateRoutes'
 import { AddSponsor } from './pages/Admin/sponsor'
@@ -14,7 +14,7 @@ interface RouteElement {
 }
 
 interface LazyRouteProps {
-  routes: IRoute[]
+  routes: Route[]
   isPrivate?: boolean
 }
 
@@ -34,7 +34,7 @@ function LazyElement({ routeElement, isPrivate = false }: RouteElement) {
 }
 
 function wrapRoutesWithLazy({ routes, isPrivate = false }: LazyRouteProps) {
-  return routes?.map((route: IRoute) => ({
+  return routes?.map((route: Route) => ({
     path: route.path,
     element: <LazyElement routeElement={route.element} isPrivate={isPrivate} />
   }))

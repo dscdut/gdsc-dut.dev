@@ -1,4 +1,4 @@
-import { IRoute } from 'src/interface/app'
+import { Route } from 'src/interface/app'
 
 // contanst url
 const PATH_URL = {
@@ -11,7 +11,7 @@ const PATH_URL = {
 } as const
 
 // private routes (path, component)
-export const PRIVATE_ROUTE: IRoute[] = [
+export const PRIVATE_ROUTE: Route[] = [
   {
     path: PATH_URL.sponsors,
     element: () => import('src/pages/Admin/sponsor/Sponsors')
