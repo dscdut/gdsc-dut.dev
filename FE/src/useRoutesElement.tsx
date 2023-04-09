@@ -1,20 +1,20 @@
-import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
+import { Navigate, useRoutes } from 'react-router-dom'
 import PATH_URL, { PRIVATE_ROUTE } from './shared/path'
 
 // component
+import { Suspense, lazy } from 'react'
+import { IRoute } from './interface/app'
 import NotFoundPage from './pages/NotFoundPage'
-import React, { ReactElement, Suspense, lazy } from 'react'
 import PrivateRoute from './routes/PrivateRoutes'
+import { AddSponsor } from './pages/Admin/sponsor'
 
-interface Route {
-  path?: string
-  element: (() => Promise<any>) | ReactElement
-  end?: boolean
-  children?: Route[]
-  skipLazyLoad?: boolean
-}
 interface RouteElement {
   routeElement: () => Promise<any>
+  isPrivate?: boolean
+}
+
+interface LazyRouteProps {
+  routes: IRoute[]
   isPrivate?: boolean
 }
 
@@ -33,8 +33,8 @@ function LazyElement({ routeElement, isPrivate = false }: RouteElement) {
   )
 }
 
-function wrapRoutesWithLazy(routes: any, isPrivate: boolean = false) {
-  return routes.map((route: any) => ({
+function wrapRoutesWithLazy({ routes, isPrivate = false }: LazyRouteProps) {
+  return routes?.map((route: IRoute) => ({
     path: route.path,
     element: <LazyElement routeElement={route.element} isPrivate={isPrivate} />
   }))
@@ -51,10 +51,18 @@ export default function useRouteElements() {
       element: <NotFoundPage />
     },
     {
+      path: `${PATH_URL.sponsors}/form`,
+      element: (
+        <PrivateRoute>
+          <AddSponsor />
+        </PrivateRoute>
+      )
+    },
+    {
       path: '/admin',
       element: <Navigate to={PATH_URL.sponsors} />
     },
-    ...wrapRoutesWithLazy(PRIVATE_ROUTE, true)
+    ...wrapRoutesWithLazy({ routes: PRIVATE_ROUTE, isPrivate: true })
   ]
   return useRoutes(routeElements)
 }

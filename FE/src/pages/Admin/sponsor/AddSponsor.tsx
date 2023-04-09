@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link, useSearchParams, useNavigate } from 'react-router-dom'
-import { Button, Card, Col, Form, Input, Row, Typography } from 'antd'
+import { Button, Card, Col, Form, Input, Row, Typography, UploadProps } from 'antd'
 import { FormInstance, useForm } from 'antd/es/form/Form'
 import { Store } from 'antd/es/form/interface'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 // config / constant
+import { FieldData } from 'src/interface'
 import { ERROR_MESSAGE, urlRegex } from 'src/shared/constant'
 import PATH_URL from 'src/shared/path'
-import { FieldData } from 'src/interface'
 
 // custom hooks
 import { useResponsive } from 'src/shared/hook'
@@ -18,15 +18,17 @@ import ImageUpload from 'src/components/common/ImageUpload'
 import AdminGuard from 'src/guard/AdminGuard'
 
 // css
+import { Sponsor } from 'src/interface/sponsor'
 import styles from './styles.module.scss'
+import { UploadRef } from 'src/interface/app'
 
 export default function CreateSponsor() {
   const navigate = useNavigate()
-  let [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { isDesktop } = useResponsive()
-  const uploadRef = useRef<any>(null)
+  const uploadRef = useRef<UploadRef>(null)
   const formRef = useRef<FormInstance<Store>>(null)
-  const [fieldsData, setFieldsData] = useState<FieldData[]>([])
+  const [fieldsData, setFieldsData] = useState<FieldData<Sponsor>[]>([])
   const [idSponsor, setIdSponsor] = useState<string>()
   const [form] = useForm()
 
@@ -38,9 +40,9 @@ export default function CreateSponsor() {
     } else {
       navigate(`${PATH_URL.sponsors}/form`, { replace: true })
     }
-  }, [])
+  }, [navigate, searchParams])
 
-  const onSubmit = (value: any) => {
+  const onSubmit = (value: Sponsor) => {
     console.log(value)
   }
 
@@ -55,7 +57,6 @@ export default function CreateSponsor() {
           {
             title: (
               <Link to={`${PATH_URL.sponsors}/form${idSponsor ? `?id=${idSponsor}` : ''}`}>
-                {' '}
                 {idSponsor ? 'Edit Sponsor' : 'Add New Sponsor'}
               </Link>
             )
@@ -88,7 +89,6 @@ export default function CreateSponsor() {
             name='image'
             rules={[{ required: true, message: ERROR_MESSAGE.required }]}
             form={form}
-            fieldsData={fieldsData}
           />
           <Form.Item label='Name' name='name' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
             <Input />
@@ -111,8 +111,10 @@ export default function CreateSponsor() {
                 <Button
                   type='default'
                   htmlType='reset'
-                  onClick={(event) => {
-                    uploadRef?.current?.onReset()
+                  onClick={() => {
+                    console.log(form.getFieldsValue())
+                    form.setFieldValue('image', null)
+                    uploadRef.current?.onReset()
                   }}
                 >
                   Clear

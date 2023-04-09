@@ -1,14 +1,14 @@
-import { ReactNode, forwardRef, useImperativeHandle, useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
 import { Form, Upload } from 'antd'
 import { FormInstance, Rule } from 'antd/es/form'
-import { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
 import { Store } from 'antd/es/form/interface'
-import { FieldData } from 'src/interface'
+import { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
+import { ReactNode, forwardRef, useImperativeHandle, useState } from 'react'
 import { ERROR_MESSAGE, IMAGE_FILETYPE, TOOLTIP_MESSAGE } from 'src/shared/constant'
 import { fileToBase64, fileToBlob, validateFileType } from 'src/utils/tools'
 
 // css
+import { UploadRef } from 'src/interface/app'
 import styles from './styles.module.scss'
 
 interface Props {
@@ -18,13 +18,12 @@ interface Props {
   form?: FormInstance<Store>
   className?: string
   children?: ReactNode
-  fieldsData: FieldData[]
 }
 
-type Ref = any
+type Ref = React.Ref<UploadRef>
 
-const ImageUpload = forwardRef<Ref, Props>((props, ref) => {
-  const { rules, label, name, className, form, fieldsData } = props
+const ImageUpload = (props: Props, ref: Ref) => {
+  const { rules, label, name, className, form } = props
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   useImperativeHandle(ref, () => {
@@ -70,7 +69,7 @@ const ImageUpload = forwardRef<Ref, Props>((props, ref) => {
       validateFirst
     >
       <Upload
-        accept='image/png, image/jpeg'
+        accept={IMAGE_FILETYPE}
         name={name}
         listType='picture-card'
         fileList={[]}
@@ -89,6 +88,6 @@ const ImageUpload = forwardRef<Ref, Props>((props, ref) => {
       </Upload>
     </Form.Item>
   )
-})
+}
 
-export default ImageUpload
+export default forwardRef(ImageUpload)
