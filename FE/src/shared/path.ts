@@ -1,3 +1,5 @@
+import { Route } from 'src/interface/app'
+
 // contanst url
 const PATH_URL = {
   home: '/',
@@ -9,15 +11,12 @@ const PATH_URL = {
 } as const
 
 // private routes (path, component)
-export const PRIVATE_ROUTE: { path: string; element: () => Promise<any> }[] = [
+export const PRIVATE_ROUTE: Route[] = [
   {
     path: PATH_URL.sponsors,
     element: () => import('src/pages/Admin/sponsor/Sponsors')
   },
-  {
-    path: `${PATH_URL.sponsors}/form`,
-    element: () => import('src/pages/Admin/sponsor/AddSponsor')
-  },
+
   {
     path: PATH_URL.events,
     element: () => import('src/pages/Admin/Events')

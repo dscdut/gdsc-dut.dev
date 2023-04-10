@@ -3,9 +3,9 @@ import type * as React from 'react'
 
 export type IMenu = Required<MenuProps>['items'][number] & { path: string }
 
-export interface FieldData {
+export interface FieldData<Values> {
   name: string | number | (string | number)[]
-  value?: any
+  value?: Values
   touched?: boolean
   validating?: boolean
   errors?: string[]
