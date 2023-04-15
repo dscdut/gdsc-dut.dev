@@ -26,8 +26,6 @@ const columns = [
 ]
 
 export default function Sponsors() {
-  const navigate = useNavigate()
-
   const setSelectedItem = (item: Event) => {
     console.log(item)
   }
@@ -39,23 +37,7 @@ export default function Sponsors() {
   }
 
   return (
-    <AdminGuard>
-      <HeaderPage
-        title='Sponsors'
-        breadcrumbList={[
-          {
-            title: <Link to={PATH_URL.sponsors}>Sponsors</Link>
-          },
-          {
-            title: <Link to={PATH_URL.sponsors}>Sponsors List</Link>
-          }
-        ]}
-        hasCreateBtn
-        onCreate={() => {
-          navigate(`${PATH_URL.sponsors}/form`)
-        }}
-      />
-      <CustomTable<Event>
+    <CustomTable<Event>
         columns={columns}
         currentPage={1}
         dataSource={EVENTS}
@@ -66,6 +48,5 @@ export default function Sponsors() {
         onChange={onChange}
         loading={false}
       />
-    </AdminGuard>
   )
 }

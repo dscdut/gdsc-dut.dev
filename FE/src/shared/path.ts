@@ -14,12 +14,22 @@ const PATH_URL = {
 export const PRIVATE_ROUTE: Route[] = [
   {
     path: PATH_URL.sponsors,
-    element: () => import('src/pages/Admin/sponsor/Sponsors')
+    element: () => import('src/pages/admin/sponsor'),
+    children: [
+      {
+        path: '',
+        element: () => import('src/pages/admin/sponsor/Sponsors')
+      },
+      {
+        path: 'form',
+        element: () => import('src/pages/admin/sponsor/AddSponsor')
+      }
+    ]
   },
 
   {
     path: PATH_URL.events,
-    element: () => import('src/pages/Admin/Events')
+    element: () => import('src/pages/admin/Events')
   }
 ]
 
