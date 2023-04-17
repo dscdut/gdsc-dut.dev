@@ -1,5 +1,5 @@
 import { RcFile, UploadFile } from 'antd/es/upload'
-
+import { PartialObject, omit } from 'lodash'
 export const scrollToTop = () => {
   window?.scrollTo({
     behavior: 'smooth',
@@ -30,3 +30,5 @@ export const fileToBase64 = (file: RcFile | Blob, callback: (url: string) => voi
   }
   reader.readAsDataURL(file)
 }
+
+export const removeKeysFromObj = <T extends object>(obj: T, keys: string[]): PartialObject<T> => omit(obj, keys)

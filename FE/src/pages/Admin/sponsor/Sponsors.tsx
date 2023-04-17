@@ -8,21 +8,30 @@ import { Event } from 'src/types/events.type'
 
 const columns = [
   {
+    dataIndex: 'id',
+    key: 'id',
+    title: 'No'
+  },
+  {
+    dataIndex: 'image',
+    key: 'image',
+    title: 'Avatar'
+  },
+  {
     dataIndex: 'name',
     key: 'name',
     title: 'Name'
   },
   {
-    dataIndex: 'location',
-    key: 'location',
-    title: 'Location'
+    dataIndex: 'description',
+    key: 'description',
+    title: 'Description'
   },
   {
-    dataIndex: 'Status',
-    key: 'Status',
-    render: (status: boolean) => (status ? 'Done' : 'Up coming'),
-    title: 'Status'
-  }
+    dataIndex: 'infor_url',
+    key: 'infor_url',
+    title: 'Website'
+  },
 ]
 
 export default function Sponsors() {
@@ -47,6 +56,7 @@ export default function Sponsors() {
         total={40}
         onChange={onChange}
         loading={false}
+        primaryKey='id'
       />
   )
 }

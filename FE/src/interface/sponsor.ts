@@ -3,4 +3,5 @@ export interface Sponsor {
   description: string
   url: string
   name: string
+  gen_id: number
 }
