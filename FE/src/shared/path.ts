@@ -7,6 +7,7 @@ const PATH_URL = {
   login: '/admin/login',
   events: '/admin/events',
   sponsors: '/admin/sponsors',
+  gens: '/admin/gens',
   memberDetail: ':memberID'
 } as const
 
@@ -26,10 +27,19 @@ export const PRIVATE_ROUTE: Route[] = [
       }
     ]
   },
-
   {
     path: PATH_URL.events,
     element: () => import('src/pages/admin/Events')
+  },
+  {
+    path: PATH_URL.gens,
+    element: () => import('src/pages/admin/gen'),
+    children: [
+      {
+        path: '',
+        element: () => import('src/pages/admin/gen/GenerationList')
+      }
+    ]
   }
 ]
 

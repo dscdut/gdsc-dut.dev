@@ -21,6 +21,7 @@ import AdminGuard from 'src/guard/AdminGuard'
 import { Sponsor } from 'src/interface/sponsor'
 import styles from './styles.module.scss'
 import { UploadRef } from 'src/interface/app'
+import { postSponsor } from 'src/apis/sponsor.api'
 
 export default function CreateSponsor() {
   const navigate = useNavigate()
@@ -42,8 +43,15 @@ export default function CreateSponsor() {
     }
   }, [])
 
-  const onSubmit = (value: Sponsor) => {
-    console.log(value)
+  const onSubmit = async (value: Sponsor) => {
+
+    value.gen_id = 1;
+    try {
+      const response = await postSponsor(value)
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
