@@ -1,21 +1,17 @@
-import { useEffect, useState } from 'react'
 // interface, type
-import { IGenResponse } from 'src/interface/gens'
 // api
-import { deleteGen, getGens } from 'src/apis/gen.api'
+import { GenAPI } from 'src/apis/gen.api'
 // component
+import { useMutation, useQuery } from 'react-query'
 import CustomTable from 'src/components/common/CustomTable'
 import { GenType } from 'src/types/gens.type'
-import { removeKeysFromObj } from 'src/utils/tools'
-import { useGenOutletContext } from './index'
-import { TOAST_MESSAGE } from 'src/shared/constant'
-import { toast } from 'react-toastify'
+import { useGenOutletContext } from '.'
 
 const columns = [
   {
     dataIndex: 'id',
     key: 'id',
-    title: 'No',
+    title: 'No'
   },
   {
     dataIndex: 'name',
@@ -24,55 +20,39 @@ const columns = [
   }
 ]
 
-type IDataSourceItem = Pick<IGenResponse, 'id'| 'name'>
-
 export default function GenerationList() {
-  const { isReadyUpdate, setIsReadyUpdate, setSelectedItem } = useGenOutletContext()
-  const [dataSource, setDataSource] = useState<IDataSourceItem[]>([])
+  const { setSelectedItem } = useGenOutletContext()
 
-  const fetchGensData = async () => {
-    try {
-      const response = await getGens()
-      const data: IDataSourceItem[] = response.data.map(
-        (item) => removeKeysFromObj<IGenResponse>(item, ['deleted_at', 'created_at', 'updated_at']) as IDataSourceItem
-      )
-      setDataSource(data.sort((a: IDataSourceItem, b: IDataSourceItem) => Number(a.id) < Number(b.id) ? -1 : 1))
-    } catch (error) {
-    }
-  }
-  
-  useEffect(() => {
-    if (isReadyUpdate) {
-      fetchGensData();
-      setIsReadyUpdate(false);
-    }
-  }, [isReadyUpdate])
+  const { data, refetch, isLoading } = useQuery({
+    queryKey: ['gens'],
+    queryFn: () => GenAPI.getGens()
+  })
 
-  const handleEditItem = (item: GenType) => {
-    setSelectedItem(item)
+  const deleteGen = useMutation({
+    mutationFn: GenAPI.deleteGen,
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
+  const handleDelete = (id: string) => {
+    deleteGen.mutate(id)
   }
 
-  const handleDelete = async (id: number | string) => {
-    try {
-      const response = await deleteGen(id)
-      toast.success(TOAST_MESSAGE.DELETE_SUCCESS)
-      setIsReadyUpdate(true)
-    } catch (error) {
-      toast.error(TOAST_MESSAGE.ERROR)
-    }
+  const handleEditItem = (gen: GenType) => {
+    setSelectedItem(gen)
   }
 
   return (
     <CustomTable<GenType>
       columns={columns}
       currentPage={1}
-      dataSource={dataSource}
+      dataSource={data?.data}
       onDelete={(id) => handleDelete(id)}
       onEdit={handleEditItem}
       pageSize={10}
       total={40}
-      onChange={() => {}}
-      loading={false}
+      loading={isLoading || deleteGen.isLoading}
       primaryKey='id'
     />
   )

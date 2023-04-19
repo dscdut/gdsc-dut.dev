@@ -10,7 +10,7 @@ import { IGen } from 'src/interface/gens'
 import { toast } from 'react-toastify'
 import { GenType } from 'src/types/gens.type'
 
-const formItemGens : IFormItem[] = [
+const formItemGens: IFormItem[] = [
   {
     label: 'Name',
     name: 'name',
@@ -22,10 +22,9 @@ const formItemGens : IFormItem[] = [
 export default function GenerationLayout() {
   const [isReadyUpdate, setIsReadyUpdate] = React.useState<boolean>(true)
   const [selectedItem, setSelectedItem] = React.useState<GenType | null>(null)
-  const [type, setType] = React.useState < 'edit' | 'add'>('add')
+  const [type, setType] = React.useState<'edit' | 'add'>('add')
   const refForm = useRef<IFormModalRef>(null)
   const [form] = useForm<IGen>()
-
   useEffect(() => {
     if (selectedItem) {
       setType('edit')
@@ -44,7 +43,17 @@ export default function GenerationLayout() {
 
   const handleUpdate = async (value: IGen) => {
     try {
-      const response = type === 'add' ? await postGen(value) : selectedItem && await updateGen({ id: selectedItem?.id, name: value.name })
+      const response =
+        type === 'add'
+          ? await postGen(value)
+          : selectedItem &&
+            (await updateGen({
+              id: selectedItem?.id,
+              name: value.name,
+              created_at: '',
+              updated_at: null,
+              deleted_at: null
+            }))
       toast.success(TOAST_MESSAGE.SUCCESS)
       setIsReadyUpdate(true)
     } catch (error) {
@@ -55,7 +64,7 @@ export default function GenerationLayout() {
         handleReset()
       }, 2000)
     }
-  }  
+  }
 
   return (
     <AdminGuard>
@@ -88,7 +97,6 @@ export default function GenerationLayout() {
     </AdminGuard>
   )
 }
-
 
 export function useGenOutletContext() {
   return useOutletContext<{

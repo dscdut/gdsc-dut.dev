@@ -20,7 +20,7 @@ interface Props<RecordType> {
   actions?: ColumnType<RecordType> | boolean
   pageSize?: number
   currentPage?: number
-  onChange: ({ page, pageSize }: { page: number; pageSize: number }) => void
+  onChange?: ({ page, pageSize }: { page: number; pageSize: number }) => void
   deleteAction?: ModalFuncProps
   total?: number
   extraLeft?: ReactNode

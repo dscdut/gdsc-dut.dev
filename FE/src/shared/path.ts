@@ -15,29 +15,29 @@ const PATH_URL = {
 export const PRIVATE_ROUTE: Route[] = [
   {
     path: PATH_URL.sponsors,
-    element: () => import('src/pages/admin/sponsor'),
+    element: () => import('src/pages/Admin/sponsor'),
     children: [
       {
         path: '',
-        element: () => import('src/pages/admin/sponsor/Sponsors')
+        element: () => import('src/pages/Admin/sponsor/Sponsors')
       },
       {
         path: 'form',
-        element: () => import('src/pages/admin/sponsor/AddSponsor')
+        element: () => import('src/pages/Admin/sponsor/AddSponsor')
       }
     ]
   },
   {
     path: PATH_URL.events,
-    element: () => import('src/pages/admin/Events')
+    element: () => import('src/pages/Admin/Events')
   },
   {
     path: PATH_URL.gens,
-    element: () => import('src/pages/admin/gen'),
+    element: () => import('src/pages/Admin/gen'),
     children: [
       {
         path: '',
-        element: () => import('src/pages/admin/gen/GenerationList')
+        element: () => import('src/pages/Admin/gen/GenerationList')
       }
     ]
   }
