@@ -1,6 +1,7 @@
 import { Button, Form, Input, Modal } from 'antd'
 import { FormInstance, Rule } from 'antd/es/form'
 import { Ref, forwardRef, useImperativeHandle, useState } from 'react'
+import { ReactWithChild } from 'src/interface/app'
 
 export interface IFormItem {
   label: string
@@ -15,7 +16,7 @@ interface IProps {
   cancelText?: string
   handleSubmit?: () => void
   handleCancel?: () => void
-  formItems: IFormItem[]
+  children?: React.ReactNode | React.ReactNode[]
   form?: FormInstance
 }
 
@@ -25,7 +26,7 @@ export interface IFormModalRef {
 }
 
 function FormModal(props: IProps, ref: Ref<IFormModalRef>) {
-  const { title, okText, cancelText = 'Cancel', formItems, form, handleSubmit, handleCancel } = props
+  const { title, okText, cancelText = 'Cancel', children, form, handleSubmit, handleCancel } = props
   const [open, setOpen] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
 
@@ -87,11 +88,7 @@ function FormModal(props: IProps, ref: Ref<IFormModalRef>) {
         autoComplete='off'
         onFinish={handleOk}
       >
-        {formItems.map((field: IFormItem) => (
-          <Form.Item key={field.name} label={field.label} name={field.name} rules={field.rules}>
-            {field.type === 'textArea' ? <Input.TextArea /> : <Input />}
-          </Form.Item>
-        ))}
+        {children}
       </Form>
     </Modal>
   )

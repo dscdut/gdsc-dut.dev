@@ -1,30 +1,72 @@
-import React, { useEffect, useRef } from 'react'
-import { Outlet, useOutletContext } from 'react-router-dom'
-import HeaderPage from 'src/components/common/HeaderPage'
-import AdminGuard from 'src/guard/AdminGuard'
-import FormModal, { IFormItem, IFormModalRef } from 'src/components/common/FormModal'
-import { ERROR_MESSAGE, TOAST_MESSAGE } from 'src/shared/constant'
 import { useForm } from 'antd/es/form/Form'
-import { postGen, updateGen } from 'src/apis/gen.api'
-import { IGen } from 'src/interface/gens'
+import React, { useEffect, useRef } from 'react'
+import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
+import { GenAPI } from 'src/apis/gen.api'
+import CustomTable from 'src/components/common/CustomTable'
+import { IFormModalRef } from 'src/components/common/FormModal'
+import HeaderPage from 'src/components/common/HeaderPage'
+import GenerationForm from 'src/components/forms/GenerationForm'
+import AdminGuard from 'src/guard/AdminGuard'
+import { IGen } from 'src/interface/gens'
+import { TOAST_MESSAGE } from 'src/shared/constant'
 import { GenType } from 'src/types/gens.type'
 
-const formItemGens: IFormItem[] = [
+const columns = [
   {
-    label: 'Name',
-    name: 'name',
-    type: 'text',
-    rules: [{ required: true, message: ERROR_MESSAGE.required }]
+    dataIndex: 'id',
+    key: 'id',
+    title: 'No'
+  },
+  {
+    dataIndex: 'name',
+    key: 'name',
+    title: 'Name'
   }
 ]
 
 export default function GenerationLayout() {
-  const [isReadyUpdate, setIsReadyUpdate] = React.useState<boolean>(true)
   const [selectedItem, setSelectedItem] = React.useState<GenType | null>(null)
   const [type, setType] = React.useState<'edit' | 'add'>('add')
   const refForm = useRef<IFormModalRef>(null)
   const [form] = useForm<IGen>()
+
+  const { data, refetch, isLoading } = useQuery({
+    queryKey: ['gens'],
+    queryFn: () => GenAPI.getGens()
+  })
+
+  const deleteGen = useMutation({
+    mutationFn: GenAPI.deleteGen,
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
+  const createGen = useMutation({
+    mutationFn: GenAPI.createGen,
+    onSuccess: () => {
+      toast.success(TOAST_MESSAGE.SUCCESS)
+      refetch()
+    }
+  })
+
+  const updateGen = useMutation({
+    mutationFn: GenAPI.updateGen,
+    onSuccess: () => {
+      refetch()
+      toast.success(TOAST_MESSAGE.SUCCESS)
+    }
+  })
+
+  const handleDelete = (id: string) => {
+    deleteGen.mutate(id)
+  }
+
+  const handleEditItem = (gen: GenType) => {
+    setSelectedItem(gen)
+  }
+
   useEffect(() => {
     if (selectedItem) {
       setType('edit')
@@ -33,7 +75,7 @@ export default function GenerationLayout() {
     } else {
       setType('add')
     }
-  }, [selectedItem])
+  }, [form, selectedItem])
 
   const handleReset = () => {
     form.resetFields()
@@ -43,19 +85,12 @@ export default function GenerationLayout() {
 
   const handleUpdate = async (value: IGen) => {
     try {
-      const response =
-        type === 'add'
-          ? await postGen(value)
-          : selectedItem &&
-            (await updateGen({
-              id: selectedItem?.id,
-              name: value.name,
-              created_at: '',
-              updated_at: null,
-              deleted_at: null
-            }))
-      toast.success(TOAST_MESSAGE.SUCCESS)
-      setIsReadyUpdate(true)
+      if (type === 'add') createGen.mutate(value)
+      selectedItem &&
+        updateGen.mutate({
+          id: selectedItem?.id,
+          name: value.name
+        })
     } catch (error) {
       toast.error(TOAST_MESSAGE.ERROR)
     } finally {
@@ -78,30 +113,28 @@ export default function GenerationLayout() {
             title: 'Generation List'
           }
         ]}
-        hasCreateBtn
-        onCreate={() => refForm?.current?.showModal()}
       />
-      <FormModal
-        title={type === 'add' ? 'Add New Generation' : 'Edit Generation'}
-        okText={type === 'add' ? 'Submit' : 'Edit'}
-        ref={refForm}
-        formItems={formItemGens}
+
+      <GenerationForm
         form={form}
-        handleSubmit={() => {
-          const data = form.getFieldsValue()
-          handleUpdate(data)
-        }}
-        handleCancel={handleReset}
+        okText={type === 'add' ? 'Create' : 'Edit'}
+        onCancel={handleReset}
+        onSubmit={handleUpdate}
+        refForm={refForm}
+        title={type === 'add' ? 'Create new gen' : 'Edit gen'}
       />
-      <Outlet context={{ isReadyUpdate, setIsReadyUpdate, setSelectedItem }} />
+      <CustomTable<GenType>
+        columns={columns}
+        currentPage={1}
+        dataSource={data?.data}
+        onDelete={(id) => handleDelete(id)}
+        onCreate={() => refForm?.current?.showModal()}
+        onEdit={handleEditItem}
+        pageSize={10}
+        total={40}
+        loading={isLoading || deleteGen.isLoading}
+        primaryKey='id'
+      />
     </AdminGuard>
   )
-}
-
-export function useGenOutletContext() {
-  return useOutletContext<{
-    isReadyUpdate: boolean
-    setIsReadyUpdate: (value: boolean) => void
-    setSelectedItem: (value: GenType) => void
-  }>()
 }

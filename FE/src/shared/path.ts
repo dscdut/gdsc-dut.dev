@@ -33,13 +33,7 @@ export const PRIVATE_ROUTE: Route[] = [
   },
   {
     path: PATH_URL.gens,
-    element: () => import('src/pages/Admin/gen'),
-    children: [
-      {
-        path: '',
-        element: () => import('src/pages/Admin/gen/GenerationList')
-      }
-    ]
+    element: () => import('src/pages/Admin/gen')
   }
 ]
 
