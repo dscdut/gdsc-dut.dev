@@ -75,7 +75,7 @@ export default function GenerationLayout() {
     } else {
       setType('add')
     }
-  }, [form, selectedItem])
+  }, [selectedItem])
 
   const handleReset = () => {
     form.resetFields()
