@@ -15,11 +15,14 @@ class Repository extends DataRepository {
                 'members.philosophy',
                 'members.feelings',
                 'members.infor_url',
+                'gens.name as gen',
                 'members.deleted_at',
                 'members.created_at',
                 'members.updated_at',
             ])
             .innerJoin('images', 'members.image_id', 'images.id')
+            .innerJoin('members_gens', 'members.id', 'members_gens.member_id')
+            .innerJoin('gens', 'members_gens.gen_id', 'gens.id')
             .first();
     }
 
@@ -34,11 +37,14 @@ class Repository extends DataRepository {
                 'members.philosophy',
                 'members.feelings',
                 'members.infor_url',
+                'gens.name as gen',
                 'members.deleted_at',
                 'members.created_at',
                 'members.updated_at',
             ])
-            .innerJoin('images', 'members.image_id', 'images.id');
+            .innerJoin('images', 'members.image_id', 'images.id')
+            .innerJoin('members_gens', 'members.id', 'members_gens.member_id')
+            .innerJoin('gens', 'members_gens.gen_id', 'gens.id');
     }
 
     createOne(member, genId, departmentId, positionId) {
