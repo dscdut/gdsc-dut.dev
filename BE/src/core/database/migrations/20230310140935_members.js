@@ -10,6 +10,8 @@ exports.up = async knex => {
             .notNullable();
         table.string('full_name');
         table.dateTime('birthday');
+        table.string('phone');
+        table.string('email');
         table.string('horoscope_sign');
         table.string('philosophy');
         table.string('feelings');
