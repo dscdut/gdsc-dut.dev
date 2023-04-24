@@ -15,25 +15,18 @@ class Service {
         this.mediaService = MediaService;
     }
 
-    async createOne(files, createMemberDto) {
+    async createOne(createMemberDto) {
         const {
-            genId, positionId, departmentId, ...member
+            genId, positionId, departmentId, imageId, ...member
         } = createMemberDto;
         const department = await this.departmentService.findById(departmentId);
         const position = await this.positionService.findById(positionId);
         const gen = await this.genService.findById(genId);
-
-        if (files) {
-            const uploadedImage = await this.mediaService.uploadOne(
-                files,
-                'gdsc',
-            );
-            member.imageId = uploadedImage[0]['id'];
-        }
+        const image = await this.mediaService.findById(imageId);
 
         return Optional.of(
             await this.repository.createOne(
-                member,
+                { ...member, image_id: image.id },
                 gen.id,
                 department.id,
                 position.id,
@@ -68,9 +61,7 @@ class Service {
         const idsNotFound = ids.filter(item => !getIds.includes(item));
 
         if (getIds.length !== ids.length) {
-            throw new NotFoundException(
-                `Member with id ${idsNotFound} not found`,
-            );
+            throw new NotFoundException(`Member with id ${idsNotFound} not found`);
         }
 
         return members;

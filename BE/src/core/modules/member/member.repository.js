@@ -1,4 +1,3 @@
-import { result } from 'lodash';
 import { DataRepository } from 'packages/restBuilder/core/dataHandler/data.repository';
 import { convertToSnakeCase } from '../../helpers/convert.helper';
 
@@ -49,6 +48,7 @@ class Repository extends DataRepository {
 
     createOne(member, genId, departmentId, positionId) {
         let memberId;
+
         return this.query()
             .insert(convertToSnakeCase(member))
             .returning('id')

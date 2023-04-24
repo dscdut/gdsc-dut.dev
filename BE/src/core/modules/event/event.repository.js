@@ -32,7 +32,7 @@ class Repository extends DataRepository {
     }
 
     createOne(data) {
-        return this.query().insert(convertToSnakeCase(data));
+        return this.query().insert(convertToSnakeCase(data)).returning('*');
     }
 
     deleteOne(id) {
@@ -40,7 +40,7 @@ class Repository extends DataRepository {
     }
 
     updateOne(id, data) {
-        return this.query().where('id', id).update(convertToSnakeCase(data));
+        return this.query().where('id', id).update(convertToSnakeCase(data)).returning('*');
     }
 }
 

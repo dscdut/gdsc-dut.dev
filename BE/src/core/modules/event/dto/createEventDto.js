@@ -3,12 +3,12 @@ import { SwaggerDocument } from 'packages/swagger';
 
 ApiDocument.addModel('CreateEventDto', {
     name: SwaggerDocument.ApiProperty({ type: 'string' }),
-    image_url: SwaggerDocument.ApiProperty({ type: 'string' }),
+    image_id: SwaggerDocument.ApiProperty({ type: 'string' }),
     description: SwaggerDocument.ApiProperty({ type: 'string' })
 });
 
 export const CreateEventDto = body => ({
     name: body.name,
-    imageUrl: body.image_url,
+    imageId: body.image_id,
     description: body.description,
 });

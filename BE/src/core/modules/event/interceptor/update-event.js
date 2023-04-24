@@ -5,7 +5,7 @@ import { JoiUtils } from '../../../utils';
 export const UpdateEventInterceptor = new DefaultValidatorInterceptor(
     Joi.object({
         name: JoiUtils.requiredString(),
-        image_url: JoiUtils.requiredString(),
+        image_id: JoiUtils.positiveNumber(),
         description: JoiUtils.requiredString(),
     }),
 );

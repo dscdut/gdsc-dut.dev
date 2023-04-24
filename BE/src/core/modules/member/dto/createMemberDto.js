@@ -13,6 +13,7 @@ ApiDocument.addModel('CreateMemberDto', {
     department_id: SwaggerDocument.ApiProperty({ type: 'int' }),
     position_id: SwaggerDocument.ApiProperty({ type: 'int' }),
     gen_id: SwaggerDocument.ApiProperty({ type: 'int' }),
+    image_id: SwaggerDocument.ApiProperty({ type: 'int' }),
 });
 
 export const CreateMemberDto = body => ({
@@ -27,4 +28,5 @@ export const CreateMemberDto = body => ({
     departmentId: body.department_id,
     positionId: body.position_id,
     genId: body.gen_id,
+    imageId: body.image_id,
 });

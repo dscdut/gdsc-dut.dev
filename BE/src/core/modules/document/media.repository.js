@@ -7,6 +7,10 @@ class Repository extends DataRepository {
             .insert(convertToSnakeCase(data))
             .returning('id');
     }
+
+    async findById(id) {
+        return this.query().select().where('id', id).first();
+    }
 }
 
 export const MediaRepository = new Repository('images');

@@ -1,3 +1,4 @@
+import { MediaService } from 'core/modules/document';
 import { Optional } from '../../../utils';
 import { NotFoundException } from '../../../../packages/httpException';
 import { EventRepository } from '../event.repository';
@@ -5,9 +6,11 @@ import { EventRepository } from '../event.repository';
 class Service {
     constructor() {
         this.repository = EventRepository;
+        this.mediaService = MediaService;
     }
 
     async createOne(createEventDto) {
+        await this.mediaService.findById(createEventDto.imageId);
         return this.repository.createOne(createEventDto);
     }
 
