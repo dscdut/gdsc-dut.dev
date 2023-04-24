@@ -1,5 +1,8 @@
 import { unlink } from 'fs';
-import { InternalServerException } from 'packages/httpException';
+import {
+    InternalServerException,
+    NotFoundException,
+} from 'packages/httpException';
 import { logger } from 'packages/logger';
 import { cloudinaryUploader } from '../../../config/cloudinary.config';
 import { MediaRepository } from '../media.repository';
@@ -12,7 +15,7 @@ class Service {
         this.repository = MediaRepository;
     }
 
-    async uploadOne(file, folderName = '') {
+    async uploadOne(file, folderName = 'gdsc') {
         try {
             const response = await cloudinaryUploader.upload(file.path, {
                 folder: folderName,
@@ -22,7 +25,7 @@ class Service {
                 await this.repository.createOne(CreateMediaDto(response)),
             )
                 .throwIfNullable()
-                .get();
+                .get()[0];
         } catch (error) {
             throw new InternalServerException(error.message);
         } finally {
@@ -52,6 +55,12 @@ class Service {
             id,
             ...response,
         };
+    }
+
+    async findById(id) {
+        return Optional.of(await this.repository.findById(id))
+            .throwIfNotPresent(new NotFoundException(`Image with id ${id} not found`))
+            .get();
     }
 }
 

@@ -4,8 +4,6 @@ import {
     CreateMemberInterceptor,
     UpdateMemberInterceptor,
 } from 'core/modules/member/interceptor';
-import { uploadMediaSwagger } from 'core/common/swagger';
-import { MediaInterceptor } from 'core/modules/document';
 import { RecordId } from '../../common/swagger/record-id';
 import { MemberController } from './member.controller';
 
@@ -27,9 +25,7 @@ export const MemberResolver = Module.builder()
         {
             route: '/',
             method: 'post',
-            params: [uploadMediaSwagger],
-            consumes: ['multipart/form-data'],
-            interceptors: [new MediaInterceptor(), CreateMemberInterceptor],
+            interceptors: [CreateMemberInterceptor],
             body: 'CreateMemberDto',
             controller: MemberController.createOne,
         },

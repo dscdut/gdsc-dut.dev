@@ -14,7 +14,7 @@ ApiDocument.addModel('UpdateMember', {
 });
 
 export const UpdateMemberDto = body => ({
-    imgaeId: body.image_id,
+    imageId: body.image_id,
     full_name: body.full_name,
     birthday: body.birthday,
     phone: SwaggerDocument.ApiProperty({ type: 'string' }),
