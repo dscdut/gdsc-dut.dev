@@ -48,4 +48,8 @@ export class JoiUtils {
   static ObjectIds() {
       return Joi.array().items(this.objectId());
   }
+
+  static phoneNumber() {
+      return Joi.string().length(10).pattern(/^[0-9]+$/);
+  }
 }

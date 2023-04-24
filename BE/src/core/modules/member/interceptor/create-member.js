@@ -6,7 +6,9 @@ export const CreateMemberInterceptor = new DefaultValidatorInterceptor(
     Joi.object({
         image_id: JoiUtils.positiveNumber(),
         full_name: JoiUtils.requiredString(),
-        birthday: JoiUtils.requiredString(),
+        birthday: JoiUtils.date(),
+        phone: JoiUtils.phoneNumber(),
+        email: JoiUtils.email(),
         horoscope_sign: JoiUtils.requiredString(),
         philosophy: JoiUtils.requiredString(),
         feelings: JoiUtils.requiredString(),
