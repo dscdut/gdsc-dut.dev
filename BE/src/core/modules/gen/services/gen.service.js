@@ -16,7 +16,14 @@ class Service {
     }
 
     async deleteOne(id) {
-        return this.repository.deleteOne(id);
+        Optional.of(await this.repository.findById(id))
+            .throwIfNotPresent(new NotFoundException(`Gen with id ${id} not found`));
+        await this.repository.deleteOne(id);
+        return {
+            message: `Delete gen with id ${id} successfully`,
+            code: 'OK',
+            status: 200,
+        };
     }
 
     async findById(id) {

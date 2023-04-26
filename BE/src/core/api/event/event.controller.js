@@ -23,8 +23,8 @@ class Controller {
     };
 
     deleteOne = async req => {
-        await this.service.deleteOne(req.params.id);
-        return ValidHttpResponse.toNoContentResponse();
+        const data = await this.service.deleteOne(req.params.id);
+        return ValidHttpResponse.toOkResponse(data);
     };
 
     findAll = async () => {
