@@ -1,4 +1,5 @@
 import { IdcardOutlined, ScheduleOutlined, SolutionOutlined, TeamOutlined } from '@ant-design/icons'
+import PATH_URL from './path'
 
 export const urlRegex =
   /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi
@@ -9,25 +10,31 @@ export const SIZEBAR_OPTIONS = [
   {
     key: 'members',
     label: 'Members',
-    path: '/admin/members',
+    path: PATH_URL.members,
     icon: TeamOutlined
   },
   {
     key: 'gen',
     label: 'Generations',
-    path: '/admin/gens',
+    path: PATH_URL.gens,
     icon: SolutionOutlined
   },
   {
     key: 'events',
     label: 'Events',
-    path: '/admin/events',
+    path: PATH_URL.events,
     icon: ScheduleOutlined
   },
   {
     key: 'sponsors',
     label: 'Sponsors',
-    path: '/admin/sponsors',
+    path: PATH_URL.sponsors,
+    icon: IdcardOutlined
+  },
+  {
+    key: 'department',
+    label: 'Department',
+    path: PATH_URL.department,
     icon: IdcardOutlined
   }
 ]
@@ -49,3 +56,19 @@ export const TOOLTIP_MESSAGE = {
 }
 
 export const IMAGE_FILETYPE = 'image/png, image/jpeg'
+
+export enum DepartmentKey {
+  'Backend' = 'Backend',
+  'Frontend' = 'Frontend',
+  'Marketing' = 'Marketing',
+  'Event' = 'Event',
+  'HR' = 'HR'
+}
+
+export const DepartmentTagColor = {
+  [DepartmentKey.Backend]: 'red',
+  [DepartmentKey.Frontend]: 'green',
+  [DepartmentKey.Marketing]: 'purple',
+  [DepartmentKey.Event]: 'yellow',
+  [DepartmentKey.HR]: 'cyan'
+}

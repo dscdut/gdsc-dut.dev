@@ -13,7 +13,7 @@ interface Props<RecordType> {
   columns: ColumnsType<RecordType>
   onCreate?: () => void
   onEdit?: (row: RecordType) => void
-  onDelete?: (id: string) => void
+  onDelete?: (id: string | number) => void
   exportExcelBtn?: React.ReactNode
   onRow?: (data: RecordType, index?: number) => React.HTMLAttributes<HTMLElement>
   primaryKey: string

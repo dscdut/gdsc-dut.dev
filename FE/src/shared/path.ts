@@ -5,10 +5,12 @@ const PATH_URL = {
   home: '/',
   admin: '/admin',
   login: '/admin/login',
+  members: '/admin/members',
   events: '/admin/events',
   sponsors: '/admin/sponsors',
   gens: '/admin/gens',
-  memberDetail: ':memberID'
+  memberDetail: ':memberID',
+  department: '/admin/department'
 } as const
 
 // private routes (path, component)
@@ -34,6 +36,10 @@ export const PRIVATE_ROUTE: Route[] = [
   {
     path: PATH_URL.gens,
     element: () => import('src/pages/admin/gen')
+  },
+  {
+    path: PATH_URL.department,
+    element: () => import('src/pages/admin/department')
   }
 ]
 

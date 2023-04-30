@@ -1,19 +1,18 @@
-import { Ref } from 'react'
-import FormModal, { IFormModalRef } from '../common/FormModal'
 import { Form, FormInstance, Input } from 'antd'
-import { IGen } from 'src/interface/gens'
+import { Ref } from 'react'
 import { getRules } from 'src/utils/rules'
+import FormModal, { IFormModalRef } from '../common/FormModal'
 
-interface IProps {
+interface IProps<T> {
   title: string
   refForm: Ref<IFormModalRef>
-  form: FormInstance<IGen>
-  onSubmit: (data: IGen) => void
+  form: FormInstance<T>
+  onSubmit: (data: T) => void
   onCancel: () => void
   okText: string
 }
 
-export default function GenerationForm({ title, refForm, form, onCancel, onSubmit, okText }: IProps) {
+export default function GenerationForm<T>({ title, refForm, form, onCancel, onSubmit, okText }: IProps<T>) {
   return (
     <>
       <FormModal
