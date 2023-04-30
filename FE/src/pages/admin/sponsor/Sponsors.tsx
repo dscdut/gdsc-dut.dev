@@ -1,9 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom'
 import CustomTable from 'src/components/common/CustomTable'
-import HeaderPage from 'src/components/common/HeaderPage'
 import { EVENTS } from 'src/data/events.dummy'
-import AdminGuard from 'src/guard/AdminGuard'
-import PATH_URL from 'src/shared/path'
 import { Event } from 'src/types/events.type'
 
 const columns = [
@@ -31,7 +27,7 @@ const columns = [
     dataIndex: 'infor_url',
     key: 'infor_url',
     title: 'Website'
-  },
+  }
 ]
 
 export default function Sponsors() {
@@ -47,16 +43,16 @@ export default function Sponsors() {
 
   return (
     <CustomTable<Event>
-        columns={columns}
-        currentPage={1}
-        dataSource={EVENTS}
-        onDelete={handleDelete}
-        onEdit={setSelectedItem}
-        pageSize={10}
-        total={40}
-        onChange={onChange}
-        loading={false}
-        primaryKey='id'
-      />
+      columns={columns}
+      currentPage={1}
+      dataSource={EVENTS}
+      onDelete={handleDelete}
+      onEdit={setSelectedItem}
+      pageSize={10}
+      total={40}
+      onChange={onChange}
+      loading={false}
+      primaryKey='id'
+    />
   )
 }

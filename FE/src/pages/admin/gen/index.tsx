@@ -115,7 +115,7 @@ export default function GenerationLayout() {
         ]}
       />
 
-      <GenerationForm
+      <GenerationForm<IGen>
         form={form}
         okText={type === 'add' ? 'Create' : 'Edit'}
         onCancel={handleReset}
@@ -127,7 +127,7 @@ export default function GenerationLayout() {
         columns={columns}
         currentPage={1}
         dataSource={data?.data}
-        onDelete={(id) => handleDelete(id)}
+        onDelete={(id) => handleDelete(id as string)}
         onCreate={() => refForm?.current?.showModal()}
         onEdit={handleEditItem}
         pageSize={10}
