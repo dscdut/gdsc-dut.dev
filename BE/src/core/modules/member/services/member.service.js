@@ -44,8 +44,6 @@ class Service {
         await this.repository.deleteOne(id);
         return {
             message: `Delete member with id ${id} successfully`,
-            code: 'OK',
-            status: 200,
         };
     }
 

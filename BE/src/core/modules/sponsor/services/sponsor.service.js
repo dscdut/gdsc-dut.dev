@@ -35,8 +35,6 @@ class Service {
         await this.repository.deleteOne(id);
         return {
             message: `Delete sponsor with id ${id} successfully`,
-            code: 'OK',
-            status: 200,
         };
     }
 
