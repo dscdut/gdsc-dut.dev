@@ -6,7 +6,11 @@ class Repository extends DataRepository {
     }
 
     findAll() {
-        return this.query().select();
+        return this.query()
+            .select('departments.id', 'departments.name')
+            .count('members_gens.member_id as total_members')
+            .innerJoin('members_gens', 'departments.id', 'members_gens.department_id')
+            .groupBy('departments.id');
     }
 
     createOne(data) {
