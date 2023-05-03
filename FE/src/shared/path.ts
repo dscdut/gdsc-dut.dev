@@ -40,6 +40,10 @@ export const PRIVATE_ROUTE: Route[] = [
   {
     path: PATH_URL.department,
     element: () => import('src/pages/admin/department')
+  },
+  {
+    path: PATH_URL.members,
+    element: () => import('src/pages/admin/members')
   }
 ]
 

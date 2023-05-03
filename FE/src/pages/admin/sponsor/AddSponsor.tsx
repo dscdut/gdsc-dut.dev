@@ -1,27 +1,23 @@
-import { Button, Card, Col, Form, Input, Row, Typography, UploadProps } from 'antd'
+import { Button, Card, Col, Form, Input, Row, Typography } from 'antd'
 import { FormInstance, useForm } from 'antd/es/form/Form'
 import { Store } from 'antd/es/form/interface'
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 // config / constant
 import { FieldData } from 'src/interface'
 import { ERROR_MESSAGE, urlRegex } from 'src/shared/constant'
-import PATH_URL from 'src/shared/path'
 
 // custom hooks
 import { useResponsive } from 'src/shared/hook'
 
 // component
-import HeaderPage from 'src/components/common/HeaderPage'
 import ImageUpload from 'src/components/common/ImageUpload'
-import AdminGuard from 'src/guard/AdminGuard'
 
 // css
+import { UploadRef } from 'src/interface/app'
 import { Sponsor } from 'src/interface/sponsor'
 import styles from './styles.module.scss'
-import { UploadRef } from 'src/interface/app'
-import { postSponsor } from 'src/apis/sponsor.api'
 
 export default function CreateSponsor() {
   const navigate = useNavigate()
@@ -36,22 +32,10 @@ export default function CreateSponsor() {
   useEffect(() => {
     const id = searchParams.get('id')
     console.log(id, searchParams.get('id'))
-    if (id) {
-      // call API
-      setIdSponsor(id)
-    } else {
-    }
-  }, [])
+  }, [searchParams])
 
   const onSubmit = async (value: Sponsor) => {
-
-    value.gen_id = 1;
-    try {
-      const response = await postSponsor(value)
-      console.log(response)
-    } catch (error) {
-      console.log(error)
-    }
+    console.log(value)
   }
 
   return (

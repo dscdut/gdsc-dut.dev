@@ -62,6 +62,7 @@ function FormModal(props: IProps, ref: Ref<IFormModalRef>) {
 
   return (
     <Modal
+      style={{ minWidth: 900 }}
       title={title}
       open={open}
       onCancel={() => {

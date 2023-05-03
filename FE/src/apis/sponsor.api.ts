@@ -1,13 +1,12 @@
 import { Sponsor } from 'src/interface/sponsor'
-import { AuthResponse } from 'src/types/auth.type'
 import http from 'src/utils/http'
 
-export const postSponsor = (body: Sponsor) =>  http.post<AuthResponse>('/sponsor/', body)
+const SPONSOR_URL = '/sponsors'
 
-export const getSponsor = () => http.get<AuthResponse>('/sponsor/')
-
-export const getSponsorById = (id: string | number) => http.get<AuthResponse>(`/sponsor/${id}`)
-
-export const deleteSponsor = (id: string | number) => http.delete<AuthResponse>(`/sponsor/${id}`)
-
-export const updateSponsor = (body: Sponsor) => http.post<AuthResponse>('/sponsor/', body)
+export const SponsorAPI = {
+  getSponsors: () => http.get(SPONSOR_URL),
+  postSponsor: (data: Sponsor) => http.post(SPONSOR_URL, data),
+  getSponsorById: (id: string | number) => http.get(`${SPONSOR_URL}/${id}`),
+  deleteSponsor: (id: string | number) => http.delete(`${SPONSOR_URL}/${id}`),
+  updateSponsor: (data: Sponsor) => http.post(SPONSOR_URL, data)
+}

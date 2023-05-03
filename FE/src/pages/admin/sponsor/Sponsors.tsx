@@ -1,22 +1,21 @@
+import { Image } from 'antd'
+import { useQuery } from 'react-query'
+import { SponsorAPI } from 'src/apis/sponsor.api'
 import CustomTable from 'src/components/common/CustomTable'
-import { EVENTS } from 'src/data/events.dummy'
 import { Event } from 'src/types/events.type'
+import { SponsorType } from 'src/types/sponsor.type'
 
 const columns = [
   {
-    dataIndex: 'id',
-    key: 'id',
-    title: 'No'
-  },
-  {
-    dataIndex: 'image',
-    key: 'image',
-    title: 'Avatar'
-  },
-  {
     dataIndex: 'name',
     key: 'name',
-    title: 'Name'
+    title: 'Tên nhà tài trợ'
+  },
+  {
+    dataIndex: 'image_url',
+    key: 'image_url',
+    title: 'Logo',
+    render: (imgUrl: string) => <Image width={120} height={120} src={imgUrl} />
   },
   {
     dataIndex: 'description',
@@ -31,7 +30,11 @@ const columns = [
 ]
 
 export default function Sponsors() {
-  const setSelectedItem = (item: Event) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ['sponsors'],
+    queryFn: () => SponsorAPI.getSponsors()
+  })
+  const setSelectedItem = (item: SponsorType) => {
     console.log(item)
   }
   const handleDelete = () => {
@@ -42,16 +45,16 @@ export default function Sponsors() {
   }
 
   return (
-    <CustomTable<Event>
+    <CustomTable<SponsorType>
       columns={columns}
       currentPage={1}
-      dataSource={EVENTS}
+      dataSource={data?.data}
       onDelete={handleDelete}
       onEdit={setSelectedItem}
       pageSize={10}
       total={40}
       onChange={onChange}
-      loading={false}
+      loading={isLoading}
       primaryKey='id'
     />
   )
