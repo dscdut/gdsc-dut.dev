@@ -4,6 +4,8 @@ import { Member } from 'src/types/member.type'
 import { getRules } from 'src/utils/rules'
 import FormModal, { IFormModalRef } from '../common/FormModal'
 import PositionsSelector from '../selectors/PositionsSelector'
+import DeparmentsSelctor from '../selectors/DeparmentsSelector'
+import GensSelector from '../selectors/GensSelectors'
 
 interface Props {
   title: string
@@ -53,13 +55,20 @@ export default function MemberForm({ title, refForm, form, onCancel, onSubmit, o
           </Col>
         </Row>
         <Row gutter={[24, 24]}>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item label='Position' name='position_id'>
               <PositionsSelector />
             </Form.Item>
           </Col>
-          <Col span={12}></Col>
+          <Col span={12}>
+            <Form.Item label='Deparment' name='deparment_id'>
+              <DeparmentsSelctor />
+            </Form.Item>
+          </Col>
         </Row>
+        <Form.Item label='Gen' name='gen_id'>
+          <GensSelector />
+        </Form.Item>
 
         <Form.Item label='Horoscope Sign' name='horoscope_sign' rules={[getRules.require('Horoscope Sign')]}>
           <Input />
