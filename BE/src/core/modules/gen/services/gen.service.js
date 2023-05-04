@@ -30,6 +30,18 @@ class Service {
     async findAll() {
         return this.repository.findAll().orderBy('created_at', 'desc');
     }
+
+    async findMany(ids) {
+        const gens = await this.repository.findMany(ids);
+        const getIds = gens.map(gen => gen.id);
+        const idsNotFound = ids.filter(item => !getIds.includes(item));
+
+        if (getIds.length !== ids.length) {
+            throw new NotFoundException(`Gen with id ${idsNotFound} not found`);
+        }
+
+        return gens;
+    }
 }
 
 export const GenService = new Service();
