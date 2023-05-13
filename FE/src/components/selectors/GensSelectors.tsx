@@ -1,9 +1,7 @@
 import { Select, SelectProps } from 'antd'
 import { get } from 'lodash'
 import { useQuery } from 'react-query'
-import { DepartmentAPI } from 'src/apis/department.api'
 import { GenAPI } from 'src/apis/gen.api'
-import { Department } from 'src/types/department.type'
 import { GenType } from 'src/types/gens.type'
 
 interface Props extends Omit<SelectProps<string>, 'onSelect'> {
@@ -19,7 +17,7 @@ export const convertDataToSelectOptions = (gens: GenType[], valueProp: string) =
     }
   })
 
-export default function GensSelector({ allowClear, onChange, onClear, size = 'large', value, id }: Props) {
+export default function GensSelector({ allowClear, onChange, onClear, size = 'middle', value, id }: Props) {
   const { isLoading, data } = useQuery({
     queryKey: ['gens'],
     queryFn: () => GenAPI.getGens()
@@ -35,10 +33,9 @@ export default function GensSelector({ allowClear, onChange, onClear, size = 'la
       onClear={onClear}
       optionFilterProp='label'
       options={options}
-      placeholder='Please select gen'
+      placeholder='Select gen'
       showSearch
       size={size}
-      style={{ minWidth: 250 }}
       value={value}
     />
   )
