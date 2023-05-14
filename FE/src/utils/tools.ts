@@ -1,5 +1,6 @@
 import { RcFile, UploadFile } from 'antd/es/upload'
-import { PartialObject, omit } from 'lodash'
+import { PartialObject, get, omit } from 'lodash'
+import { Position } from 'src/types/positions.type'
 export const scrollToTop = () => {
   window?.scrollTo({
     behavior: 'smooth',
@@ -32,3 +33,11 @@ export const fileToBase64 = (file: RcFile | Blob, callback: (url: string) => voi
 }
 
 export const removeKeysFromObj = <T extends object>(obj: T, keys: string[]): PartialObject<T> => omit(obj, keys)
+
+export const convertDataPositionsToSelectOptions = (positions: Position[], valueProp: string) =>
+  positions?.map((position) => {
+    return {
+      label: `${position.name}`,
+      value: get(position, valueProp)
+    }
+  })

@@ -1,4 +1,4 @@
-import { Layout, Menu, MenuRef } from 'antd'
+import { Image, Layout, Menu, MenuRef } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ReactWithChild } from 'src/interface/app'
@@ -37,6 +37,7 @@ export default function PrivateLayout({ children }: ReactWithChild) {
       <Layout>
         <Layout.Sider width={200} collapsed={isCollapsed} collapsedWidth={60}>
           <Menu
+            className='pt-12'
             ref={inputRef}
             mode='inline'
             defaultSelectedKeys={['members']}
