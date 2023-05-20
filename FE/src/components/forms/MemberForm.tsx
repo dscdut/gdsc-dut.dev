@@ -34,26 +34,26 @@ export default function MemberForm({ title, refForm, form, onCancel, onSubmit, o
       >
         <Row gutter={[24, 24]}>
           <Col span={6}>
-            <ImageUpload rules={[]} label='Avatar' name='image_id' />
+            <ImageUpload label='Avatar' name='image_id' rules={[getRules.require()]} />
           </Col>
 
           <Col span={18}>
-            <Form.Item label='Full Name' name='full_name' rules={[getRules.require('Full name')]}>
+            <Form.Item label='Full Name' name='full_name' rules={[getRules.require()]}>
               <Input />
             </Form.Item>
             <Row gutter={[24, 24]}>
               <Col span={12}>
-                <Form.Item label='Phone' name='phone' rules={[getRules.require('Phone')]}>
+                <Form.Item label='Phone' name='phone' rules={[getRules.require()]}>
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label='Birthday' name='birthday' rules={[getRules.require('Birthday')]}>
+                <Form.Item label='Birthday' name='birthday' rules={[getRules.require()]}>
                   <DatePicker className='h-full w-full' />
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label='Gen' name='gen_id' rules={[getRules.require('Gen')]}>
+                <Form.Item label='Gen' name='gen_id' rules={[getRules.require()]}>
                   <GensSelector />
                 </Form.Item>
               </Col>
@@ -63,7 +63,7 @@ export default function MemberForm({ title, refForm, form, onCancel, onSubmit, o
 
         <Row gutter={[24, 24]}>
           <Col span={12}>
-            <Form.Item label='Email' name='email' rules={[getRules.require('Email')]}>
+            <Form.Item label='Email' name='email' rules={[getRules.require()]}>
               <Input />
             </Form.Item>
           </Col>
@@ -86,14 +86,14 @@ export default function MemberForm({ title, refForm, form, onCancel, onSubmit, o
           </Col>
         </Row>
 
-        <Form.Item label='Horoscope' name='horoscope_sign' rules={[getRules.require('Horoscope Sign')]}>
+        <Form.Item label='Horoscope' name='horoscope_sign' rules={[getRules.require()]}>
           <Input />
         </Form.Item>
-        <Form.Item label='Motto/ Favorite Saying' name='philosophy' rules={[getRules.require('Philosophy')]}>
+        <Form.Item label='Motto/ Favorite Saying' name='philosophy' rules={[getRules.require()]}>
           <Input.TextArea />
         </Form.Item>
 
-        <Form.Item label='Feelings' name='feelings' rules={[getRules.require('Feelings')]}>
+        <Form.Item label='Feelings' name='feelings' rules={[getRules.require()]}>
           <Input.TextArea className='!h-44' />
         </Form.Item>
       </FormModal>

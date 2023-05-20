@@ -1,8 +1,10 @@
+import { ERROR_MESSAGE} from 'src/shared/constant'
+
 export const getRules = {
-  require(name: string) {
+  require() {
     return {
       required: true,
-      message: `Vui lòng nhập ${name}`
+      message: ERROR_MESSAGE.required
     }
   }
 }
