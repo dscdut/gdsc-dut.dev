@@ -52,6 +52,10 @@ export const PRIVATE_ROUTE: Route[] = [
       {
         path: 'form',
         element: () => import('src/pages/admin/members/AddMember')
+      },
+      {
+        path: 'form/:id',
+        element: () => import('src/pages/admin/members/EditMember')
       }
     ]
   }

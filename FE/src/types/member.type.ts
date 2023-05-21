@@ -1,5 +1,6 @@
 export type Member = {
   id: number
+  image_url: string
   full_name: string
   birthday: string
   phone: string
@@ -11,5 +12,5 @@ export type Member = {
   department_id: number
   position_id: number
   gen_id: number
-  image_id: number
+  // image_id: number
 }
