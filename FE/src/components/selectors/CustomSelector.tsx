@@ -15,7 +15,6 @@ const CustomSelector = <T extends { name: string }>({
   data,
   isLoading,
   placeholder,
-  mode,
   size = 'large',
   ...props
 }: CustomSelectorProps<T>) => {
@@ -24,7 +23,6 @@ const CustomSelector = <T extends { name: string }>({
   return (
     <Select
       placeholder={placeholder}
-      mode={mode}
       loading={isLoading}
       options={options}
       optionFilterProp='label'
