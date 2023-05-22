@@ -3,10 +3,12 @@ import { Ref } from 'react'
 import { Member } from 'src/types/member.type'
 import { getRules } from 'src/utils/rules'
 import FormModal, { IFormModalRef } from '../common/FormModal'
-import PositionsSelector from '../selectors/PositionsSelector'
-import DeparmentsSelctor from '../selectors/DeparmentsSelector'
-import GensSelector from '../selectors/GensSelectors'
 import ImageUpload from '../common/ImageUpload'
+import CustomSelector from '../selectors/CustomSelector'
+import { GenType } from 'src/types/gens.type'
+import { Position } from 'src/types/positions.type'
+import { Department } from 'src/types/department.type'
+import useGetData from 'src/shared/hook/useGetData'
 
 interface Props {
   title: string
@@ -18,6 +20,10 @@ interface Props {
 }
 
 export default function MemberForm({ title, refForm, form, onCancel, onSubmit, okText }: Props) {
+  const departmentDataSelector = useGetData('departments')
+  const genDataSelector = useGetData('gens')
+  const positionDataSelector = useGetData('positions')
+
   return (
     <>
       <FormModal
@@ -39,22 +45,26 @@ export default function MemberForm({ title, refForm, form, onCancel, onSubmit, o
 
           <Col span={18}>
             <Form.Item label='Full Name' name='full_name' rules={[getRules.require('Full name')]}>
-              <Input />
+              <Input className='p-2' />
             </Form.Item>
             <Row gutter={[24, 24]}>
               <Col span={12}>
                 <Form.Item label='Phone' name='phone' rules={[getRules.require('Phone')]}>
-                  <Input />
+                  <Input className='p-2' />
                 </Form.Item>
               </Col>
               <Col span={6}>
                 <Form.Item label='Birthday' name='birthday' rules={[getRules.require('Birthday')]}>
-                  <DatePicker className='h-full w-full' />
+                  <DatePicker className='h-full w-full' size='large' />
                 </Form.Item>
               </Col>
               <Col span={6}>
                 <Form.Item label='Gen' name='gen_id' rules={[getRules.require('Gen')]}>
-                  <GensSelector />
+                  <CustomSelector<GenType>
+                    data={genDataSelector.data?.data}
+                    isLoading={genDataSelector.isLoading}
+                    placeholder='Select gens'
+                  />
                 </Form.Item>
               </Col>
             </Row>
@@ -64,30 +74,38 @@ export default function MemberForm({ title, refForm, form, onCancel, onSubmit, o
         <Row gutter={[24, 24]}>
           <Col span={12}>
             <Form.Item label='Email' name='email' rules={[getRules.require('Email')]}>
-              <Input />
+              <Input className='p-2' />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label='Link facebook/ instagram' name='infor_url'>
-              <Input />
+              <Input className='p-2' />
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={[24, 24]}>
           <Col span={12}>
             <Form.Item label='Position' name='position_id'>
-              <PositionsSelector />
+              <CustomSelector<Position>
+                data={positionDataSelector.data?.data}
+                isLoading={positionDataSelector.isLoading}
+                placeholder='Please select position'
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label='Deparment' name='deparment_id'>
-              <DeparmentsSelctor />
+              <CustomSelector<Department>
+                data={departmentDataSelector.data?.data}
+                isLoading={departmentDataSelector.isLoading}
+                placeholder='Please select departments'
+              />
             </Form.Item>
           </Col>
         </Row>
 
         <Form.Item label='Horoscope' name='horoscope_sign' rules={[getRules.require('Horoscope Sign')]}>
-          <Input />
+          <Input className='p-2' />
         </Form.Item>
         <Form.Item label='Motto/ Favorite Saying' name='philosophy' rules={[getRules.require('Philosophy')]}>
           <Input.TextArea />
