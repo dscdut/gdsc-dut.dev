@@ -1,7 +1,6 @@
 import { Select, SelectProps } from 'antd'
-import { useQuery } from 'react-query'
-import http from 'src/utils/http'
 import { convertDataToSelectOptions } from 'src/utils/tools'
+import styles from './styles.module.scss'
 
 interface CustomSelectorProps<T> extends Omit<SelectProps<string>, 'onSelect'> {
   id?: string
@@ -29,6 +28,7 @@ const CustomSelector = <T extends { name: string }>({
       showSearch
       size={size}
       {...props}
+      className={styles.customSelector}
     />
   )
 }
