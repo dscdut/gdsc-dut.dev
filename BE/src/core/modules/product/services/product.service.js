@@ -22,12 +22,13 @@ class Service {
     }
 
     async deleteOne(id) {
+        await this.findById(id);
         return this.repository.deleteOne(id);
     }
 
     async findById(id) {
         const data = Optional.of(await this.repository.findById(id))
-            .throwIfNotPresent(new NotFoundException())
+            .throwIfNotPresent(new NotFoundException((`Produtc with id ${id} not found`)))
             .get();
         return data;
     }
