@@ -3,14 +3,14 @@ import { SwaggerDocument } from 'packages/swagger';
 
 ApiDocument.addModel('UpdateSponsorDto', {
     name: SwaggerDocument.ApiProperty({ type: 'string' }),
-    image_url: SwaggerDocument.ApiProperty({ type: 'string' }),
     description: SwaggerDocument.ApiProperty({ type: 'string' }),
     infor_url: SwaggerDocument.ApiProperty({ type: 'string' }),
+    image_id: SwaggerDocument.ApiProperty({ type: 'int' })
 });
 
 export const UpdateSponsorDto = body => ({
     name: body.name,
-    image_url: body.image_url,
     description: body.description,
-    infor_url: body.infor_url,
+    inforUrl: body.infor_url,
+    imageId: body.image_id
 });
