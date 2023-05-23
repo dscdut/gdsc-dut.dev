@@ -23,7 +23,11 @@ class Service {
     }
 
     async updateOne(id, updateSponsorDto) {
-        return this.repository.updateOne(id, updateSponsorDto);
+        await this.findById(id);
+        await this.mediaService.findById(updateSponsorDto.imageId);
+        return Optional.of(await this.repository.updateOne(id, updateSponsorDto))
+            .throwIfNullable()
+            .get();
     }
 
     async deleteOne(id) {
@@ -32,7 +36,7 @@ class Service {
 
     async findById(id) {
         const data = Optional.of(await this.repository.findById(id))
-            .throwIfNotPresent(new NotFoundException())
+            .throwIfNotPresent(new NotFoundException((`Sponsor with id ${id} not found`)))
             .get();
         return data;
     }
