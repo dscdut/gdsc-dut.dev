@@ -13,7 +13,7 @@ class Controller {
   };
 
   createOne = async req => {
-      const data = await this.service.createOne(req.files, CreateSponsorDto(req.body));
+      const data = await this.service.createOne(CreateSponsorDto(req.body));
       return data && ValidHttpResponse.toCreatedResponse(data);
   };
 

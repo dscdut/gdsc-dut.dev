@@ -31,11 +31,11 @@ class Repository extends DataRepository {
             .innerJoin('images', 'sponsors.image_id', 'images.id');
     }
 
-    async createOne(sponsor, genId) {
+    async createOne(updateSponsor, genId) {
         let sponsorId;
 
         return this.query()
-            .insert(convertToSnakeCase(sponsor))
+            .insert(convertToSnakeCase(updateSponsor))
             .returning('id')
             .then(([result]) => {
                 sponsorId = result.id;

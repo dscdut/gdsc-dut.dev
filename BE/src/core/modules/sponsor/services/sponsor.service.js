@@ -1,4 +1,3 @@
-import { FOLDER_NAME } from 'core/common/constants';
 import { Optional } from '../../../utils';
 import { NotFoundException } from '../../../../packages/httpException';
 import { SponsorRepository } from '../sponsor.repository';
@@ -12,15 +11,13 @@ class Service {
         this.mediaService = MediaService;
     }
 
-    async createOne(files, createSponsorDto) {
-        const { genId, ...sponsor } = createSponsorDto;
+    async createOne(createSponsorDto) {
+        const { genId, imageId, ...sponsor } = createSponsorDto;
         const gen = await this.genService.findById(genId);
-        const uploadImageSponsor = await this.mediaService.uploadOne(files[0], FOLDER_NAME.SPONSORS);
-        const imageId = uploadImageSponsor?.length && uploadImageSponsor[0]?.id;
+        await this.mediaService.findById(imageId);
+        const updateSponsor = { ...sponsor, imageId };
 
-        sponsor.imageId = imageId;
-
-        return Optional.of(await this.repository.createOne(sponsor, gen.id))
+        return Optional.of(await this.repository.createOne(updateSponsor, gen.id))
             .throwIfNullable()
             .get();
     }
