@@ -46,22 +46,21 @@ class Repository extends DataRepository {
             .innerJoin('gens', 'members_gens.gen_id', 'gens.id');
     }
 
-    createOne(member, genId, departmentId, positionId) {
+    createOne(member, genIds, departmentId, positionId) {
         let memberId;
-
         return this.query()
             .insert(convertToSnakeCase(member))
             .returning('id')
             .then(([result]) => {
                 memberId = result.id;
-                return this.query()
-                    .insert({
-                        member_id: memberId,
-                        gen_id: genId,
-                        department_id: departmentId,
-                        position_id: positionId,
-                    })
-                    .into('members_gens');
+                const genIdValues = genIds.map(genId => ({
+                    member_id: memberId,
+                    gen_id: genId,
+                    department_id: departmentId,
+                    position_id: positionId,
+                }));
+
+                return this.query().insert(genIdValues).into('members_gens');
             })
             .then(() => this.query()
                 .select('members.*', 'members_gens.gen_id as gen_id')
