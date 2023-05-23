@@ -3,7 +3,7 @@ import { SwaggerDocument } from 'packages/swagger';
 
 ApiDocument.addModel('UpdateEventDto', {
     name: SwaggerDocument.ApiProperty({ type: 'string' }),
-    image_id: SwaggerDocument.ApiProperty({ type: 'string' }),
+    image_id: SwaggerDocument.ApiProperty({ type: 'int' }),
     description: SwaggerDocument.ApiProperty({ type: 'string' })
 });
 
