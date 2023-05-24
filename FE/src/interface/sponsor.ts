@@ -1,7 +1,7 @@
 export interface Sponsor {
   image: Blob
   description: string
-  url: string
+  infor_url: string
   name: string
   gen_id: number
 }

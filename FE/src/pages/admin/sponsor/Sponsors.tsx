@@ -1,8 +1,9 @@
 import { Image } from 'antd'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
+import { toast } from 'react-toastify'
 import { SponsorAPI } from 'src/apis/sponsor.api'
 import CustomTable from 'src/components/common/CustomTable'
-import { Event } from 'src/types/events.type'
+import { TOAST_MESSAGE } from 'src/shared/constant'
 import { SponsorType } from 'src/types/sponsor.type'
 
 const columns = [
@@ -30,15 +31,29 @@ const columns = [
 ]
 
 export default function Sponsors() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['sponsors'],
     queryFn: () => SponsorAPI.getSponsors()
+  })
+  const deleteSponsor = useMutation({
+    mutationFn: (id: string | number) => SponsorAPI.deleteSponsor(id),
+    onSuccess: () => {
+      toast.success(TOAST_MESSAGE.SUCCESS)
+    }
   })
   const setSelectedItem = (item: SponsorType) => {
     console.log(item)
   }
-  const handleDelete = () => {
-    console.log('delete')
+  const handleDelete = async (id: string | number) => {
+    try {
+      const deleteSponsorResults = await deleteSponsor.mutateAsync(id)
+      console.log(deleteSponsorResults)
+      if (deleteSponsorResults) {
+        refetch()
+      }
+    } catch (error) {
+      toast.error(TOAST_MESSAGE.ERROR)
+    }
   }
   const onChange = () => {
     console.log('change')
