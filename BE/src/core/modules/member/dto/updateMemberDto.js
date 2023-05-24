@@ -1,7 +1,7 @@
 import { ApiDocument } from 'core/config/swagger.config';
 import { SwaggerDocument } from 'packages/swagger';
 
-ApiDocument.addModel('UpdateMember', {
+ApiDocument.addModel('UpdateMemberDto', {
     image_id: SwaggerDocument.ApiProperty({ type: 'int' }),
     full_name: SwaggerDocument.ApiProperty({ type: 'string' }),
     birthday: SwaggerDocument.ApiProperty({ type: 'string' }),

@@ -81,7 +81,7 @@ class Repository extends DataRepository {
     }
 
     updateOne(id, data) {
-        return this.query().where('id', id).update(data);
+        return this.query().where('id', id).update(convertToSnakeCase(data));
     }
 
     findMany(ids) {

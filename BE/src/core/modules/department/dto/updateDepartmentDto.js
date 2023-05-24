@@ -1,7 +1,7 @@
 import { ApiDocument } from 'core/config/swagger.config';
 import { SwaggerDocument } from 'packages/swagger';
 
-ApiDocument.addModel('UpdateDepartment', {
+ApiDocument.addModel('UpdateDepartmentDto', {
     name: SwaggerDocument.ApiProperty({ type: 'string' }),
 });
 
