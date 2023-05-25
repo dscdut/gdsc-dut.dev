@@ -23,9 +23,11 @@ class Service {
     }
 
     async updateOne(id, updateSponsorDto) {
+        const { genId, ...sponsor } = updateSponsorDto;
         await this.findById(id);
+        await this.genService.findById(genId);
         await this.mediaService.findById(updateSponsorDto.imageId);
-        return Optional.of(await this.repository.updateOne(id, updateSponsorDto))
+        return Optional.of(await this.repository.updateOne(id, sponsor, genId))
             .throwIfNullable()
             .get();
     }
