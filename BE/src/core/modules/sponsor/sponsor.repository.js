@@ -51,11 +51,18 @@ class Repository extends DataRepository {
     }
 
     deleteOne(id) {
-        return this.query().where('id', id).del();
+        return this.query().where('sponsor_id', id).del().from('gens_sponsors')
+            .then(() => this.query()
+                .where('id', id)
+                .del());
     }
 
-    updateOne(id, data) {
-        return this.query().where('id', id).update(convertToSnakeCase(data));
+    async updateOne(id, data, genId) {
+        return this.query().where('id', id).update(convertToSnakeCase(data))
+            .then(() => this.query()
+                .where('sponsor_id', id)
+                .update({ gen_id: genId })
+                .into('gens_sponsors'));
     }
 }
 

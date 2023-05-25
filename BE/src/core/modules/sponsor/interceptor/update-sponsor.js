@@ -7,6 +7,7 @@ export const UpdateSponsorInterceptor = new DefaultValidatorInterceptor(
         name: JoiUtils.requiredString(),
         description: JoiUtils.requiredString(),
         infor_url: JoiUtils.requiredString(),
-        image_id: JoiUtils.positiveNumber()
+        image_id: JoiUtils.positiveNumber(),
+        gen_id: JoiUtils.positiveNumber(),
     }),
 );
