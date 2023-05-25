@@ -12,12 +12,11 @@ class Service {
     }
 
     async createOne(createSponsorDto) {
-        const { genId, imageId, ...sponsor } = createSponsorDto;
-        const gen = await this.genService.findById(genId);
+        const { genIds, imageId, ...sponsor } = createSponsorDto;
+        await this.genService.findMany(genIds);
         await this.mediaService.findById(imageId);
         const updateSponsor = { ...sponsor, imageId };
-
-        return Optional.of(await this.repository.createOne(updateSponsor, gen.id))
+        return Optional.of(await this.repository.createOne(updateSponsor, genIds))
             .throwIfNullable()
             .get();
     }
