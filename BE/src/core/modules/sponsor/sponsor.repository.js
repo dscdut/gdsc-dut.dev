@@ -31,7 +31,7 @@ class Repository extends DataRepository {
             .innerJoin('images', 'sponsors.image_id', 'images.id');
     }
 
-    async createOne(updateSponsor, genId) {
+    async createOne(updateSponsor, genIds) {
         let sponsorId;
 
         return this.query()
@@ -39,15 +39,34 @@ class Repository extends DataRepository {
             .returning('id')
             .then(([result]) => {
                 sponsorId = result.id;
-                return this.query()
-                    .insert({ sponsor_id: sponsorId, gen_id: genId })
-                    .into('gens_sponsors');
+                const genIdValues = genIds.map(genId => ({
+                    sponsor_id: sponsorId,
+                    gen_id: genId
+                }));
+
+                return this.query().insert(genIdValues).into('gens_sponsors');
             })
             .then(() => this.query()
-                .select('sponsors.*', 'gens_sponsors.gen_id as gen_id')
+                .select('sponsors.*', 'gens_sponsors.gen_id')
                 .from('sponsors')
                 .innerJoin('gens_sponsors', 'sponsors.id', 'gens_sponsors.sponsor_id')
-                .where('sponsors.id', sponsorId));
+                .where('sponsors.id', sponsorId))
+            .then(results => {
+                const groupByResults = results.reduce((acc, current) => {
+                    if (acc[current.id]) {
+                        acc[current.id].gen_ids.push(current.gen_id);
+                    } else {
+                        acc[current.id] = { ...current, gen_ids: [current.gen_id] };
+                    }
+                    return acc;
+                }, {});
+
+                const finalResult = Object.values(groupByResults).map(obj => {
+                    const { gen_id, ...rest } = obj;
+                    return rest;
+                });
+                return finalResult;
+            });
     }
 
     deleteOne(id) {
