@@ -12,9 +12,29 @@ class Repository extends DataRepository {
             'sponsors.deleted_at',
             'sponsors.created_at',
             'sponsors.updated_at',
+            'gens.name',
+            'gens_sponsors.gen_id'
         ])
             .innerJoin('images', 'sponsors.image_id', 'images.id')
-            .first();
+            .innerJoin('gens_sponsors', 'sponsors.id', 'gens_sponsors.sponsor_id')
+            .innerJoin('gens', 'gens_sponsors.gen_id', 'gens.id')
+            .then(results => {
+                const groupByResults = results.reduce((acc, current) => {
+                    if (acc[current.id]) {
+                        acc[current.id].gens.push(current.name);
+                        acc[current.id].gen_ids.push(current.gen_id);
+                    } else {
+                        acc[current.id] = { ...current, gen_ids: [current.gen_id], gens: [current.name] };
+                    }
+                    return acc;
+                }, {});
+
+                const finalResult = Object.values(groupByResults).map(obj => {
+                    const { gen_id, name, ...rest } = obj;
+                    return rest;
+                });
+                return finalResult;
+            });
     }
 
     findAll() {
