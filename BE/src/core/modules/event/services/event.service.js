@@ -21,7 +21,12 @@ class Service {
     }
 
     async deleteOne(id) {
-        return this.repository.deleteOne(id);
+        Optional.of(await this.repository.findById(id))
+            .throwIfNotPresent(new NotFoundException(`Event with id ${id} not found`));
+        await this.repository.deleteOne(id);
+        return {
+            message: `Delete event with id ${id} successfully`,
+        };
     }
 
     async findById(id) {

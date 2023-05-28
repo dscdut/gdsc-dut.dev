@@ -32,7 +32,12 @@ class Service {
     }
 
     async deleteOne(id) {
-        return this.repository.deleteOne(id);
+        Optional.of(await this.repository.findById(id))
+            .throwIfNotPresent(new NotFoundException(`Sponsor with id ${id} not found`));
+        await this.repository.deleteOne(id);
+        return {
+            message: `Delete sponsor with id ${id} successfully`,
+        };
     }
 
     async findById(id) {
