@@ -12,9 +12,29 @@ class Repository extends DataRepository {
             'sponsors.deleted_at',
             'sponsors.created_at',
             'sponsors.updated_at',
+            'gens.name',
+            'gens_sponsors.gen_id'
         ])
             .innerJoin('images', 'sponsors.image_id', 'images.id')
-            .first();
+            .innerJoin('gens_sponsors', 'sponsors.id', 'gens_sponsors.sponsor_id')
+            .innerJoin('gens', 'gens_sponsors.gen_id', 'gens.id')
+            .then(results => {
+                const groupByResults = results.reduce((acc, current) => {
+                    if (acc[current.id]) {
+                        acc[current.id].gens.push(current.name);
+                        acc[current.id].gen_ids.push(current.gen_id);
+                    } else {
+                        acc[current.id] = { ...current, gen_ids: [current.gen_id], gens: [current.name] };
+                    }
+                    return acc;
+                }, {});
+
+                const finalResult = Object.values(groupByResults).map(obj => {
+                    const { gen_id, name, ...rest } = obj;
+                    return rest;
+                });
+                return finalResult;
+            });
     }
 
     findAll() {
@@ -31,31 +51,57 @@ class Repository extends DataRepository {
             .innerJoin('images', 'sponsors.image_id', 'images.id');
     }
 
-    async createOne(sponsor, genId) {
+    async createOne(updateSponsor, genIds) {
         let sponsorId;
 
         return this.query()
-            .insert(convertToSnakeCase(sponsor))
+            .insert(convertToSnakeCase(updateSponsor))
             .returning('id')
             .then(([result]) => {
                 sponsorId = result.id;
-                return this.query()
-                    .insert({ sponsor_id: sponsorId, gen_id: genId })
-                    .into('gens_sponsors');
+                const genIdValues = genIds.map(genId => ({
+                    sponsor_id: sponsorId,
+                    gen_id: genId
+                }));
+
+                return this.query().insert(genIdValues).into('gens_sponsors');
             })
             .then(() => this.query()
-                .select('sponsors.*', 'gens_sponsors.gen_id as gen_id')
+                .select('sponsors.*', 'gens_sponsors.gen_id')
                 .from('sponsors')
                 .innerJoin('gens_sponsors', 'sponsors.id', 'gens_sponsors.sponsor_id')
-                .where('sponsors.id', sponsorId));
+                .where('sponsors.id', sponsorId))
+            .then(results => {
+                const groupByResults = results.reduce((acc, current) => {
+                    if (acc[current.id]) {
+                        acc[current.id].gen_ids.push(current.gen_id);
+                    } else {
+                        acc[current.id] = { ...current, gen_ids: [current.gen_id] };
+                    }
+                    return acc;
+                }, {});
+
+                const finalResult = Object.values(groupByResults).map(obj => {
+                    const { gen_id, ...rest } = obj;
+                    return rest;
+                });
+                return finalResult;
+            });
     }
 
     deleteOne(id) {
-        return this.query().where('id', id).del();
+        return this.query().where('sponsor_id', id).del().from('gens_sponsors')
+            .then(() => this.query()
+                .where('id', id)
+                .del());
     }
 
-    updateOne(id, data) {
-        return this.query().where('id', id).update(data);
+    async updateOne(id, data, genId) {
+        return this.query().where('id', id).update(convertToSnakeCase(data))
+            .then(() => this.query()
+                .where('sponsor_id', id)
+                .update({ gen_id: genId })
+                .into('gens_sponsors'));
     }
 }
 

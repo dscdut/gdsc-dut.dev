@@ -1,3 +1,7 @@
 import http from 'src/utils/http'
 
-export const getPositions = () => http.get('/positions')
+const POSITION_URL = '/positions'
+
+export const PositionAPI = {
+  getPositions: () => http.get(POSITION_URL)
+}

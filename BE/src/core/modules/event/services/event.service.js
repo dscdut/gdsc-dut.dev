@@ -15,6 +15,8 @@ class Service {
     }
 
     async updateOne(id, updateEventDto) {
+        await this.findById(id);
+        await this.mediaService.findById(updateEventDto.imageId);
         return this.repository.updateOne(id, updateEventDto);
     }
 

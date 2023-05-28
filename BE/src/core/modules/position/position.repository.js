@@ -14,7 +14,10 @@ class Repository extends DataRepository {
     }
 
     deleteOne(id) {
-        return this.query().where('id', id).del();
+        return this.query().where('position_id', id).del().from('members_gens')
+            .then(() => this.query()
+                .where('id', id)
+                .del());
     }
 
     updateOne(id, data) {
