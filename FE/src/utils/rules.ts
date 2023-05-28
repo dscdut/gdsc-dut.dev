@@ -4,7 +4,7 @@ export const getRules = {
   require() {
     return {
       required: true,
-      message: ERROR_MESSAGE.required
+      message: `Please select ${name}`
     }
   }
 }
