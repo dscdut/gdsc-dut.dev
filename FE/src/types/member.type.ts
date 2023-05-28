@@ -1,4 +1,5 @@
 export type Member = {
+  id: number
   full_name: string
   birthday: string
   phone: string
