@@ -1,0 +1,27 @@
+.customSelector {
+  :global(.ant-select-selection-overflow) {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+
+    
+  }
+
+  ::-webkit-scrollbar {
+    height: 4px; // height of horizontal scrollbar
+    width: 4px;  // width of vertical scrollbar
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #e2e2e2e2;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #cececee5;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 4px;
+  }
+}
+

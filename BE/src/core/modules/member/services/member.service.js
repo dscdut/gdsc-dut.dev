@@ -17,17 +17,17 @@ class Service {
 
     async createOne(createMemberDto) {
         const {
-            genId, positionId, departmentId, imageId, ...member
+            genIds, positionId, departmentId, imageId, ...member
         } = createMemberDto;
         const department = await this.departmentService.findById(departmentId);
         const position = await this.positionService.findById(positionId);
-        const gen = await this.genService.findById(genId);
+        await this.genService.findMany(genIds);
         const image = await this.mediaService.findById(imageId);
 
         return Optional.of(
             await this.repository.createOne(
                 { ...member, image_id: image.id },
-                gen.id,
+                genIds,
                 department.id,
                 position.id,
             ),

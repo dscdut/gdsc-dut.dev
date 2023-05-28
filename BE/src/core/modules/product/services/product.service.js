@@ -32,7 +32,7 @@ class Service {
 
     async findById(id) {
         const data = Optional.of(await this.repository.findById(id))
-            .throwIfNotPresent(new NotFoundException())
+            .throwIfNotPresent(new NotFoundException((`Produtc with id ${id} not found`)))
             .get();
         return data;
     }

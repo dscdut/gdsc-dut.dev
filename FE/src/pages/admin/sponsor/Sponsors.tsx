@@ -1,26 +1,21 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Image } from 'antd'
+import { useQuery } from 'react-query'
+import { SponsorAPI } from 'src/apis/sponsor.api'
 import CustomTable from 'src/components/common/CustomTable'
-import HeaderPage from 'src/components/common/HeaderPage'
-import { EVENTS } from 'src/data/events.dummy'
-import AdminGuard from 'src/guard/AdminGuard'
-import PATH_URL from 'src/shared/path'
 import { Event } from 'src/types/events.type'
+import { SponsorType } from 'src/types/sponsor.type'
 
 const columns = [
   {
-    dataIndex: 'id',
-    key: 'id',
-    title: 'No'
-  },
-  {
-    dataIndex: 'image',
-    key: 'image',
-    title: 'Avatar'
-  },
-  {
     dataIndex: 'name',
     key: 'name',
-    title: 'Name'
+    title: 'Tên nhà tài trợ'
+  },
+  {
+    dataIndex: 'image_url',
+    key: 'image_url',
+    title: 'Logo',
+    render: (imgUrl: string) => <Image width={120} height={120} src={imgUrl} />
   },
   {
     dataIndex: 'description',
@@ -31,11 +26,15 @@ const columns = [
     dataIndex: 'infor_url',
     key: 'infor_url',
     title: 'Website'
-  },
+  }
 ]
 
 export default function Sponsors() {
-  const setSelectedItem = (item: Event) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ['sponsors'],
+    queryFn: () => SponsorAPI.getSponsors()
+  })
+  const setSelectedItem = (item: SponsorType) => {
     console.log(item)
   }
   const handleDelete = () => {
@@ -46,17 +45,17 @@ export default function Sponsors() {
   }
 
   return (
-    <CustomTable<Event>
-        columns={columns}
-        currentPage={1}
-        dataSource={EVENTS}
-        onDelete={handleDelete}
-        onEdit={setSelectedItem}
-        pageSize={10}
-        total={40}
-        onChange={onChange}
-        loading={false}
-        primaryKey='id'
-      />
+    <CustomTable<SponsorType>
+      columns={columns}
+      currentPage={1}
+      dataSource={data?.data}
+      onDelete={handleDelete}
+      onEdit={setSelectedItem}
+      pageSize={10}
+      total={40}
+      onChange={onChange}
+      loading={isLoading}
+      primaryKey='id'
+    />
   )
 }

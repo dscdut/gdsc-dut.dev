@@ -52,4 +52,8 @@ export class JoiUtils {
   static phoneNumber() {
       return Joi.string().length(10).pattern(/^[0-9]+$/);
   }
+
+  static requiredArrayNumber() {
+      return Joi.array().items(Joi.number().integer());
+  }
 }

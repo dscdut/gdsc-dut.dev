@@ -8,4 +8,22 @@ exports.seed = knex => knex('departments')
         {
             name: 'Backend',
         },
+        {
+            name: 'Frontend',
+        },
+        {
+            name: 'Mobile'
+        },
+        {
+            name: 'Maketting'
+        },
+        {
+            name: 'Events'
+        },
+        {
+            name: 'HR'
+        },
+        {
+            name: 'Partnerships'
+        }
     ]));
