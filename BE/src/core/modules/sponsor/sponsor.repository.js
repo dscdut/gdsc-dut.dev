@@ -2,10 +2,10 @@ import { DataRepository } from 'packages/restBuilder/core/dataHandler/data.repos
 import { convertToSnakeCase } from '../../helpers/convert.helper';
 
 class Repository extends DataRepository {
-    findById(id) {
+    async findById(id) {
         return this.query().where('sponsors.id', id).select([
             'sponsors.id',
-            'sponsors.name',
+            'sponsors.name as Name',
             'images.url as image_url',
             'sponsors.description',
             'sponsors.infor_url',
@@ -96,12 +96,19 @@ class Repository extends DataRepository {
                 .del());
     }
 
-    async updateOne(id, data, genId) {
+    async updateOne(id, data) {
         return this.query().where('id', id).update(convertToSnakeCase(data))
-            .then(() => this.query()
-                .where('sponsor_id', id)
-                .update({ gen_id: genId })
-                .into('gens_sponsors'));
+            .then(() => this.findById(id));
+    }
+
+    async upsertOne(id, genIds) {
+        const genIdValues = genIds.map(genId => ({
+            sponsor_id: id,
+            gen_id: genId
+        }));
+
+        return this.query().insert(genIdValues).into('gens_sponsors')
+            .then(() => this.findById(id));
     }
 }
 

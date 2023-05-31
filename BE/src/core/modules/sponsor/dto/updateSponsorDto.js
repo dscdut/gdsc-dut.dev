@@ -6,7 +6,7 @@ ApiDocument.addModel('UpdateSponsorDto', {
     description: SwaggerDocument.ApiProperty({ type: 'string' }),
     infor_url: SwaggerDocument.ApiProperty({ type: 'string' }),
     image_id: SwaggerDocument.ApiProperty({ type: 'int' }),
-    gen_id: SwaggerDocument.ApiProperty({ type: 'int' })
+    gen_ids: SwaggerDocument.ApiProperty({ type: 'array', model: 'int' }),
 });
 
 export const UpdateSponsorDto = body => ({
@@ -14,5 +14,5 @@ export const UpdateSponsorDto = body => ({
     description: body.description,
     inforUrl: body.infor_url,
     imageId: body.image_id,
-    genId: body.gen_id,
+    genIds: body.gen_ids,
 });
