@@ -3,6 +3,7 @@ import { NotFoundException } from '../../../../packages/httpException';
 import { SponsorRepository } from '../sponsor.repository';
 import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document/service/media.service';
+import { getUniqueElements } from '../../../helpers/convert.helper';
 
 class Service {
     constructor() {
@@ -22,11 +23,19 @@ class Service {
     }
 
     async updateOne(id, updateSponsorDto) {
-        const { genId, ...sponsor } = updateSponsorDto;
+        const { genIds, ...sponsor } = updateSponsorDto;
         await this.findById(id);
-        await this.genService.findById(genId);
+        await this.genService.findMany(genIds);
         await this.mediaService.findById(updateSponsorDto.imageId);
-        return Optional.of(await this.repository.updateOne(id, sponsor, genId))
+        const newGens = genIds;
+        const OldGens = await this.genService.findManyGenBySponsorId(id);
+        const upsertGen = getUniqueElements(OldGens, newGens);
+        if (upsertGen.length === 0) {
+            return Optional.of(await this.repository.updateOne(id, sponsor))
+                .throwIfNullable()
+                .get();
+        }
+        return Optional.of(await this.repository.upsertOne(id, upsertGen), await this.repository.updateOne(id, sponsor))
             .throwIfNullable()
             .get();
     }
