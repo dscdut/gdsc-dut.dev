@@ -37,18 +37,36 @@ class Repository extends DataRepository {
             });
     }
 
-    findAll() {
+    async findAll() {
         return this.query().select([
             'sponsors.id',
             'sponsors.name',
             'images.url as image_url',
             'sponsors.description',
             'sponsors.infor_url',
+            'gens_sponsors.gen_id',
             'sponsors.deleted_at',
             'sponsors.created_at',
             'sponsors.updated_at',
         ])
-            .innerJoin('images', 'sponsors.image_id', 'images.id');
+            .innerJoin('images', 'sponsors.image_id', 'images.id')
+            .innerJoin('gens_sponsors', 'sponsors.id', 'gens_sponsors.sponsor_id')
+            .then(results => {
+                const groupByResults = results.reduce((acc, current) => {
+                    if (acc[current.id]) {
+                        acc[current.id].gen_ids.push(current.gen_id);
+                    } else {
+                        acc[current.id] = { ...current, gen_ids: [current.gen_id] };
+                    }
+                    return acc;
+                }, {});
+
+                const finalResult = Object.values(groupByResults).map(obj => {
+                    const { gen_id, ...rest } = obj;
+                    return rest;
+                });
+                return finalResult;
+            });
     }
 
     async createOne(updateSponsor, genIds) {
