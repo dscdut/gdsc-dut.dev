@@ -18,9 +18,9 @@ import ImageUpload from 'src/components/common/ImageUpload'
 import { UploadRef } from 'src/interface/app'
 import { Member } from 'src/interface/member'
 import styles from './styles.module.scss'
-import GensSelector from 'src/components/selectors/GensSelectors'
-import PositionsSelector from 'src/components/selectors/PositionsSelector'
-import DeparmentsSelctor from 'src/components/selectors/DeparmentsSelector'
+// import GensSelector from 'src/components/selectors/GensSelectors'
+// import PositionsSelector from 'src/components/selectors/PositionsSelector'
+// import DeparmentsSelctor from 'src/components/selectors/DeparmentsSelector'
 
 export default function CreateMember() {
   const navigate = useNavigate()
@@ -121,7 +121,8 @@ export default function CreateMember() {
                   wrapperCol={{ span: 24 }}
                   labelAlign='left'
                 >
-                  <GensSelector />
+                  {/* <GensSelector /> */}
+                  <Input />
                 </Form.Item>
               </Col>
             </Row>
@@ -162,7 +163,8 @@ export default function CreateMember() {
               wrapperCol={{ span: 24 }}
               labelAlign='left'
             >
-              <PositionsSelector />
+              {/* <PositionsSelector /> */}
+              <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -173,7 +175,8 @@ export default function CreateMember() {
               wrapperCol={{ span: 24 }}
               labelAlign='left'
             >
-              <DeparmentsSelctor />
+              {/* <DeparmentsSelctor /> */}
+              <Input />
             </Form.Item>
           </Col>
         </Row>
