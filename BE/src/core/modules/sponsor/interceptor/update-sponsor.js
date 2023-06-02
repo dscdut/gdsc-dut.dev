@@ -8,6 +8,6 @@ export const UpdateSponsorInterceptor = new DefaultValidatorInterceptor(
         description: JoiUtils.requiredString(),
         infor_url: JoiUtils.requiredString(),
         image_id: JoiUtils.positiveNumber(),
-        gen_id: JoiUtils.positiveNumber(),
+        gen_ids: JoiUtils.requiredArrayNumber(),
     }),
 );

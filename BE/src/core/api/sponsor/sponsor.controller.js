@@ -8,8 +8,8 @@ class Controller {
     }
 
   updateOne = async req => {
-      await this.service.updateOne(req.params.id, UpdateSponsorDto(req.body));
-      return ValidHttpResponse.toNoContentResponse();
+      const data = await this.service.updateOne(req.params.id, UpdateSponsorDto(req.body));
+      return data && ValidHttpResponse.toCreatedResponse(data);
   };
 
   createOne = async req => {

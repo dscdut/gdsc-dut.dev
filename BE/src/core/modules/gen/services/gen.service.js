@@ -42,6 +42,10 @@ class Service {
 
         return gens;
     }
+
+    async findManyGenBySponsorId(id) {
+        return this.repository.findManyGenBySponsorId(id);
+    }
 }
 
 export const GenService = new Service();
