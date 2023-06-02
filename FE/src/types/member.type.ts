@@ -12,5 +12,4 @@ export type Member = {
   department_id: number
   position_id: number
   gen_id: number
-  // image_id: number
 }

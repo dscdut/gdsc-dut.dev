@@ -1,5 +1,5 @@
 export default function EditMember () {
     return (
-        <div>lllllll</div>
+        <div>Edit member</div>
     )
 }

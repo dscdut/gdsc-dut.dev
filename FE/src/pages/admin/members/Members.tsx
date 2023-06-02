@@ -43,7 +43,7 @@ export default function Members() {
     queryFn: () => MemberAPI.getMembers()
   })
   const setSelectedItem = (item: Member) => {
-    navigate(`${PATH_URL.members}/form?id=${item.id}`)
+    navigate(`${PATH_URL.members}/form/${item.id}`)
   }
   const handleDelete = () => {
     console.log('delete')
