@@ -1,7 +1,13 @@
+export type Gens = {
+  id: number
+  name: string
+}
+
 export type SponsorType = {
   id: number
   name: string
   image_url: string
+  gens: Gens[]
   description: string
   infor_url: string
   deleted_at: string | null
@@ -9,9 +15,7 @@ export type SponsorType = {
   updated_at: string | null
 }
 
-export type SponsorBodyCreate = Pick<SponsorType, 'name' | 'infor_url' | 'description'> & {
+export type SponsorBody = Pick<SponsorType, 'name' | 'infor_url' | 'description'> & {
   image_id: number
-  gen_id: number
+  gen_ids: number[]
 }
-
-export type SponsorBodyUpdate = Omit<SponsorBodyCreate, 'gen_id'>

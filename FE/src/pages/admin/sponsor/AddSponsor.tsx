@@ -1,8 +1,7 @@
 import { Button, Card, Col, Form, Input, Row, Typography } from 'antd'
-import { FormInstance, useForm } from 'antd/es/form/Form'
-import { Store } from 'antd/es/form/interface'
+import { useForm } from 'antd/es/form/Form'
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 
 // config / constant
 import { FieldData } from 'src/interface'
@@ -24,26 +23,50 @@ import useGetData from 'src/shared/hook/useGetData'
 import { SponsorAPI } from 'src/apis/sponsor.api'
 import { mediaAPI } from 'src/apis/media.api'
 import { useMutation } from 'react-query'
-import { SponsorBodyCreate } from 'src/types/sponsor.type'
+import { SponsorBody, SponsorType } from 'src/types/sponsor.type'
 import PATH_URL from 'src/shared/path'
 import { toast } from 'react-toastify'
+import axios from 'axios'
 
 export default function CreateSponsor() {
-  const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const { isDesktop } = useResponsive()
   const uploadRef = useRef<UploadRef>(null)
-  const formRef = useRef<FormInstance<Store>>(null)
   const [fieldsData, setFieldsData] = useState<FieldData<Sponsor>[]>([])
-  const [idSponsor, setIdSponsor] = useState<string>()
+  const [previewImage, setPreviewImage] = useState<string>('')
+  const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
+  const navigate = useNavigate()
+  const location = useLocation()
   const [form] = useForm()
+  const { isDesktop } = useResponsive()
   const genDataSelector = useGetData('gens')
-  const [confirmLoading, setConfirmLoading] = useState(false)
+  const { id: idSponsor } = useParams()
+  const isEditMode = Boolean(idSponsor)
 
   useEffect(() => {
-    const id = searchParams.get('id')
-    console.log(id, searchParams.get('id'))
-  }, [searchParams])
+    if (isEditMode) {
+      const data: SponsorType = location?.state
+      if (data) {
+        axios
+          .get(data.image_url, { responseType: 'blob' })
+          .then(function (response) {
+            const blob = response.data
+            const values: Sponsor = {
+              image: blob,
+              description: data.description,
+              infor_url: data.infor_url,
+              name: data.name,
+              gen_ids: data.gens.map((gen) => gen.id)
+            }
+            form.setFieldsValue(values)
+            setPreviewImage(data?.image_url)
+          })
+          .catch(() => {
+            navigate('/not-found')
+          })
+      } else {
+        navigate('/not-found')
+      }
+    }
+  }, [])
 
   const uploadImage = useMutation({
     mutationFn: (image: Blob) => {
@@ -54,8 +77,17 @@ export default function CreateSponsor() {
   })
 
   const createSponsor = useMutation({
-    mutationFn: (sponsor: SponsorBodyCreate) => {
-      return SponsorAPI.postSponsor(sponsor)
+    mutationFn: (sponsor: SponsorBody) => {
+      return SponsorAPI.createSponsor(sponsor)
+    },
+    onSuccess: () => {
+      toast.success(TOAST_MESSAGE.SUCCESS)
+    }
+  })
+
+  const updateSponsor = useMutation({
+    mutationFn: (sponsor: SponsorBody) => {
+      return SponsorAPI.updateSponsor(sponsor, Number(idSponsor))
     },
     onSuccess: () => {
       toast.success(TOAST_MESSAGE.SUCCESS)
@@ -66,22 +98,22 @@ export default function CreateSponsor() {
     try {
       setConfirmLoading(true)
       const imageData = await uploadImage.mutateAsync(value.image)
-      if (imageData) {
-        const imageId = imageData.data[0]?.id
-        const sponsor: SponsorBodyCreate = {
-          name: value.name,
-          description: value.description,
-          infor_url: value.infor_url,
-          gen_id: value.gen_id,
-          image_id: imageId
-        }
-        const createSponsorResult = await createSponsor.mutateAsync(sponsor)
-        if (createSponsorResult) {
-          navigate(`${PATH_URL.sponsors}`)
-        }
+      const imageId = imageData.data[0]?.id
+      const sponsor: SponsorBody = {
+        name: value.name,
+        description: value.description,
+        infor_url: value.infor_url,
+        gen_ids: value.gen_ids,
+        image_id: imageId
       }
+      if (isEditMode) {
+        await updateSponsor.mutateAsync(sponsor)
+      } else {
+        await createSponsor.mutateAsync(sponsor)
+      }
+      navigate(`${PATH_URL.sponsors}`)
     } catch (error) {
-      toast.error(TOAST_MESSAGE.ERROR)
+      navigate('/not-found')
     } finally {
       setConfirmLoading(false)
     }
@@ -91,7 +123,7 @@ export default function CreateSponsor() {
     <Card>
       <Row className='mb-2'>
         <Typography.Title level={4} className='!my-0'>
-          {idSponsor ? 'Edit Sponsor' : 'Add New Sponsor'}
+          {isEditMode ? 'Edit Sponsor' : 'Add New Sponsor'}
         </Typography.Title>
       </Row>
       <Form
@@ -110,19 +142,21 @@ export default function CreateSponsor() {
       >
         <ImageUpload
           ref={uploadRef}
-          label='Avatar'
+          label='Logo'
           name='image'
           rules={[{ required: true, message: ERROR_MESSAGE.required }]}
           form={form}
+          previewImage={previewImage}
         />
         <Form.Item label='Name' name='name' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
           <Input className='p-2' />
         </Form.Item>
-        <Form.Item label='Gen' name='gen_id' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
+        <Form.Item label='Gens' name='gen_ids' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
           <CustomSelector<GenType>
             data={genDataSelector.data?.data}
             isLoading={genDataSelector.isLoading}
             placeholder='Select gens'
+            mode='multiple'
           />
         </Form.Item>
         <Form.Item label='Description' name='description'>
@@ -143,7 +177,6 @@ export default function CreateSponsor() {
                 type='default'
                 htmlType='reset'
                 onClick={() => {
-                  console.log(form.getFieldsValue())
                   form.setFieldValue('image', null)
                   uploadRef.current?.onReset()
                 }}
@@ -153,7 +186,7 @@ export default function CreateSponsor() {
             </Col>
             <Col>
               <Button type='primary' htmlType='submit' loading={confirmLoading}>
-                {idSponsor ? 'Edit' : 'Submit'}
+                {isEditMode ? 'Edit' : 'Submit'}
               </Button>
             </Col>
           </Row>

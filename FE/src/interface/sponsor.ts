@@ -3,5 +3,5 @@ export interface Sponsor {
   description: string
   infor_url: string
   name: string
-  gen_id: number
+  gen_ids: number[]
 }

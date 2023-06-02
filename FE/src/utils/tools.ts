@@ -42,3 +42,9 @@ export const convertDataToSelectOptions = <T extends { name: string }>(data: T[]
       value: get(item, valueProp)
     }
   }) || []
+
+export const getRandomColor = () => {
+  const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple']
+  const randomIndex = Math.floor(Math.random() * colors.length)
+  return colors[randomIndex]
+}

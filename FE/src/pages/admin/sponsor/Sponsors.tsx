@@ -1,22 +1,39 @@
-import { Image } from 'antd'
+import { Image, Tag } from 'antd'
+import { useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { SponsorAPI } from 'src/apis/sponsor.api'
 import CustomTable from 'src/components/common/CustomTable'
 import { TOAST_MESSAGE } from 'src/shared/constant'
-import { SponsorType } from 'src/types/sponsor.type'
+import PATH_URL from 'src/shared/path'
+import { Gens, SponsorType } from 'src/types/sponsor.type'
+import { getRandomColor } from 'src/utils/tools'
 
 const columns = [
   {
     dataIndex: 'name',
     key: 'name',
-    title: 'Tên nhà tài trợ'
+    title: 'Sponsor'
   },
   {
     dataIndex: 'image_url',
     key: 'image_url',
     title: 'Logo',
     render: (imgUrl: string) => <Image width={120} height={120} src={imgUrl} />
+  },
+  {
+    dataIndex: 'gens',
+    key: 'gens',
+    title: 'Gens',
+    render: (gens: Gens[]) => {
+      const genRender = gens.map((gen) => (
+        <Tag color={getRandomColor()} className='mt-2' key={gen.id}>
+          {gen.name}
+        </Tag>
+      ))
+      return genRender
+    }
   },
   {
     dataIndex: 'description',
@@ -31,6 +48,7 @@ const columns = [
 ]
 
 export default function Sponsors() {
+  const navigate = useNavigate()
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['sponsors'],
     queryFn: () => SponsorAPI.getSponsors()
@@ -41,18 +59,19 @@ export default function Sponsors() {
       toast.success(TOAST_MESSAGE.SUCCESS)
     }
   })
-  const setSelectedItem = (item: SponsorType) => {
-    console.log(item)
+  const handleEdit = (item: SponsorType) => {
+    navigate(`${PATH_URL.sponsors}/${item.id}`, {
+      state: item
+    })
   }
   const handleDelete = async (id: string | number) => {
     try {
       const deleteSponsorResults = await deleteSponsor.mutateAsync(id)
-      console.log(deleteSponsorResults)
       if (deleteSponsorResults) {
         refetch()
       }
     } catch (error) {
-      toast.error(TOAST_MESSAGE.ERROR)
+      navigate('/not-found')
     }
   }
   const onChange = () => {
@@ -65,7 +84,7 @@ export default function Sponsors() {
       currentPage={1}
       dataSource={data?.data}
       onDelete={handleDelete}
-      onEdit={setSelectedItem}
+      onEdit={handleEdit}
       pageSize={10}
       total={40}
       onChange={onChange}

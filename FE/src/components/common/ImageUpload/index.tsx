@@ -18,12 +18,13 @@ interface Props {
   form?: FormInstance<Store>
   className?: string
   children?: ReactNode
+  previewImage: string
 }
 
 type Ref = React.Ref<UploadRef>
 
 const ImageUpload = (props: Props, ref: Ref) => {
-  const { rules, label, name, className, form } = props
+  const { rules, label, name, className, form, previewImage } = props
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   useImperativeHandle(ref, () => {
@@ -34,7 +35,6 @@ const ImageUpload = (props: Props, ref: Ref) => {
 
   const handleUpload: UploadProps['customRequest'] = async (options) => {
     const { onSuccess, onError, file, onProgress } = options
-
     const isAllowedType = validateFileType(file as UploadFile, IMAGE_FILETYPE)
     if (!isAllowedType) {
       setImageUrl(null)
@@ -77,8 +77,8 @@ const ImageUpload = (props: Props, ref: Ref) => {
         showUploadList={false}
         customRequest={handleUpload}
       >
-        {imageUrl ? (
-          <img alt='Sponsor avatar' style={{ width: '100%' }} src={imageUrl} />
+        {imageUrl || previewImage ? (
+          <img alt='Sponsor avatar' style={{ width: '100%' }} src={imageUrl || previewImage} />
         ) : (
           <div>
             <PlusOutlined />
