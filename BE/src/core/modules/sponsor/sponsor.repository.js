@@ -36,7 +36,7 @@ class Repository extends DataRepository {
                     const { gen_id, gen_name, ...rest } = obj;
                     return rest;
                 });
-                return finalResult;
+                return finalResult[0];
             });
     }
 
