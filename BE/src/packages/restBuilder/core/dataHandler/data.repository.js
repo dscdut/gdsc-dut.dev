@@ -48,6 +48,7 @@ export class DataRepository {
             baseQuery,
             QueryBuilder.builder(this.query(), baseQuery)
                 .countRecords()
+                .clearPagination()
         ], task => task.run());
     }
 
@@ -65,7 +66,7 @@ export class DataRepository {
 
     /**
      *
-     * @param {import('../../modules/query/search.query').SearchQuery} searchQuery 
+     * @param {import('../../modules/query/search.query').SearchQuery} searchQuery
      * @param {import('mongoose').PopulateOptions[]} associates
      */
     search(searchQuery, main, associates) {

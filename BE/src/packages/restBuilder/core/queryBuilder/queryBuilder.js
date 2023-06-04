@@ -250,7 +250,9 @@ export class QueryBuilder {
             });
         }
 
-        this.#queryBuilder.orderBy(this.#sortDocument);
+        if (this.#buildType !== BUILDER_TYPE.COUNT) {
+            this.#queryBuilder.orderBy(this.#sortDocument);
+        }
 
         this.#notDeleted.forEach(table => {
             this.#queryBuilder.whereNull(`${table}.deleted_at`);
