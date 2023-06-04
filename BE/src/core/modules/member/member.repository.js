@@ -7,7 +7,8 @@ class Repository extends DataRepository {
             .where('members.id', id)
             .select([
                 'members.id',
-                'images.url as avatar_url',
+                'images.id as image_id',
+                'images.url as image_url',
                 'members.full_name',
                 'members.birthday',
                 'members.horoscope_sign',
@@ -22,7 +23,11 @@ class Repository extends DataRepository {
             .innerJoin('images', 'members.image_id', 'images.id')
             .innerJoin('members_gens', 'members.id', 'members_gens.member_id')
             .innerJoin('gens', 'members_gens.gen_id', 'gens.id')
-            .first();
+            .first()
+            .then(result => {
+                const { image_id, image_url, ...rest } = result;
+                return { ...rest, image: { id: image_id, url: image_url } };
+            });
     }
 
     createOne(member, genIds, departmentId, positionId) {
