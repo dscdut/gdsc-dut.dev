@@ -60,9 +60,7 @@ export default function Sponsors() {
     }
   })
   const handleEdit = (item: SponsorType) => {
-    navigate(`${PATH_URL.sponsors}/${item.id}`, {
-      state: item
-    })
+    navigate(`${PATH_URL.sponsors}/${item.id}`)
   }
   const handleDelete = async (id: string | number) => {
     try {
@@ -71,11 +69,11 @@ export default function Sponsors() {
         refetch()
       }
     } catch (error) {
-      navigate('/not-found')
+      toast.error(TOAST_MESSAGE.ERROR)
     }
   }
   const onChange = () => {
-    console.log('change')
+    // handle on change
   }
 
   return (

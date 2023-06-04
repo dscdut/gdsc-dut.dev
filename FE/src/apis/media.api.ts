@@ -10,7 +10,7 @@ export const mediaAPI = {
       }
     })
   },
-  deleteImage: (id: string) => {
-    return http.delete(`${MEDIA_URL}/${id}`)
+  deleteImage: (body: { ids: string[] }) => {
+    return http.delete(`${MEDIA_URL}`, { data: body })
   }
 }

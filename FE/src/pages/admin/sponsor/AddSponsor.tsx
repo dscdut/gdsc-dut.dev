@@ -1,7 +1,7 @@
 import { Button, Card, Col, Form, Input, Row, Typography } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 // config / constant
 import { FieldData } from 'src/interface'
@@ -21,12 +21,12 @@ import CustomSelector from 'src/components/selectors/CustomSelector'
 import { GenType } from 'src/types/gens.type'
 import useGetData from 'src/shared/hook/useGetData'
 import { SponsorAPI } from 'src/apis/sponsor.api'
-import { mediaAPI } from 'src/apis/media.api'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { SponsorBody, SponsorType } from 'src/types/sponsor.type'
 import PATH_URL from 'src/shared/path'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import useMedia from 'src/shared/hook/useMedia'
 
 export default function CreateSponsor() {
   const uploadRef = useRef<UploadRef>(null)
@@ -34,16 +34,24 @@ export default function CreateSponsor() {
   const [previewImage, setPreviewImage] = useState<string>('')
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
   const navigate = useNavigate()
-  const location = useLocation()
   const [form] = useForm()
   const { isDesktop } = useResponsive()
   const genDataSelector = useGetData('gens')
   const { id: idSponsor } = useParams()
   const isEditMode = Boolean(idSponsor)
+  const uploadImage = useMedia().UploadImage()
+
+  const sponsorDetailsQuery = useQuery({
+    queryKey: ['id', idSponsor],
+    queryFn: () => {
+      return SponsorAPI.getSponsorById(idSponsor as string | number)
+    },
+    enabled: isEditMode
+  })
 
   useEffect(() => {
     if (isEditMode) {
-      const data: SponsorType = location?.state
+      const data: SponsorType = sponsorDetailsQuery.data?.data
       if (data) {
         axios
           .get(data.image_url, { responseType: 'blob' })
@@ -60,21 +68,12 @@ export default function CreateSponsor() {
             setPreviewImage(data?.image_url)
           })
           .catch(() => {
+            toast.error(TOAST_MESSAGE.ERROR)
             navigate('/not-found')
           })
-      } else {
-        navigate('/not-found')
       }
     }
-  }, [])
-
-  const uploadImage = useMutation({
-    mutationFn: (image: Blob) => {
-      const formData = new FormData()
-      formData.append('image', image, 'image.jpg')
-      return mediaAPI.postImage(formData)
-    }
-  })
+  }, [isEditMode, sponsorDetailsQuery.data, form, navigate])
 
   const createSponsor = useMutation({
     mutationFn: (sponsor: SponsorBody) => {
@@ -113,6 +112,7 @@ export default function CreateSponsor() {
       }
       navigate(`${PATH_URL.sponsors}`)
     } catch (error) {
+      toast.error(TOAST_MESSAGE.ERROR)
       navigate('/not-found')
     } finally {
       setConfirmLoading(false)
