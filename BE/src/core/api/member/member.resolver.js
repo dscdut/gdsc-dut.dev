@@ -4,6 +4,7 @@ import {
     CreateMemberInterceptor,
     UpdateMemberInterceptor,
 } from 'core/modules/member/interceptor';
+import { DefaultQueryCriteriaDocument } from 'core/common/swagger';
 import { RecordId } from '../../common/swagger/record-id';
 import { MemberController } from './member.controller';
 
@@ -46,6 +47,7 @@ export const MemberResolver = Module.builder()
         {
             route: '/',
             method: 'get',
+            params: DefaultQueryCriteriaDocument,
             controller: MemberController.findAll,
         },
     ]);
