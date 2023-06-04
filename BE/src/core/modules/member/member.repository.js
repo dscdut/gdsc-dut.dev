@@ -25,27 +25,6 @@ class Repository extends DataRepository {
             .first();
     }
 
-    findAll() {
-        return this.query()
-            .select([
-                'members.id',
-                'images.url as avatar_url',
-                'members.full_name',
-                'members.birthday',
-                'members.horoscope_sign',
-                'members.philosophy',
-                'members.feelings',
-                'members.infor_url',
-                'gens.name as gen',
-                'members.deleted_at',
-                'members.created_at',
-                'members.updated_at',
-            ])
-            .innerJoin('images', 'members.image_id', 'images.id')
-            .innerJoin('members_gens', 'members.id', 'members_gens.member_id')
-            .innerJoin('gens', 'members_gens.gen_id', 'gens.id');
-    }
-
     createOne(member, genIds, departmentId, positionId) {
         let memberId;
         return this.query()

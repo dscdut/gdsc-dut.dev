@@ -1,0 +1,40 @@
+{
+    "main": [
+      "members.id",
+      "members.full_name",
+      "members.birthday",
+      "members.horoscope_sign",
+      "members.philosophy",
+      "members.feelings",
+      "members.infor_url",
+      { "avatar_url": "images.url" },
+      { "gen": "gens.name" },
+      { "department": "departments.name" },
+      { "createdAt": "members.created_at" },
+      { "updatedAt": "members.updated_at" },
+      { "deletedAt": "members.deleted_at" }
+    ],
+    "associates": [
+      ["images", "members.image_id", "images.id"],
+      ["members_gens", "members.id", "members_gens.member_id"],
+      ["gens", "members_gens.gen_id", "gens.id"],
+      ["departments", "members_gens.department_id", "departments.id"]
+    ],
+    "notDeleted": ["members"],
+    "locks": {
+      "filters": [
+        { "full_name": "members.full_name" },
+        { "gen": "gens.id" },
+        { "department": "departments.id" },
+        { "createdAt": "members.created_at" },
+        { "updatedAt": "members.updated_at" }
+      ],
+      "sorts": [
+        { "id": "members.id" },
+        { "full_name": "members.full_name" },
+        { "createdAt": "members.created_at" },
+        { "updatedAt": "members.updated_at" }
+      ]
+    },
+    "searchCriteria": ["full_name"]
+  }

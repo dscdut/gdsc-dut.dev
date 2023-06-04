@@ -47,7 +47,7 @@
             "only-multiline"
         ],
         "no-trailing-spaces": [
-            "error", 
+            "error",
             { "ignoreComments": true }
         ],
         "max-len": ["error", 150, 2, {

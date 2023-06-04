@@ -1,3 +1,4 @@
+import { DataPersistenceService } from 'packages/restBuilder/core/dataHandler/data.persistence.service';
 import { Optional } from '../../../utils';
 import { NotFoundException } from '../../../../packages/httpException';
 import { MemberRepository } from '../member.repository';
@@ -6,9 +7,9 @@ import { DepartmentService } from '../../department/services/department.service'
 import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document';
 
-class Service {
+class Service extends DataPersistenceService {
     constructor() {
-        this.repository = MemberRepository;
+        super(MemberRepository);
         this.positionService = PositionService;
         this.departmentService = DepartmentService;
         this.genService = GenService;
@@ -49,10 +50,6 @@ class Service {
             )
             .get();
         return data;
-    }
-
-    async findAll() {
-        return this.repository.findAll();
     }
 
     async findMany(ids) {
