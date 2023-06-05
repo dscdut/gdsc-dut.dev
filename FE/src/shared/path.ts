@@ -16,6 +16,10 @@ const PATH_URL = {
 // private routes (path, component)
 export const PRIVATE_ROUTE: Route[] = [
   {
+    path: '',
+    element: () => import('src/pages/admin/members')
+  },
+  {
     path: PATH_URL.sponsors,
     element: () => import('src/pages/admin/sponsor'),
     children: [
@@ -25,6 +29,10 @@ export const PRIVATE_ROUTE: Route[] = [
       },
       {
         path: 'form',
+        element: () => import('src/pages/admin/sponsor/AddSponsor')
+      },
+      {
+        path: ':id',
         element: () => import('src/pages/admin/sponsor/AddSponsor')
       }
     ]

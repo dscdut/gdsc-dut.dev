@@ -10,7 +10,11 @@ function PrivateRoute() {
     //handle redirect o day
   }, [])
 
-  return <PrivateLayout><Outlet /></PrivateLayout>
+  return (
+    <PrivateLayout>
+      <Outlet />
+    </PrivateLayout>
+  )
 }
 
 export default PrivateRoute
