@@ -1,7 +1,7 @@
 import { RcFile, UploadFile } from 'antd/es/upload'
 import { PartialObject, get, omit } from 'lodash'
 import { SelectOption } from 'src/interface/selectOption'
-import { Position } from 'src/types/positions.type'
+
 export const scrollToTop = () => {
   window?.scrollTo({
     behavior: 'smooth',

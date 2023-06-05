@@ -49,31 +49,36 @@ export default function CreateSponsor() {
     enabled: isEditMode
   })
 
+  const fetchDetailApi = () => {
+    const data: SponsorType = sponsorDetailsQuery.data?.data
+    if (data) {
+      axios
+        .get(data.image.url, { responseType: 'blob' })
+        .then(function (response) {
+          const blob = response.data
+          const values: Sponsor = {
+            image: blob,
+            description: data.description,
+            infor_url: data.infor_url,
+            name: data.name,
+            gen_ids: data.gens.map((gen) => gen.id)
+          }
+          form.setFieldsValue(values)
+          setPreviewImage(data.image.url)
+          uploadRef?.current?.setImageUrl(data.image.url)
+        })
+        .catch(() => {
+          toast.error(TOAST_MESSAGE.NOT_FOUND)
+          navigate('/not-found')
+        })
+    }
+  }
+
   useEffect(() => {
     if (isEditMode) {
-      const data: SponsorType = sponsorDetailsQuery.data?.data
-      if (data) {
-        axios
-          .get(data.image_url, { responseType: 'blob' })
-          .then(function (response) {
-            const blob = response.data
-            const values: Sponsor = {
-              image: blob,
-              description: data.description,
-              infor_url: data.infor_url,
-              name: data.name,
-              gen_ids: data.gens.map((gen) => gen.id)
-            }
-            form.setFieldsValue(values)
-            setPreviewImage(data?.image_url)
-          })
-          .catch(() => {
-            toast.error(TOAST_MESSAGE.ERROR)
-            navigate('/not-found')
-          })
-      }
+      fetchDetailApi()
     }
-  }, [isEditMode, sponsorDetailsQuery.data, form, navigate])
+  }, [isEditMode, sponsorDetailsQuery.data])
 
   const createSponsor = useMutation({
     mutationFn: (sponsor: SponsorBody) => {
@@ -96,8 +101,13 @@ export default function CreateSponsor() {
   const onSubmit = async (value: Sponsor) => {
     try {
       setConfirmLoading(true)
-      const imageData = await uploadImage.mutateAsync(value.image)
-      const imageId = imageData.data[0]?.id
+      const data: SponsorType = sponsorDetailsQuery.data?.data
+      let imageData
+      if (uploadRef?.current && previewImage !== uploadRef?.current?.imageUrl) {
+        console.log('UPDATE')
+        imageData = await uploadImage.mutateAsync(value.image)
+      }
+      const imageId = imageData ? imageData?.data[0]?.id : data.image.id
       const sponsor: SponsorBody = {
         name: value.name,
         description: value.description,
@@ -110,10 +120,8 @@ export default function CreateSponsor() {
       } else {
         await createSponsor.mutateAsync(sponsor)
       }
-      navigate(`${PATH_URL.sponsors}`)
     } catch (error) {
       toast.error(TOAST_MESSAGE.ERROR)
-      navigate('/not-found')
     } finally {
       setConfirmLoading(false)
     }
@@ -159,14 +167,17 @@ export default function CreateSponsor() {
             mode='multiple'
           />
         </Form.Item>
-        <Form.Item label='Description' name='description'>
+        <Form.Item label='Description' name='description' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
           <Input.TextArea rows={4} className='p-2' />
         </Form.Item>
 
         <Form.Item
           label='Website'
           name='infor_url'
-          rules={[{ pattern: new RegExp(urlRegex), message: ERROR_MESSAGE.invalid }]}
+          rules={[
+            { required: true, message: ERROR_MESSAGE.required },
+            { pattern: new RegExp(urlRegex), message: ERROR_MESSAGE.invalid }
+          ]}
         >
           <Input className='p-2' />
         </Form.Item>
@@ -177,8 +188,12 @@ export default function CreateSponsor() {
                 type='default'
                 htmlType='reset'
                 onClick={() => {
-                  form.setFieldValue('image', null)
-                  uploadRef.current?.onReset()
+                  if (!isEditMode) {
+                    form.setFieldValue('image', null)
+                    uploadRef.current?.onReset()
+                  } else {
+                    fetchDetailApi()
+                  }
                 }}
               >
                 Clear

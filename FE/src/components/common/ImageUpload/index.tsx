@@ -3,7 +3,7 @@ import { Form, Upload } from 'antd'
 import { FormInstance, Rule } from 'antd/es/form'
 import { Store } from 'antd/es/form/interface'
 import { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
-import { ReactNode, forwardRef, useImperativeHandle, useState } from 'react'
+import { ReactNode, forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { ERROR_MESSAGE, IMAGE_FILETYPE, TOOLTIP_MESSAGE } from 'src/shared/constant'
 import { fileToBase64, fileToBlob, validateFileType } from 'src/utils/tools'
 
@@ -25,11 +25,17 @@ type Ref = React.Ref<UploadRef>
 
 const ImageUpload = (props: Props, ref: Ref) => {
   const { rules, label, name, className, form, previewImage } = props
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(previewImage)
+
+  useEffect(() => {
+    setImageUrl(previewImage)
+  }, [previewImage])
 
   useImperativeHandle(ref, () => {
     return {
-      onReset: () => setImageUrl(null)
+      onReset: () => setImageUrl(null),
+      imageUrl: imageUrl,
+      setImageUrl: (url: string) => setImageUrl(url)
     }
   })
 

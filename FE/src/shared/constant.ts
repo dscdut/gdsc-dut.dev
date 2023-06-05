@@ -48,7 +48,9 @@ export const ERROR_MESSAGE = {
 export const TOAST_MESSAGE = {
   ERROR: 'Oops! Something went wrong. Please try again later.',
   SUCCESS: 'Your data has been successfully saved!',
-  DELETE_SUCCESS: 'The item has been successfully deleted!'
+  DELETE_SUCCESS: 'The item has been successfully deleted!',
+  NOT_FOUND: 'The item does not exist.',
+  SUCCESS_DELETE: 'Delete the item successfully.'
 }
 
 export const TOOLTIP_MESSAGE = {

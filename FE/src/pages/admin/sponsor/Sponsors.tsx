@@ -1,5 +1,4 @@
 import { Image, Tag } from 'antd'
-import { useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -56,7 +55,7 @@ export default function Sponsors() {
   const deleteSponsor = useMutation({
     mutationFn: (id: string | number) => SponsorAPI.deleteSponsor(id),
     onSuccess: () => {
-      toast.success(TOAST_MESSAGE.SUCCESS)
+      toast.success(TOAST_MESSAGE.SUCCESS_DELETE)
     }
   })
   const handleEdit = (item: SponsorType) => {

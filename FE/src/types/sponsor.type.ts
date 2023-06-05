@@ -6,7 +6,10 @@ export type Gens = {
 export type SponsorType = {
   id: number
   name: string
-  image_url: string
+  image: {
+    url: string
+    id: number | string
+  }
   gens: Gens[]
   description: string
   infor_url: string
