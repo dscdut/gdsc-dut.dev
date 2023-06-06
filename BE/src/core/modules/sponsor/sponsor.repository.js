@@ -72,6 +72,7 @@ class Repository extends DataRepository {
             .innerJoin('images', 'sponsors.image_id', 'images.id')
             .innerJoin('gens_sponsors', 'sponsors.id', 'gens_sponsors.sponsor_id')
             .innerJoin('gens', 'gens_sponsors.gen_id', 'gens.id')
+            .groupBy('sponsors.id')
             .then(results => {
                 const groupByResults = results.reduce((acc, current) => {
                     if (acc[current.id]) {
