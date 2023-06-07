@@ -3,20 +3,8 @@ import { DataRepository } from 'packages/restBuilder/core/dataHandler/data.repos
 class Repository extends DataRepository {
     findByEmail(email) {
         return this.query()
-            .innerJoin('users_roles', 'users_roles.user_id', 'users.id')
-            .innerJoin('roles', 'roles.id', 'users_roles.role_id')
-            .whereNull('users.deleted_at')
-            .where('users.email', '=', email)
-            .select(
-                'users.id',
-                'users.email',
-                'users.password',
-                { role: 'roles.name' },
-                { fullName: 'users.full_name' },
-                { createdAt: 'users.created_at' },
-                { updatedAt: 'users.updated_at' },
-                { deletedAt: 'users.deleted_at' },
-            );
+            .where('email', email)
+            .select();
     }
 
     findById(id) {

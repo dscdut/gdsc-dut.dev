@@ -6,6 +6,7 @@ import { BcryptService } from './bcrypt.service';
 import { JwtService } from './jwt.service';
 import { UserRepository } from '../../user/user.repository';
 import { UnAuthorizedException } from '../../../../packages/httpException';
+import { OAuthService } from './oauth.service';
 
 class Service {
     constructor() {
@@ -13,6 +14,7 @@ class Service {
         this.jwtService = JwtService;
         this.bcryptService = BcryptService;
         this.userDataService = UserDataService;
+        this.oauthService = OAuthService;
     }
 
     async login(loginDto) {
@@ -27,6 +29,26 @@ class Service {
         }
 
         throw new UnAuthorizedException('Email or password is incorrect');
+    }
+
+    async signIn(token) {
+        let userInfo;
+        try {
+            userInfo = await this.oauthService.verify(token);
+        } catch (error) {
+            throw new UnAuthorizedException('Invalid token');
+        }
+
+        let userId = '';
+        const isUserExist = await this.userRepository.findByEmail(userInfo.email);
+        if (isUserExist) {
+            userId = isUserExist.id;
+        }
+        const accessToken = this.jwtService.sign({ email: userInfo.email, id: userId });
+        return {
+            email: userInfo.email,
+            accessToken,
+        };
     }
 
     #getUserInfo = user => pick(user, ['_id', 'email', 'username', 'roles']);
