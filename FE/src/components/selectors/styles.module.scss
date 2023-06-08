@@ -2,13 +2,12 @@
   :global(.ant-select-selection-overflow) {
     flex-wrap: nowrap !important;
     overflow-x: auto;
-
-    
+    gap: 0.25rem;
   }
 
   ::-webkit-scrollbar {
     height: 4px; // height of horizontal scrollbar
-    width: 4px;  // width of vertical scrollbar
+    width: 4px; // width of vertical scrollbar
   }
 
   ::-webkit-scrollbar-thumb {
@@ -24,4 +23,3 @@
     border-radius: 4px;
   }
 }
-

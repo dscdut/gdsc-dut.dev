@@ -10,7 +10,8 @@ const PATH_URL = {
   sponsors: '/admin/sponsors',
   gens: '/admin/gens',
   memberDetail: ':memberID',
-  department: '/admin/department'
+  department: '/admin/department',
+  products: '/admin/products'
 } as const
 
 // private routes (path, component)
@@ -52,6 +53,24 @@ export const PRIVATE_ROUTE: Route[] = [
   {
     path: PATH_URL.members,
     element: () => import('src/pages/admin/members')
+  },
+  {
+    path: PATH_URL.products,
+    element: () => import('src/pages/admin/product'),
+    children: [
+      {
+        path: '',
+        element: () => import('src/pages/admin/product/Products')
+      },
+      {
+        path: 'form',
+        element: () => import('src/pages/admin/product/AddProduct')
+      },
+      {
+        path: ':id',
+        element: () => import('src/pages/admin/product/AddProduct')
+      }
+    ]
   }
 ]
 

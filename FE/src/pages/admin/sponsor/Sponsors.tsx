@@ -6,7 +6,8 @@ import { SponsorAPI } from 'src/apis/sponsor.api'
 import CustomTable from 'src/components/common/CustomTable'
 import { TOAST_MESSAGE } from 'src/shared/constant'
 import PATH_URL from 'src/shared/path'
-import { Gens, SponsorType } from 'src/types/sponsor.type'
+import { Gen } from 'src/types/gens.type'
+import { SponsorType } from 'src/types/sponsor.type'
 import { getRandomColor } from 'src/utils/tools'
 
 const columns = [
@@ -25,7 +26,7 @@ const columns = [
     dataIndex: 'gens',
     key: 'gens',
     title: 'Gens',
-    render: (gens: Gens[]) => {
+    render: (gens: Gen[]) => {
       const genRender = gens.map((gen) => (
         <Tag color={getRandomColor()} className='mt-2' key={gen.id}>
           {gen.name}

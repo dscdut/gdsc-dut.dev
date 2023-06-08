@@ -1,7 +1,4 @@
-export type Gens = {
-  id: number
-  name: string
-}
+import { Gen } from './gens.type'
 
 export type SponsorType = {
   id: number
@@ -10,7 +7,7 @@ export type SponsorType = {
     url: string
     id: number | string
   }
-  gens: Gens[]
+  gens: Gen[]
   description: string
   infor_url: string
   deleted_at: string | null

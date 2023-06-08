@@ -10,7 +10,7 @@ interface CustomSelectorProps<T> extends Omit<SelectProps<string>, 'onSelect'> {
   placeholder: string
 }
 
-const CustomSelector = <T extends { name: string }>({
+const CustomSelector = <T extends { name?: string; full_name?: string }>({
   data,
   isLoading,
   placeholder,

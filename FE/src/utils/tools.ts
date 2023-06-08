@@ -35,10 +35,13 @@ export const fileToBase64 = (file: RcFile | Blob, callback: (url: string) => voi
 
 export const removeKeysFromObj = <T extends object>(obj: T, keys: string[]): PartialObject<T> => omit(obj, keys)
 
-export const convertDataToSelectOptions = <T extends { name: string }>(data: T[], valueProp: string): SelectOption[] =>
+export const convertDataToSelectOptions = <T extends { name?: string; full_name?: string }>(
+  data: T[],
+  valueProp: string
+): SelectOption[] =>
   data?.map((item) => {
     return {
-      label: `${item.name}`,
+      label: `${item.name || item.full_name}`,
       value: get(item, valueProp)
     }
   }) || []
