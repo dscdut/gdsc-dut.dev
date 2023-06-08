@@ -1,0 +1,42 @@
+{
+    "main": [
+      "events.id",
+      "events.name",
+      "events.description",
+      { "avatar_url": "images.url" },
+      {
+        "gen_name": "gens.name",
+        "gen_id": "gens.id"
+      },
+      {
+        "sponsor_id": "sponsors.id",
+        "sponsor_name": "sponsors.name"
+      },
+      { "createdAt": "events.created_at" },
+      { "updatedAt": "events.updated_at" },
+      { "deletedAt": "events.deleted_at" }
+    ],
+    "associates": [
+      ["images", "events.image_id", "images.id"],
+      ["gens_sponsors", "events.id", "gens_sponsors.event_id"],
+      ["sponsors", "gens_sponsors.sponsor_id", "sponsors.id"],
+      ["gens", "gens_sponsors.gen_id", "gens.id"]
+    ],
+    "notDeleted": ["events"],
+    "locks": {
+      "filters": [
+        { "name": "events.name" },
+        { "gen": "gens.name" },
+        { "sponsor": "sponsors.name" },
+        { "createdAt": "events.created_at" },
+        { "updatedAt": "events.updated_at" }
+      ],
+      "sorts": [
+        { "id": "events.id" },
+        { "name": "events.name" },
+        { "createdAt": "events.created_at" },
+        { "updatedAt": "events.updated_at" }
+      ]
+    },
+    "searchCriteria": ["events.name"]
+  }

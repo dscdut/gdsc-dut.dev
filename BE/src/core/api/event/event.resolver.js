@@ -4,6 +4,7 @@ import {
     CreateEventInterceptor,
     UpdateEventInterceptor,
 } from 'core/modules/event/interceptor';
+import { DefaultQueryCriteriaDocument } from 'core/common/swagger';
 import { RecordId } from '../../common/swagger/record-id';
 import { EventController } from './event.controller';
 
@@ -46,6 +47,7 @@ export const EventResolver = Module.builder()
         {
             route: '/',
             method: 'get',
+            params: DefaultQueryCriteriaDocument,
             controller: EventController.findAll,
         },
     ]);

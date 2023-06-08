@@ -1,17 +1,28 @@
+import { DataPersistenceService } from 'packages/restBuilder/core/dataHandler/data.persistence.service';
 import { MediaService } from 'core/modules/document';
+import { GenService } from '../../gen/services/gen.service';
+import { SponsorService } from '../../sponsor/services/sponsor.service';
 import { Optional } from '../../../utils';
 import { NotFoundException } from '../../../../packages/httpException';
 import { EventRepository } from '../event.repository';
 
-class Service {
+class Service extends DataPersistenceService {
     constructor() {
+        super(EventRepository);
         this.repository = EventRepository;
         this.mediaService = MediaService;
+        this.genService = GenService;
+        this.sponsorService = SponsorService;
     }
 
     async createOne(createEventDto) {
+        const { genId, sponsorIds, ...event } = createEventDto;
         await this.mediaService.findById(createEventDto.imageId);
-        return this.repository.createOne(createEventDto);
+        await this.genService.findById(genId);
+        await this.sponsorService.findMany(sponsorIds);
+        return Optional.of(await this.repository.createOne(event, sponsorIds, genId))
+            .throwIfNullable()
+            .get();
     }
 
     async updateOne(id, updateEventDto) {
