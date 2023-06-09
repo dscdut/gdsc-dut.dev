@@ -16,6 +16,7 @@ class Repository extends DataRepository {
                 'members.feelings',
                 'members.infor_url',
                 'gens.name as gen',
+                'positions.name as position',
                 'members.deleted_at',
                 'members.created_at',
                 'members.updated_at',
@@ -23,6 +24,7 @@ class Repository extends DataRepository {
             .innerJoin('images', 'members.image_id', 'images.id')
             .innerJoin('members_gens', 'members.id', 'members_gens.member_id')
             .innerJoin('gens', 'members_gens.gen_id', 'gens.id')
+            .innerJoin('positions', 'members_gens.position_id', 'positions.id')
             .first()
             .then(result => {
                 const { image_id, image_url, ...rest } = result;
