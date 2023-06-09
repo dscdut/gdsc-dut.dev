@@ -13,3 +13,4 @@ export const { CLOUDINARY_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = pr
 export const SALT_ROUNDS = Number.parseInt(process.env.SALT_ROUNDS, 10);
 export const CORS_ALLOW = process.env.CORS_ALLOW || 'http://localhost:3000';
 export const { CLIENT_ID } = process.env;
+export const { CLIENT_SECRET } = process.env;

@@ -12,13 +12,11 @@ class OAuthServiceImp {
          try {
              const ticket = await this.client.verifyIdToken({
                  idToken: token,
-                 audience: CLIENT_ID,
              });
              return ticket.getPayload();
          } catch (error) {
-             // Xử lý lỗi xác thực ở đây
              console.error('Lỗi xác thực:', error);
-             return null; // Hoặc giá trị mặc định khác
+             return null;
          }
      };
 }

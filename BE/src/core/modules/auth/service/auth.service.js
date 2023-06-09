@@ -46,6 +46,7 @@ class Service {
         }
         const accessToken = this.jwtService.sign({ email: userInfo.email, id: userId });
         return {
+            name: userInfo.name,
             email: userInfo.email,
             accessToken,
         };
