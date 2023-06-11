@@ -1,4 +1,11 @@
-import { ApartmentOutlined, IdcardOutlined, ScheduleOutlined, SolutionOutlined, TeamOutlined } from '@ant-design/icons'
+import {
+  ApartmentOutlined,
+  IdcardOutlined,
+  ScheduleOutlined,
+  SolutionOutlined,
+  TeamOutlined,
+  ProjectOutlined
+} from '@ant-design/icons'
 import PATH_URL from './path'
 
 export const urlRegex =
@@ -36,6 +43,12 @@ export const SIZEBAR_OPTIONS = [
     label: 'Department',
     path: PATH_URL.department,
     icon: ApartmentOutlined
+  },
+  {
+    key: 'products',
+    label: 'Products',
+    path: PATH_URL.products,
+    icon: ProjectOutlined
   }
 ]
 

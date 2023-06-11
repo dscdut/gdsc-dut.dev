@@ -31,7 +31,7 @@ import useMedia from 'src/shared/hook/useMedia'
 export default function CreateSponsor() {
   const uploadRef = useRef<UploadRef>(null)
   const [fieldsData, setFieldsData] = useState<FieldData<Sponsor>[]>([])
-  const [previewImage, setPreviewImage] = useState<string>('')
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const [form] = useForm()

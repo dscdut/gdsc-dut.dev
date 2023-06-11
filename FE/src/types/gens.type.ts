@@ -1,3 +1,8 @@
+export type Gen = {
+  id: number
+  name: string
+}
+
 export type GenType = {
   id: string | number
   name: string
