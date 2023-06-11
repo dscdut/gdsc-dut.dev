@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 // config / constant
-import { FieldData, QueryFilter } from 'src/interface'
+import { FieldData } from 'src/interface'
 import { ERROR_MESSAGE, urlRegex } from 'src/shared/constant'
 
 // custom hooks
@@ -20,38 +20,37 @@ import styles from './styles.module.scss'
 import CustomSelector from 'src/components/selectors/CustomSelector'
 import { GenType } from 'src/types/gens.type'
 import useGetData from 'src/shared/hook/useGetData'
-import { useMutation } from 'react-query'
 import { Product } from 'src/interface/product'
-import { Member } from 'src/types/member.type'
-import { MemberAPI } from 'src/apis/members.api'
+import { MemberType } from 'src/types/member.type'
 
 export default function CreateSponsor() {
   const uploadRef = useRef<UploadRef>(null)
   const [fieldsData, setFieldsData] = useState<FieldData<Sponsor>[]>([])
-  const [previewImage, setPreviewImage] = useState<string>('')
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
   const [form] = useForm()
   const { isDesktop } = useResponsive()
-  const genDataSelector = useGetData('gens')
   const { id: idSponsor } = useParams()
   const isEditMode = Boolean(idSponsor)
   const [isSelectedGen, setIsSelectedGen] = useState<boolean>(false)
-  const [filterMembersData, setFilterMembersData] = useState<Member[]>([])
-
-  const filterMembers = useMutation({
-    mutationFn: (query: QueryFilter) => MemberAPI.filterMembers(query)
-  })
+  const [filterMembersData, setFilterMembersData] = useState<MemberType[]>([])
+  const genDataSelector = useGetData('gens')
+  const membersData = useGetData('members')
 
   const onSubmit = async (value: Product) => {
     // handle submit here!
   }
 
-  const handleOnchangeGen = async () => {
-    const genValue = form.getFieldValue('gen_id')
-    const filterData = await filterMembers.mutateAsync({ filter: `gen|$eq|${genValue}` })
-    setFilterMembersData(filterData.data?.content)
+  const handleOnChangeGen = () => {
+    const genValue: number[] = form.getFieldValue('gen_ids')
+    const filterData = (membersData.data?.data.content as MemberType[]).filter((member) =>
+      genValue.includes(member.gen.id)
+    )
+    setFilterMembersData(filterData)
     if (!isSelectedGen) {
       setIsSelectedGen(true)
+    } else if (form.getFieldValue('gen_ids').length === 0) {
+      setIsSelectedGen(false)
     }
   }
 
@@ -81,18 +80,19 @@ export default function CreateSponsor() {
         <Form.Item label='Name' name='name' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
           <Input className='p-2' />
         </Form.Item>
-        <Form.Item label='Gens' name='gen_id' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
+        <Form.Item label='Gens' name='gen_ids' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
           <CustomSelector<GenType>
             data={genDataSelector.data?.data}
             isLoading={genDataSelector.isLoading}
             placeholder='Select gens'
-            onChange={handleOnchangeGen}
+            mode='multiple'
+            onChange={handleOnChangeGen}
           />
         </Form.Item>
         <Form.Item label='Members' name='members' rules={[{ required: true, message: ERROR_MESSAGE.required }]}>
-          <CustomSelector<Member>
+          <CustomSelector<MemberType>
             data={filterMembersData}
-            isLoading={filterMembers.isLoading}
+            isLoading={membersData.isLoading}
             placeholder='Select members'
             mode='multiple'
             disabled={!isSelectedGen}

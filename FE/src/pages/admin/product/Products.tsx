@@ -1,6 +1,8 @@
 import { Image, Tag } from 'antd'
 import CustomTable from 'src/components/common/CustomTable'
+import { PRODUCTS } from 'src/data/products.dummy'
 import { Gen } from 'src/types/gens.type'
+import { Member } from 'src/types/member.type'
 import { ProductType } from 'src/types/products.type'
 import { getRandomColor } from 'src/utils/tools'
 
@@ -17,14 +19,17 @@ const columns = [
     render: (image: { id: number; url: string }) => <Image width={120} height={120} src={image.url} />
   },
   {
-    dataIndex: 'gen',
-    key: 'gen',
-    title: 'Gen',
-    render: (gen: Gen) => (
-      <Tag color={getRandomColor()} className='mt-2' key={gen.id}>
-        {gen.name}
-      </Tag>
-    )
+    dataIndex: 'gens',
+    key: 'gens',
+    title: 'Gens',
+    render: (gens: Gen[]) => {
+      const genRender = gens.map((gen) => (
+        <Tag color={getRandomColor()} className='mt-2' key={gen.id}>
+          {gen.name}
+        </Tag>
+      ))
+      return genRender
+    }
   },
   {
     dataIndex: 'description',
@@ -40,7 +45,7 @@ const columns = [
     dataIndex: 'members',
     key: 'members',
     title: 'Members',
-    render: (members: { id: number; name: string }[]) => {
+    render: (members: Member[]) => {
       const listMember = members.map((member) => (
         <Tag color={getRandomColor()} className='mt-2 w-max' key={member.id}>
           {member.name}
@@ -48,103 +53,6 @@ const columns = [
       ))
       return <div className='scrollbar-hide flex max-h-30 flex-col overflow-y-scroll'>{listMember}</div>
     }
-  }
-]
-
-const fakeData: ProductType[] = [
-  {
-    id: 19,
-    name: 'Sharing-Hub',
-    image: {
-      url: 'https://www.clipartkey.com/mpngs/m/33-339198_volunteering-clipart-transparent-volunteer-clip-art-transparent.png',
-      id: 1
-    },
-    description: 'sharing-hub',
-    infor_url: 'https://www.google.com',
-    deleted_at: null,
-    created_at: '2023-06-05T14:14:36.358Z',
-    updated_at: '2023-06-05T14:31:22.766Z',
-    gen: {
-      id: 3,
-      name: 'Gen 1'
-    },
-    members: [
-      {
-        id: 1,
-        name: 'Tran Van Kiem'
-      },
-      {
-        id: 2,
-        name: 'Pham Tuyen'
-      },
-      {
-        id: 3,
-        name: 'Phung Thi Anh'
-      },
-      {
-        id: 4,
-        name: 'Truong Ha Vu'
-      },
-      {
-        id: 5,
-        name: 'Huynh Dinh Hoang Vien'
-      },
-      {
-        id: 6,
-        name: 'Le Ngoc Khanh Thy'
-      },
-      {
-        id: 7,
-        name: 'Nguyen Tran My Duyen'
-      }
-    ]
-  },
-  {
-    id: 20,
-    name: 'Happy-child',
-    image: {
-      url: 'https://thumbs.dreamstime.com/b/happy-child-girl-hands-thumbs-up-27321302.jpg',
-      id: 2
-    },
-    description: 'happy-child',
-    infor_url: 'https://www.google.com',
-    deleted_at: null,
-    created_at: '2023-06-05T14:14:36.358Z',
-    updated_at: '2023-06-05T14:31:22.766Z',
-    gen: {
-      id: 1,
-      name: 'Gen 4'
-    },
-    members: [
-      {
-        id: 1,
-        name: 'Tran Van Kiem'
-      },
-      {
-        id: 2,
-        name: 'Pham Tuyen'
-      },
-      {
-        id: 3,
-        name: 'Phung Thi Anh'
-      },
-      {
-        id: 4,
-        name: 'Truong Ha Vu'
-      },
-      {
-        id: 5,
-        name: 'Huynh Dinh Hoang Vien'
-      },
-      {
-        id: 6,
-        name: 'Le Ngoc Khanh Thy'
-      },
-      {
-        id: 7,
-        name: 'Nguyen Tran My Duyen'
-      }
-    ]
   }
 ]
 
@@ -163,7 +71,7 @@ export default function Sponsors() {
     <CustomTable<ProductType>
       columns={columns}
       currentPage={1}
-      dataSource={fakeData}
+      dataSource={PRODUCTS}
       onDelete={handleDelete}
       onEdit={handleEdit}
       pageSize={10}

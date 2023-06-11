@@ -6,13 +6,13 @@
   }
 
   ::-webkit-scrollbar {
-    height: 4px; // height of horizontal scrollbar
-    width: 4px; // width of vertical scrollbar
+    height: 0.25rem; // height of horizontal scrollbar
+    width: 0.25rem; // width of vertical scrollbar
   }
 
   ::-webkit-scrollbar-thumb {
     background-color: #e2e2e2e2;
-    border-radius: 4px;
+    border-radius: 0.25rem;
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -20,6 +20,6 @@
   }
 
   ::-webkit-scrollbar-track {
-    border-radius: 4px;
+    border-radius: 0.25rem;
   }
 }

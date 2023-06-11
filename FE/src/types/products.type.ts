@@ -1,10 +1,6 @@
 import { SponsorType } from './sponsor.type'
 
-export type ProductType = Omit<SponsorType, 'gens'> & {
-  gen: {
-    id: number
-    name: string
-  }
+export type ProductType = SponsorType & {
   members: {
     id: number
     name: string

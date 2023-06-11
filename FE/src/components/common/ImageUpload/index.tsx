@@ -18,7 +18,7 @@ interface Props {
   form?: FormInstance<Store>
   className?: string
   children?: ReactNode
-  previewImage: string
+  previewImage: string | null
 }
 
 type Ref = React.Ref<UploadRef>
@@ -84,7 +84,7 @@ const ImageUpload = (props: Props, ref: Ref) => {
         customRequest={handleUpload}
       >
         {imageUrl || previewImage ? (
-          <img alt='Sponsor avatar' style={{ width: '100%' }} src={imageUrl || previewImage} />
+          <img alt='Sponsor avatar' style={{ width: '100%' }} src={imageUrl || (previewImage as string)} />
         ) : (
           <div>
             <PlusOutlined />
