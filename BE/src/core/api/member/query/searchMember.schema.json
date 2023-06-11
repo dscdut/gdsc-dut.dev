@@ -3,14 +3,25 @@
       "members.id",
       "members.full_name",
       "members.birthday",
+      "members.phone",
+      "members.email",
       "members.horoscope_sign",
       "members.philosophy",
       "members.feelings",
       "members.infor_url",
       { "avatar_url": "images.url" },
-      { "gen": "gens.name" },
-      { "department": "departments.name" },
-      { "position": "positions.name" },
+      {
+        "gen_id": "members_gens.gen_id",
+        "gen_name": "gens.name"
+      },
+      {
+        "department_id": "departments.id",
+        "department_name": "departments.name"
+      },
+      {
+        "position_id": "positions.id",
+        "position_name": "positions.name"
+      },
       { "createdAt": "members.created_at" },
       { "updatedAt": "members.updated_at" },
       { "deletedAt": "members.deleted_at" }
