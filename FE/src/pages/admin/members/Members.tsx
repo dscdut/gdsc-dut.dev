@@ -3,7 +3,6 @@ import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { MemberAPI } from 'src/apis/member.api'
 import CustomTable from 'src/components/common/CustomTable'
-import { MEMBERS } from 'src/data/members.dummy'
 import PATH_URL from 'src/shared/path'
 import { Member } from 'src/types/member.type'
 
@@ -14,8 +13,8 @@ const columns = [
     title: 'Tên'
   },
   {
-    dataIndex: 'image_url',
-    key: 'image_url',
+    dataIndex: 'avatar_url',
+    key: 'avatar_url',
     title: 'Ảnh',
     render: (imgUrl: string) => <Image width={120} height={120} src={imgUrl} />
   },
@@ -56,7 +55,7 @@ export default function Members() {
     <CustomTable<Member>
       columns={columns}
       currentPage={1}
-      dataSource={MEMBERS}
+      dataSource={data?.data}
       onDelete={handleDelete}
       onEdit={setSelectedItem}
       pageSize={10}

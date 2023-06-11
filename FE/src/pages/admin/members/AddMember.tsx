@@ -1,15 +1,11 @@
-import { Button, Card, Col, ColProps, DatePicker, Form, Input, Row, Typography } from 'antd'
-import { FormInstance, useForm } from 'antd/es/form/Form'
-import { Store } from 'antd/es/form/interface'
-import { ReactNode, useEffect, useRef, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Button, Card, Col, DatePicker, Form, Input, Row, Typography } from 'antd'
+import { useForm } from 'antd/es/form/Form'
+import { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 // config / constant
 import { FieldData } from 'src/interface'
-import { ERROR_MESSAGE, urlRegex } from 'src/shared/constant'
-
-// custom hooks
-import { useResponsive } from 'src/shared/hook'
+import { ERROR_MESSAGE, emailRegex, phoneRegex, urlRegex } from 'src/shared/constant'
 
 // component
 import ImageUpload from 'src/components/common/ImageUpload'
@@ -18,19 +14,28 @@ import ImageUpload from 'src/components/common/ImageUpload'
 import { UploadRef } from 'src/interface/app'
 import { Member } from 'src/interface/member'
 import styles from './styles.module.scss'
-// import GensSelector from 'src/components/selectors/GensSelectors'
-// import PositionsSelector from 'src/components/selectors/PositionsSelector'
-// import DeparmentsSelctor from 'src/components/selectors/DeparmentsSelector'
+import GensSelector from 'src/components/selectors/GensSelector'
+import DepartmentsSelector from 'src/components/selectors/DepartmentsSelector'
+import PositionsSelector from 'src/components/selectors/PositionsSelector'
 
 export default function CreateMember() {
-  const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const { isDesktop } = useResponsive()
+  const [searchParams] = useSearchParams()
   const uploadRef = useRef<UploadRef>(null)
-  const formRef = useRef<FormInstance<Store>>(null)
   const [fieldsData, setFieldsData] = useState<FieldData<Member>[]>([])
-  const [idMember, setIdMember] = useState<string>()
+  const [idMember] = useState<string>()
   const [form] = useForm()
+
+  const validateField = (regex: RegExp) => (rule: any, value: string, callback: (arg?: string) => void) => {
+    if (!value) {
+      callback(ERROR_MESSAGE.required)
+    } else if (!regex.test(value)) {
+      callback(ERROR_MESSAGE.invalid)
+    } else {
+      callback()
+    }
+  }
+  const validatePhone = validateField(phoneRegex)
+  const validateEmail = validateField(emailRegex)
 
   useEffect(() => {
     const id = searchParams.get('id')
@@ -53,8 +58,8 @@ export default function CreateMember() {
         form={form}
         className={styles.formWrapper}
         name='MemberForm'
-        layout={isDesktop ? 'horizontal' : 'vertical'}
-        labelCol={{ md: 3 }}
+        layout='vertical'
+        labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         rootClassName='mx-auto'
         style={{ maxWidth: 900 }}
@@ -63,7 +68,7 @@ export default function CreateMember() {
         onFieldsChange={(_, allFields) => setFieldsData(allFields)}
       >
         <Row gutter={[24, 24]}>
-          <Col span={6}>
+          <Col md={24} lg={6}>
             <ImageUpload
               label='Avatar'
               ref={uploadRef}
@@ -72,9 +77,9 @@ export default function CreateMember() {
             />
           </Col>
 
-          <Col span={18}>
+          <Col md={24} lg={18}>
             <Row gutter={[24, 24]}>
-              <Col span={24}>
+              <Col xs={24} lg={24}>
                 <Form.Item
                   label='Full Name'
                   name='full_name'
@@ -88,11 +93,11 @@ export default function CreateMember() {
               </Col>
             </Row>
             <Row gutter={[24, 24]}>
-              <Col span={12}>
+              <Col xs={24} lg={12}>
                 <Form.Item
                   label='Phone'
                   name='phone'
-                  rules={[{ required: true, message: ERROR_MESSAGE.required }]}
+                  rules={[{ validator: validatePhone, required: true }]}
                   labelCol={{ span: 24 }}
                   wrapperCol={{ span: 24 }}
                   labelAlign='left'
@@ -100,7 +105,7 @@ export default function CreateMember() {
                   <Input />
                 </Form.Item>
               </Col>
-              <Col span={6}>
+              <Col xs={24} lg={6}>
                 <Form.Item
                   label='Birthday'
                   name='birthday'
@@ -112,7 +117,7 @@ export default function CreateMember() {
                   <DatePicker className='h-full w-full' />
                 </Form.Item>
               </Col>
-              <Col span={6}>
+              <Col xs={24} lg={6}>
                 <Form.Item
                   label='Gen'
                   name='gen_id'
@@ -121,8 +126,7 @@ export default function CreateMember() {
                   wrapperCol={{ span: 24 }}
                   labelAlign='left'
                 >
-                  {/* <GensSelector /> */}
-                  <Input />
+                  <GensSelector />
                 </Form.Item>
               </Col>
             </Row>
@@ -134,7 +138,7 @@ export default function CreateMember() {
             <Form.Item
               label='Email'
               name='email'
-              rules={[{ required: true, message: ERROR_MESSAGE.required }]}
+              rules={[{ validator: validateEmail, required: true }]}
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
               labelAlign='left'
@@ -146,6 +150,7 @@ export default function CreateMember() {
             <Form.Item
               label='Link facebook/ instagram'
               name='infor_url'
+              rules={[{ pattern: new RegExp(urlRegex), message: ERROR_MESSAGE.invalid }]}
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
               labelAlign='left'
@@ -163,8 +168,7 @@ export default function CreateMember() {
               wrapperCol={{ span: 24 }}
               labelAlign='left'
             >
-              {/* <PositionsSelector /> */}
-              <Input />
+              <PositionsSelector />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -175,8 +179,7 @@ export default function CreateMember() {
               wrapperCol={{ span: 24 }}
               labelAlign='left'
             >
-              {/* <DeparmentsSelctor /> */}
-              <Input />
+              <DepartmentsSelector />
             </Form.Item>
           </Col>
         </Row>
@@ -212,25 +215,31 @@ export default function CreateMember() {
         >
           <Input.TextArea className='!h-44' />
         </Form.Item>
+
         <Form.Item label='Button' className={styles['form-item__label--invisible']}>
           <Row align='middle' justify='center' gutter={[16, 16]}>
-            <Col>
-              <Button
-                type='default'
-                htmlType='reset'
-                onClick={() => {
-                  console.log(form.getFieldsValue())
-                  form.setFieldValue('image', null)
-                  uploadRef.current?.onReset()
-                }}
-              >
-                Clear
-              </Button>
-            </Col>
-            <Col>
-              <Button type='primary' htmlType='submit'>
-                {idMember ? 'Edit' : 'Submit'}
-              </Button>
+            <Col span={24}>
+              <Row justify='center'>
+                <Col className='text-center'>
+                  <Button
+                    type='default'
+                    htmlType='reset'
+                    onClick={() => {
+                      console.log(form.getFieldsValue())
+                      form.setFieldValue('image', null)
+                      uploadRef.current?.onReset()
+                    }}
+                    className='mx-2'
+                  >
+                    Clear
+                  </Button>
+                </Col>
+                <Col className='text-center'>
+                  <Button type='primary' htmlType='submit' className='mx-2'>
+                    {idMember ? 'Edit' : 'Submit'}
+                  </Button>
+                </Col>
+              </Row>
             </Col>
           </Row>
         </Form.Item>

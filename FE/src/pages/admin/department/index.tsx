@@ -18,7 +18,7 @@ const columns = [
   {
     dataIndex: 'name',
     key: 'name',
-    title: 'Deparment',
+    title: 'department',
     render: (department: string) => <Tag color={DepartmentTagColor[department as DepartmentKey]}>{department}</Tag>
   }
 ]
@@ -45,7 +45,7 @@ export default function DepartmentLayout() {
       toast.error(TOAST_MESSAGE.ERROR)
     }
   })
-  const deleteDeparment = useMutation({
+  const deleteDepartment = useMutation({
     mutationFn: DepartmentAPI.deleteDepartment,
     onSuccess: () => {
       refetch()
@@ -71,7 +71,7 @@ export default function DepartmentLayout() {
   }, [selectedItem])
 
   const handleDelete = (id: number) => {
-    deleteDeparment.mutate(id)
+    deleteDepartment.mutate(id)
   }
 
   return (
@@ -91,7 +91,7 @@ export default function DepartmentLayout() {
         onCancel={handleReset}
         onSubmit={handleUpdate}
         refForm={refForm}
-        title={type === 'add' ? 'Create new gen' : 'Edit gen'}
+        title={type === 'add' ? 'Create new department' : 'Edit department'}
       />
       <CustomTable<Department>
         columns={columns}
