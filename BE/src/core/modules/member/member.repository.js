@@ -10,13 +10,19 @@ class Repository extends DataRepository {
                 'images.id as image_id',
                 'images.url as image_url',
                 'members.full_name',
+                'members.email',
+                'members.phone',
                 'members.birthday',
                 'members.horoscope_sign',
                 'members.philosophy',
                 'members.feelings',
                 'members.infor_url',
-                'gens.name as gen',
-                'positions.name as position',
+                'gens.id as gen_id',
+                'gens.name as gen_name',
+                'positions.id as position_id',
+                'positions.name as position_name',
+                'departments.id as department_id',
+                'departments.name as department_name',
                 'members.deleted_at',
                 'members.created_at',
                 'members.updated_at',
@@ -25,10 +31,19 @@ class Repository extends DataRepository {
             .innerJoin('members_gens', 'members.id', 'members_gens.member_id')
             .innerJoin('gens', 'members_gens.gen_id', 'gens.id')
             .innerJoin('positions', 'members_gens.position_id', 'positions.id')
+            .innerJoin('departments', 'members_gens.department_id', 'departments.id')
             .first()
             .then(result => {
-                const { image_id, image_url, ...rest } = result;
-                return { ...rest, image: { id: image_id, url: image_url } };
+                const {
+                    image_id, image_url, gen_id, gen_name, position_id, position_name, department_id, department_name, ...rest
+                } = result;
+                return {
+                    ...rest,
+                    image: { id: image_id, url: image_url },
+                    gen: { id: gen_id, name: gen_name },
+                    position: { id: position_id, name: position_name },
+                    department: { id: department_id, name: department_name }
+                };
             });
     }
 
