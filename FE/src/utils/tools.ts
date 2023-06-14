@@ -1,7 +1,8 @@
 import { RcFile, UploadFile } from 'antd/es/upload'
 import { PartialObject, get, omit } from 'lodash'
 import { SelectOption } from 'src/interface/selectOption'
-import { Position } from 'src/types/positions.type'
+import { Nameable } from 'src/types/utils.type'
+
 export const scrollToTop = () => {
   window?.scrollTo({
     behavior: 'smooth',
@@ -35,10 +36,16 @@ export const fileToBase64 = (file: RcFile | Blob, callback: (url: string) => voi
 
 export const removeKeysFromObj = <T extends object>(obj: T, keys: string[]): PartialObject<T> => omit(obj, keys)
 
-export const convertDataToSelectOptions = <T extends { name: string }>(data: T[], valueProp: string): SelectOption[] =>
+export const convertDataToSelectOptions = <T extends Nameable>(data: T[], valueProp: string): SelectOption[] =>
   data?.map((item) => {
     return {
-      label: `${item.name}`,
+      label: `${item.name || item.full_name}`,
       value: get(item, valueProp)
     }
   }) || []
+
+export const getRandomColor = () => {
+  const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple']
+  const randomIndex = Math.floor(Math.random() * colors.length)
+  return colors[randomIndex]
+}

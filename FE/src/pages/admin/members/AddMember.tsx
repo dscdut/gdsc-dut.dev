@@ -1,11 +1,11 @@
 import { Button, Card, Col, DatePicker, Form, Input, Row, Typography } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 // config / constant
 import { FieldData } from 'src/interface'
-import { ERROR_MESSAGE, emailRegex, phoneRegex, urlRegex } from 'src/shared/constant'
+import { ERROR_MESSAGE, TOAST_MESSAGE, emailRegex, phoneRegex, urlRegex } from 'src/shared/constant'
 
 // component
 import ImageUpload from 'src/components/common/ImageUpload'
@@ -17,13 +17,23 @@ import styles from './styles.module.scss'
 import GensSelector from 'src/components/selectors/GensSelector'
 import DepartmentsSelector from 'src/components/selectors/DepartmentsSelector'
 import PositionsSelector from 'src/components/selectors/PositionsSelector'
+import { useMutation, useQuery } from 'react-query'
+import { MemberAPI } from 'src/apis/member.api'
+import { MemberBody, MemberType } from 'src/types/member.type'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import useMedia from 'src/shared/hook/useMedia'
 
 export default function CreateMember() {
-  const [searchParams] = useSearchParams()
   const uploadRef = useRef<UploadRef>(null)
   const [fieldsData, setFieldsData] = useState<FieldData<Member>[]>([])
-  const [idMember] = useState<string>()
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+  const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
+  const navigate = useNavigate()
   const [form] = useForm()
+  const { id: idMember } = useParams()
+  const isEdit = Boolean(idMember)
+  const uploadImage = useMedia().UploadImage()
 
   const validateField = (regex: RegExp) => (rule: any, value: string, callback: (arg?: string) => void) => {
     if (!value) {
@@ -37,13 +47,110 @@ export default function CreateMember() {
   const validatePhone = validateField(phoneRegex)
   const validateEmail = validateField(emailRegex)
 
+  const getMember = useQuery({
+    queryKey: ['id', idMember],
+    queryFn: () => {
+      console.log(MemberAPI.getMemberById(idMember as string | number))
+      return MemberAPI.getMemberById(idMember as string | number)
+    },
+    enabled: isEdit
+  })
+
+  const fetchDetailMember = () => {
+    const data: MemberType = getMember.data?.data
+    console.log(getMember.data?.data)
+    if (data) {
+      axios
+        .get(data.image.url, { responseType: 'blob' })
+        .then(function (response) {
+          const blob = response.data
+
+          console.log(data)
+          const values: Member = {
+            image: blob,
+            full_name: data.full_name,
+            birthday: data.birthday,
+            phone: data.phone,
+            email: data.email,
+            infor_url: data.infor_url,
+            horoscope_sign: data.horoscope_sign,
+            philosophy: data.philosophy,
+            feelings: data.feelings,
+            gen_id: data.gen?.id,
+            department_id: data.department?.id,
+            position_id: data.position?.id
+          }
+          console.log(values)
+
+          form.setFieldsValue(values)
+          setPreviewImage(data.image.url) // Update to use `data.avatar_url` instead of `data.image.url`
+          uploadRef?.current?.setImageUrl(data.image.url) // Update to use `data.avatar_url` instead of `data.image.url`
+        })
+        .catch(() => {
+          toast.error(TOAST_MESSAGE.NOT_FOUND)
+          navigate('/not-found')
+        })
+    }
+  }
+
   useEffect(() => {
-    const id = searchParams.get('id')
-    console.log(id, searchParams.get('id'))
-  }, [searchParams])
+    if (isEdit) {
+      fetchDetailMember()
+    }
+  }, [isEdit, getMember.data])
+
+  const createMember = useMutation({
+    mutationFn: (member: MemberBody) => {
+      return MemberAPI.createMember(member)
+    },
+    onSuccess: () => {
+      toast.success(TOAST_MESSAGE.SUCCESS)
+    }
+  })
+
+  const updateMember = useMutation({
+    mutationFn: (member: MemberBody) => {
+      return MemberAPI.updateMember(member, Number(idMember))
+    },
+    onSuccess: () => {
+      toast.success(TOAST_MESSAGE.SUCCESS)
+    }
+  })
 
   const onSubmit = async (value: Member) => {
-    console.log(value)
+    try {
+      setConfirmLoading(true)
+      const data: MemberType = getMember.data?.data
+      let imageData
+      if (uploadRef?.current && previewImage !== uploadRef?.current?.imageUrl) {
+        console.log('UPDATE')
+        imageData = await uploadImage.mutateAsync(value.image)
+      }
+      const imageId = imageData ? imageData?.data[0]?.id : data.image.id
+      const member: MemberBody = {
+        image_id: imageId,
+        full_name: value.full_name,
+        birthday: value.birthday,
+        phone: value.phone,
+        email: value.email,
+        infor_url: value.infor_url,
+        gen_id: value.gen_id,
+        department_id: value.department_id,
+        position_id: value.position_id,
+        horoscope_sign: value.horoscope_sign,
+        philosophy: value.philosophy,
+        feelings: value.feelings
+      }
+      if (isEdit) {
+        await updateMember.mutateAsync(member)
+      } else {
+        await createMember.mutateAsync(member)
+      }
+    } catch (error) {
+      toast.error(TOAST_MESSAGE.ERROR)
+    } finally {
+      setConfirmLoading(false)
+    }
   }
 
   return (
@@ -74,7 +181,7 @@ export default function CreateMember() {
               ref={uploadRef}
               name='image_url'
               rules={[{ required: true, message: ERROR_MESSAGE.required }]}
-            />
+              previewImage={previewImage}            />
           </Col>
 
           <Col md={24} lg={18}>
@@ -173,8 +280,8 @@ export default function CreateMember() {
           </Col>
           <Col span={12}>
             <Form.Item
-              label='Deparment'
-              name='deparment_id'
+              label='Department'
+              name='department_id'
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
               labelAlign='left'
@@ -225,9 +332,12 @@ export default function CreateMember() {
                     type='default'
                     htmlType='reset'
                     onClick={() => {
-                      console.log(form.getFieldsValue())
-                      form.setFieldValue('image', null)
-                      uploadRef.current?.onReset()
+                       if (!isEdit) {
+                         form.setFieldValue('image', null)
+                         uploadRef.current?.onReset()
+                       } else {
+                         fetchDetailMember()
+                       }
                     }}
                     className='mx-2'
                   >

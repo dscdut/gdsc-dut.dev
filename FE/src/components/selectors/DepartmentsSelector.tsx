@@ -32,7 +32,7 @@ export default function DepartmentsSelector({ allowClear, onChange, onClear, siz
       onClear={onClear}
       optionFilterProp='label'
       options={options}
-      placeholder='Select departments'
+      placeholder='Select department'
       showSearch
       size={size}
       style={{ minWidth: 250 }}

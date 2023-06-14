@@ -1,4 +1,11 @@
-import { ApartmentOutlined, IdcardOutlined, ScheduleOutlined, SolutionOutlined, TeamOutlined } from '@ant-design/icons'
+import {
+  ApartmentOutlined,
+  IdcardOutlined,
+  ScheduleOutlined,
+  SolutionOutlined,
+  TeamOutlined,
+  ProjectOutlined
+} from '@ant-design/icons'
 import PATH_URL from './path'
 
 export const urlRegex =
@@ -40,6 +47,12 @@ export const SIZEBAR_OPTIONS = [
     label: 'Department',
     path: PATH_URL.department,
     icon: ApartmentOutlined
+  },
+  {
+    key: 'products',
+    label: 'Products',
+    path: PATH_URL.products,
+    icon: ProjectOutlined
   }
 ]
 
@@ -52,7 +65,9 @@ export const ERROR_MESSAGE = {
 export const TOAST_MESSAGE = {
   ERROR: 'Oops! Something went wrong. Please try again later.',
   SUCCESS: 'Your data has been successfully saved!',
-  DELETE_SUCCESS: 'The item has been successfully deleted!'
+  DELETE_SUCCESS: 'The item has been successfully deleted!',
+  NOT_FOUND: 'The item does not exist.',
+  SUCCESS_DELETE: 'Delete the item successfully.'
 }
 
 export const TOOLTIP_MESSAGE = {

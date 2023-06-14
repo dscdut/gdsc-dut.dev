@@ -1,5 +1,4 @@
 import axios, { AxiosError, type AxiosInstance } from 'axios'
-import { toast } from 'react-toastify'
 import { clearLS, getAccessTokenFromLS, getRefreshTokenFromLS, setAccessTokenToLS, setRefreshTokenToLS } from './auth'
 import config from '../configs'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
@@ -64,7 +63,7 @@ export class Http {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
           const message = data?.message || error.message
-          toast.error(message)
+          console.log(`Error ${message}`)
         }
 
         // Lỗi Unauthorized (401) có rất nhiều trường hợp
@@ -101,7 +100,7 @@ export class Http {
           clearLS()
           this.accessToken = ''
           this.refreshToken = ''
-          toast.error(error.response?.data.data?.message || error.response?.data.message)
+          console.log(`Error ${error.response?.data.data?.message || error.response?.data.message}`)
           // window.location.reload()
         }
         return Promise.reject(error)

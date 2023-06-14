@@ -1,6 +1,7 @@
 import { Select, SelectProps } from 'antd'
 import { convertDataToSelectOptions } from 'src/utils/tools'
 import styles from './styles.module.scss'
+import { Nameable } from 'src/types/utils.type'
 
 interface CustomSelectorProps<T> extends Omit<SelectProps<string>, 'onSelect'> {
   id?: string
@@ -10,7 +11,7 @@ interface CustomSelectorProps<T> extends Omit<SelectProps<string>, 'onSelect'> {
   placeholder: string
 }
 
-const CustomSelector = <T extends { name: string }>({
+const CustomSelector = <T extends Nameable>({
   data,
   isLoading,
   placeholder,

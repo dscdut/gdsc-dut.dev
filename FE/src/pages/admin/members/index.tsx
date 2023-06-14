@@ -1,13 +1,13 @@
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
 import HeaderPage from 'src/components/common/HeaderPage'
 import AdminGuard from 'src/guard/AdminGuard'
 import PATH_URL from 'src/shared/path'
 
 export default function Members() {
   const navigate = useNavigate()
-  const location = useLocation()
+  const { id: idMember } = useParams()
   const isListPage = location.pathname.endsWith('/members')
-  const title = isListPage ? 'Members List' : location?.search ? 'Edit Member' : 'Add Member'
+  const title = isListPage ? 'Members List' : idMember ? 'Edit Member' : 'Add Member'
 
   return (
     <AdminGuard>

@@ -1,21 +1,39 @@
-import { Image } from 'antd'
-import { useQuery } from 'react-query'
+import { Image, Tag } from 'antd'
+import { useMutation, useQuery } from 'react-query'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { SponsorAPI } from 'src/apis/sponsor.api'
 import CustomTable from 'src/components/common/CustomTable'
-import { Event } from 'src/types/events.type'
+import { TOAST_MESSAGE } from 'src/shared/constant'
+import PATH_URL from 'src/shared/path'
+import { Gen } from 'src/types/gens.type'
 import { SponsorType } from 'src/types/sponsor.type'
+import { getRandomColor } from 'src/utils/tools'
 
 const columns = [
   {
     dataIndex: 'name',
     key: 'name',
-    title: 'Tên nhà tài trợ'
+    title: 'Sponsor'
   },
   {
     dataIndex: 'image_url',
     key: 'image_url',
     title: 'Logo',
     render: (imgUrl: string) => <Image width={120} height={120} src={imgUrl} />
+  },
+  {
+    dataIndex: 'gens',
+    key: 'gens',
+    title: 'Gens',
+    render: (gens: Gen[]) => {
+      const genRender = gens.map((gen) => (
+        <Tag color={getRandomColor()} className='mt-2' key={gen.id}>
+          {gen.name}
+        </Tag>
+      ))
+      return genRender
+    }
   },
   {
     dataIndex: 'description',
@@ -30,18 +48,32 @@ const columns = [
 ]
 
 export default function Sponsors() {
-  const { data, isLoading } = useQuery({
+  const navigate = useNavigate()
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['sponsors'],
     queryFn: () => SponsorAPI.getSponsors()
   })
-  const setSelectedItem = (item: SponsorType) => {
-    console.log(item)
+  const deleteSponsor = useMutation({
+    mutationFn: (id: string | number) => SponsorAPI.deleteSponsor(id),
+    onSuccess: () => {
+      toast.success(TOAST_MESSAGE.SUCCESS_DELETE)
+    }
+  })
+  const handleEdit = (item: SponsorType) => {
+    navigate(`${PATH_URL.sponsors}/${item.id}`)
   }
-  const handleDelete = () => {
-    console.log('delete')
+  const handleDelete = async (id: string | number) => {
+    try {
+      const deleteSponsorResults = await deleteSponsor.mutateAsync(id)
+      if (deleteSponsorResults) {
+        refetch()
+      }
+    } catch (error) {
+      toast.error(TOAST_MESSAGE.ERROR)
+    }
   }
   const onChange = () => {
-    console.log('change')
+    // handle on change
   }
 
   return (
@@ -50,7 +82,7 @@ export default function Sponsors() {
       currentPage={1}
       dataSource={data?.data}
       onDelete={handleDelete}
-      onEdit={setSelectedItem}
+      onEdit={handleEdit}
       pageSize={10}
       total={40}
       onChange={onChange}

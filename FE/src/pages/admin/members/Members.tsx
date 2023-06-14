@@ -1,10 +1,12 @@
 import { Image } from 'antd'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { MemberAPI } from 'src/apis/member.api'
 import CustomTable from 'src/components/common/CustomTable'
+import { TOAST_MESSAGE } from 'src/shared/constant'
 import PATH_URL from 'src/shared/path'
-import { Member } from 'src/types/member.type'
+import { MemberType } from 'src/types/member.type'
 
 const columns = [
   {
@@ -37,27 +39,40 @@ const columns = [
 
 export default function Members() {
   const navigate = useNavigate()
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['members'],
     queryFn: () => MemberAPI.getMembers()
   })
-  const setSelectedItem = (item: Member) => {
-    navigate(`${PATH_URL.members}/form/${item.id}`)
+  const deleteMember = useMutation({
+    mutationFn: (id: string | number) => MemberAPI.deleteMember(id),
+    onSuccess: () => {
+      toast.success(TOAST_MESSAGE.SUCCESS_DELETE)
+    }
+  })
+  const handleEdit = (item: MemberType) => {
+    navigate(`${PATH_URL.members}/${item.id}`)
   }
-  const handleDelete = () => {
-    console.log('delete')
+  const handleDelete = async (id: string | number) => {
+    try {
+      const resultDelete = await deleteMember.mutateAsync(id)
+      if (resultDelete) {
+        refetch()
+      }
+    } catch (error) {
+      toast.error(TOAST_MESSAGE.ERROR)
+    }
   }
   const onChange = () => {
     console.log('change')
   }
 
   return (
-    <CustomTable<Member>
+    <CustomTable<MemberType>
       columns={columns}
       currentPage={1}
       dataSource={data?.data}
       onDelete={handleDelete}
-      onEdit={setSelectedItem}
+      onEdit={handleEdit}
       pageSize={10}
       total={40}
       onChange={onChange}

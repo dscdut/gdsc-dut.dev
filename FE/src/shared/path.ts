@@ -10,11 +10,16 @@ const PATH_URL = {
   sponsors: '/admin/sponsors',
   gens: '/admin/gens',
   memberDetail: ':memberID',
-  department: '/admin/department'
+  department: '/admin/department',
+  products: '/admin/products'
 } as const
 
 // private routes (path, component)
 export const PRIVATE_ROUTE: Route[] = [
+  {
+    path: '',
+    element: () => import('src/pages/admin/members')
+  },
   {
     path: PATH_URL.sponsors,
     element: () => import('src/pages/admin/sponsor'),
@@ -25,6 +30,10 @@ export const PRIVATE_ROUTE: Route[] = [
       },
       {
         path: 'form',
+        element: () => import('src/pages/admin/sponsor/AddSponsor')
+      },
+      {
+        path: ':id',
         element: () => import('src/pages/admin/sponsor/AddSponsor')
       }
     ]
@@ -54,8 +63,26 @@ export const PRIVATE_ROUTE: Route[] = [
         element: () => import('src/pages/admin/members/AddMember')
       },
       {
-        path: 'form/:id',
-        element: () => import('src/pages/admin/members/EditMember')
+        path: ':id',
+        element: () => import('src/pages/admin/members/AddMember')
+      }
+    ]
+  },
+  {
+    path: PATH_URL.products,
+    element: () => import('src/pages/admin/product'),
+    children: [
+      {
+        path: '',
+        element: () => import('src/pages/admin/product/Products')
+      },
+      {
+        path: 'form',
+        element: () => import('src/pages/admin/product/AddProduct')
+      },
+      {
+        path: ':id',
+        element: () => import('src/pages/admin/product/AddProduct')
       }
     ]
   }
