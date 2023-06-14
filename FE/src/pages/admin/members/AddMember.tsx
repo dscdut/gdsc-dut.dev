@@ -23,6 +23,7 @@ import { MemberBody, MemberType } from 'src/types/member.type'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import useMedia from 'src/shared/hook/useMedia'
+import dayjs from 'dayjs'
 
 export default function CreateMember() {
   const uploadRef = useRef<UploadRef>(null)
@@ -50,7 +51,6 @@ export default function CreateMember() {
   const getMember = useQuery({
     queryKey: ['id', idMember],
     queryFn: () => {
-      console.log(MemberAPI.getMemberById(idMember as string | number))
       return MemberAPI.getMemberById(idMember as string | number)
     },
     enabled: isEdit
@@ -65,7 +65,6 @@ export default function CreateMember() {
         .then(function (response) {
           const blob = response.data
 
-          console.log(data)
           const values: Member = {
             image: blob,
             full_name: data.full_name,
@@ -80,11 +79,14 @@ export default function CreateMember() {
             department_id: data.department?.id,
             position_id: data.position?.id
           }
-          console.log(values)
+          const formValues = {
+            ...values,
+            birthday: dayjs(values.birthday)
+          }
 
-          form.setFieldsValue(values)
-          setPreviewImage(data.image.url) // Update to use `data.avatar_url` instead of `data.image.url`
-          uploadRef?.current?.setImageUrl(data.image.url) // Update to use `data.avatar_url` instead of `data.image.url`
+          form.setFieldsValue(formValues)
+          setPreviewImage(data.image.url)
+          uploadRef?.current?.setImageUrl(data.image.url)
         })
         .catch(() => {
           toast.error(TOAST_MESSAGE.NOT_FOUND)
