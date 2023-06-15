@@ -88,4 +88,11 @@ export const PRIVATE_ROUTE: Route[] = [
   }
 ]
 
+export const PUBLIC_ROUTE: Route[] = [
+  {
+    path: '',
+    element: () => import('src/pages/home')
+  }
+]
+
 export default PATH_URL
