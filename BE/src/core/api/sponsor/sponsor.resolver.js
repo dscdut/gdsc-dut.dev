@@ -4,8 +4,6 @@ import {
     CreateSponsorInterceptor,
     UpdateSponsorInterceptor,
 } from 'core/modules/sponsor/interceptor';
-import { uploadMediaSwagger } from 'core/common/swagger';
-import { MediaInterceptor } from 'core/modules/document';
 import { RecordId } from '../../common/swagger/record-id';
 import { SponsorController } from './sponsor.controller';
 
@@ -27,9 +25,7 @@ export const SponsorResolver = Module.builder()
         {
             route: '/',
             method: 'post',
-            params: [uploadMediaSwagger],
-            consumes: ['multipart/form-data'],
-            interceptors: [new MediaInterceptor(10), CreateSponsorInterceptor],
+            interceptors: [CreateSponsorInterceptor],
             body: 'CreateSponsorDto',
             controller: SponsorController.createOne,
         },

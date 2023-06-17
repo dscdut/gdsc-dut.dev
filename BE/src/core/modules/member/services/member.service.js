@@ -1,3 +1,4 @@
+import { DataPersistenceService } from 'packages/restBuilder/core/dataHandler/data.persistence.service';
 import { Optional } from '../../../utils';
 import { NotFoundException } from '../../../../packages/httpException';
 import { MemberRepository } from '../member.repository';
@@ -6,9 +7,9 @@ import { DepartmentService } from '../../department/services/department.service'
 import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document';
 
-class Service {
+class Service extends DataPersistenceService {
     constructor() {
-        this.repository = MemberRepository;
+        super(MemberRepository);
         this.positionService = PositionService;
         this.departmentService = DepartmentService;
         this.genService = GenService;
@@ -17,17 +18,17 @@ class Service {
 
     async createOne(createMemberDto) {
         const {
-            genId, positionId, departmentId, imageId, ...member
+            genIds, positionId, departmentId, imageId, ...member
         } = createMemberDto;
         const department = await this.departmentService.findById(departmentId);
         const position = await this.positionService.findById(positionId);
-        const gen = await this.genService.findById(genId);
+        await this.genService.findMany(genIds);
         const image = await this.mediaService.findById(imageId);
 
         return Optional.of(
             await this.repository.createOne(
                 { ...member, image_id: image.id },
-                gen.id,
+                genIds,
                 department.id,
                 position.id,
             ),
@@ -49,10 +50,6 @@ class Service {
             )
             .get();
         return data;
-    }
-
-    async findAll() {
-        return this.repository.findAll();
     }
 
     async findMany(ids) {

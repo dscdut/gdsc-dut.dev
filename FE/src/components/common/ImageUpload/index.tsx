@@ -3,7 +3,7 @@ import { Form, Upload } from 'antd'
 import { FormInstance, Rule } from 'antd/es/form'
 import { Store } from 'antd/es/form/interface'
 import { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
-import { ReactNode, forwardRef, useImperativeHandle, useState } from 'react'
+import { ReactNode, forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { ERROR_MESSAGE, IMAGE_FILETYPE, TOOLTIP_MESSAGE } from 'src/shared/constant'
 import { fileToBase64, fileToBlob, validateFileType } from 'src/utils/tools'
 
@@ -18,23 +18,29 @@ interface Props {
   form?: FormInstance<Store>
   className?: string
   children?: ReactNode
+  previewImage: string | null
 }
 
 type Ref = React.Ref<UploadRef>
 
 const ImageUpload = (props: Props, ref: Ref) => {
-  const { rules, label, name, className, form } = props
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const { rules, label, name, className, form, previewImage } = props
+  const [imageUrl, setImageUrl] = useState<string | null>(previewImage)
+
+  useEffect(() => {
+    setImageUrl(previewImage)
+  }, [previewImage])
 
   useImperativeHandle(ref, () => {
     return {
-      onReset: () => setImageUrl(null)
+      onReset: () => setImageUrl(null),
+      imageUrl: imageUrl,
+      setImageUrl: (url: string) => setImageUrl(url)
     }
   })
 
   const handleUpload: UploadProps['customRequest'] = async (options) => {
     const { onSuccess, onError, file, onProgress } = options
-
     const isAllowedType = validateFileType(file as UploadFile, IMAGE_FILETYPE)
     if (!isAllowedType) {
       setImageUrl(null)
@@ -77,8 +83,8 @@ const ImageUpload = (props: Props, ref: Ref) => {
         showUploadList={false}
         customRequest={handleUpload}
       >
-        {imageUrl ? (
-          <img alt='Sponsor avatar' style={{ width: '100%' }} src={imageUrl} />
+        {imageUrl || previewImage ? (
+          <img alt='Sponsor avatar' style={{ width: '100%' }} src={imageUrl || (previewImage as string)} />
         ) : (
           <div>
             <PlusOutlined />

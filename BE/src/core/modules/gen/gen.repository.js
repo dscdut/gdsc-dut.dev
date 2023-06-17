@@ -14,11 +14,27 @@ class Repository extends DataRepository {
     }
 
     deleteOne(id) {
-        return this.query().where('id', id).del();
+        return this.query().where('gen_id', id).del().from('members_gens')
+            .then(() => this.query()
+                .where('gen_id', id)
+                .del()
+                .from('gens_sponsors'))
+            .then(() => this.query()
+                .where('id', id)
+                .del());
     }
 
     updateOne(id, data) {
         return this.query().where('id', id).update(data);
+    }
+
+    findMany(ids) {
+        return this.query().select('*').from('gens').whereIn('id', ids);
+    }
+
+    async findManyGenBySponsorId(id) {
+        return this.query().select('gen_id').where('sponsor_id', id).from('gens_sponsors')
+            .then(results => results.map(result => result.gen_id));
     }
 }
 

@@ -14,6 +14,7 @@ class Service {
     }
 
     async updateOne(id, updateDepartmentDto) {
+        await this.findById(id);
         return this.repository.updateOne(id, updateDepartmentDto);
     }
 

@@ -1,9 +1,9 @@
-import { FOLDER_NAME } from 'core/common/constants';
 import { Optional } from '../../../utils';
 import { NotFoundException } from '../../../../packages/httpException';
 import { SponsorRepository } from '../sponsor.repository';
 import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document/service/media.service';
+import { getUniqueElements } from '../../../helpers/convert.helper';
 
 class Service {
     constructor() {
@@ -12,21 +12,32 @@ class Service {
         this.mediaService = MediaService;
     }
 
-    async createOne(files, createSponsorDto) {
-        const { genId, ...sponsor } = createSponsorDto;
-        const gen = await this.genService.findById(genId);
-        const uploadImageSponsor = await this.mediaService.uploadOne(files[0], FOLDER_NAME.SPONSORS);
-        const imageId = uploadImageSponsor?.length && uploadImageSponsor[0]?.id;
-
-        sponsor.imageId = imageId;
-
-        return Optional.of(await this.repository.createOne(sponsor, gen.id))
+    async createOne(createSponsorDto) {
+        const { genIds, imageId, ...sponsor } = createSponsorDto;
+        await this.genService.findMany(genIds);
+        await this.mediaService.findById(imageId);
+        const updateSponsor = { ...sponsor, imageId };
+        return Optional.of(await this.repository.createOne(updateSponsor, genIds))
             .throwIfNullable()
             .get();
     }
 
     async updateOne(id, updateSponsorDto) {
-        return this.repository.updateOne(id, updateSponsorDto);
+        const { genIds, ...sponsor } = updateSponsorDto;
+        await this.findById(id);
+        await this.genService.findMany(genIds);
+        await this.mediaService.findById(updateSponsorDto.imageId);
+        const newGens = genIds;
+        const OldGens = await this.genService.findManyGenBySponsorId(id);
+        const upsertGen = getUniqueElements(OldGens, newGens);
+        if (upsertGen.length === 0) {
+            return Optional.of(await this.repository.updateOne(id, sponsor))
+                .throwIfNullable()
+                .get();
+        }
+        return Optional.of(await this.repository.upsertOne(id, upsertGen), await this.repository.updateOne(id, sponsor))
+            .throwIfNullable()
+            .get();
     }
 
     async deleteOne(id) {
@@ -35,7 +46,7 @@ class Service {
 
     async findById(id) {
         const data = Optional.of(await this.repository.findById(id))
-            .throwIfNotPresent(new NotFoundException())
+            .throwIfNotPresent(new NotFoundException((`Sponsor with id ${id} not found`)))
             .get();
         return data;
     }

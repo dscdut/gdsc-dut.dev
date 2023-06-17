@@ -77,3 +77,7 @@ export interface UploadRequestOption<T = any> {
 export interface RcFile extends File {
   uid: string
 }
+
+export interface QueryFilter {
+  filter: string
+}

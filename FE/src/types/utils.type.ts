@@ -12,3 +12,8 @@ export interface ErrorResponse<Data> {
 export type NoUndefinedField<T> = {
   [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>
 }
+
+export type Nameable = {
+  name?: string
+  full_name?: string
+}

@@ -20,4 +20,6 @@ export interface Route {
 
 export interface UploadRef extends UploadProps {
   onReset: () => void
+  imageUrl: string | null
+  setImageUrl: (url: string) => void
 }

@@ -1,5 +1,10 @@
 export type Member = {
   id: number
+  name: string
+}
+
+export type MemberType = {
+  id: number
   full_name: string
   birthday: string
   phone: string
@@ -8,8 +13,14 @@ export type Member = {
   philosophy: string
   feelings: string
   infor_url: string
-  department_id: number
-  position_id: number
-  gen_id: number
-  image_id: number
+  avatar_url: string
+  gen: {
+    id: number
+    name: string
+  }
+  position: string
+  department: string
+  createdAt: string
+  updatedAt: string
+  deletedAt: string
 }
