@@ -3,6 +3,10 @@ import { Route } from 'src/interface/app'
 // contanst url
 const PATH_URL = {
   home: '/',
+  homeDepartment: '/department',
+  homeEvents: '/events',
+  homeProducts: '/products',
+  homeActivities: '/activities',
   admin: '/admin',
   login: '/admin/login',
   members: '/admin/members',
@@ -74,4 +78,26 @@ export const PRIVATE_ROUTE: Route[] = [
   }
 ]
 
+export const PUBLIC_ROUTE: Route[] = [
+  {
+    path: '',
+    element: () => import('src/pages/public/Home')
+  },
+  {
+    path: PATH_URL.homeDepartment,
+    element: () => import('src/pages/public/Department')
+  },
+  {
+    path: PATH_URL.homeEvents,
+    element: () => import('src/pages/public/Events')
+  },
+  {
+    path: PATH_URL.homeProducts,
+    element: () => import('src/pages/public/Products')
+  },
+  {
+    path: PATH_URL.homeActivities,
+    element: () => import('src/pages/public/Activities')
+  }
+]
 export default PATH_URL
