@@ -1,5 +1,5 @@
 import { RouteObject, useRoutes } from 'react-router-dom'
-import { PRIVATE_ROUTE } from './shared/path'
+import { PRIVATE_ROUTE, PUBLIC_ROUTE } from './shared/path'
 
 // component
 import { Row, Spin } from 'antd'
@@ -7,6 +7,7 @@ import { Suspense, lazy } from 'react'
 import { Route } from './interface/app'
 import NotFoundPage from './pages/NotFoundPage'
 import PrivateRoute from './routes/PrivateRoutes'
+import PublicRoute from './routes/PublicRoute'
 
 interface RouteElement {
   routeElement: () => Promise<any>
@@ -44,7 +45,8 @@ export default function useRouteElements() {
   const routeElements = [
     {
       path: '/',
-      element: <LazyElement routeElement={() => import('./pages/Home')} />
+      element: <PublicRoute />,
+      children: wrapRoutesWithLazy({ routes: PUBLIC_ROUTE })
     },
     {
       path: '*',

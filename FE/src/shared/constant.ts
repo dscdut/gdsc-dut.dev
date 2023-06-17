@@ -56,6 +56,34 @@ export const SIZEBAR_OPTIONS = [
   }
 ]
 
+export const HEADER_OPTIONS = [
+  {
+    key: 'home',
+    label: 'Home',
+    path: PATH_URL.home
+  },
+  {
+    key: 'department',
+    label: 'Department',
+    path: PATH_URL.homeDepartment
+  },
+  {
+    key: 'events',
+    label: 'Events',
+    path: PATH_URL.homeEvents
+  },
+  {
+    key: 'products',
+    label: 'Products',
+    path: PATH_URL.homeProducts
+  },
+  {
+    key: 'activities',
+    label: 'Activities',
+    path: PATH_URL.homeActivities
+  }
+]
+
 export const ERROR_MESSAGE = {
   required: 'This field is required.',
   invalid: 'This field is invalid.',
