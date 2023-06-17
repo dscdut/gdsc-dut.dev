@@ -24,12 +24,20 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import useMedia from 'src/shared/hook/useMedia'
 import dayjs from 'dayjs'
+import CustomSelector from 'src/components/selectors/CustomSelector'
+import { GenType } from 'src/types/gens.type'
+import useGetData from 'src/shared/hook/useGetData'
+import { Position } from 'src/types/positions.type'
+import { Department } from 'src/types/department.type'
 
 export default function CreateMember() {
   const uploadRef = useRef<UploadRef>(null)
   const [fieldsData, setFieldsData] = useState<FieldData<Member>[]>([])
   const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
+  const genDataSelector = useGetData('gens')
+  const genDataPosition = useGetData('positions')
+  const genDataDepartment = useGetData('departments')
   const navigate = useNavigate()
   const [form] = useForm()
   const { id: idMember } = useParams()
@@ -58,7 +66,6 @@ export default function CreateMember() {
 
   const fetchDetailMember = () => {
     const data: MemberType = getMember.data?.data
-    console.log(getMember.data?.data)
     if (data) {
       axios
         .get(data.image.url, { responseType: 'blob' })
@@ -127,6 +134,7 @@ export default function CreateMember() {
       if (uploadRef?.current && previewImage !== uploadRef?.current?.imageUrl) {
         console.log('UPDATE')
         imageData = await uploadImage.mutateAsync(value.image)
+        console.log('gone')
       }
       const imageId = imageData ? imageData?.data[0]?.id : data.image.id
       const member: MemberBody = {
@@ -181,9 +189,11 @@ export default function CreateMember() {
             <ImageUpload
               label='Avatar'
               ref={uploadRef}
-              name='image_url'
+              name='image'
               rules={[{ required: true, message: ERROR_MESSAGE.required }]}
-              previewImage={previewImage}            />
+              form={form}
+              previewImage={previewImage}
+            />
           </Col>
 
           <Col md={24} lg={18}>
@@ -197,7 +207,7 @@ export default function CreateMember() {
                   wrapperCol={{ span: 24 }}
                   labelAlign='left'
                 >
-                  <Input />
+                  <Input className='p-2' />
                 </Form.Item>
               </Col>
             </Row>
@@ -211,7 +221,7 @@ export default function CreateMember() {
                   wrapperCol={{ span: 24 }}
                   labelAlign='left'
                 >
-                  <Input />
+                  <Input className='p-2' />
                 </Form.Item>
               </Col>
               <Col xs={24} lg={6}>
@@ -223,7 +233,7 @@ export default function CreateMember() {
                   wrapperCol={{ span: 24 }}
                   labelAlign='left'
                 >
-                  <DatePicker className='h-full w-full' />
+                  <DatePicker className='h-full w-full p-2' />
                 </Form.Item>
               </Col>
               <Col xs={24} lg={6}>
@@ -235,7 +245,11 @@ export default function CreateMember() {
                   wrapperCol={{ span: 24 }}
                   labelAlign='left'
                 >
-                  <GensSelector />
+                  <CustomSelector<GenType>
+                    data={genDataSelector.data?.data}
+                    isLoading={genDataSelector.isLoading}
+                    placeholder='Select gen'
+                  />
                 </Form.Item>
               </Col>
             </Row>
@@ -252,7 +266,7 @@ export default function CreateMember() {
               wrapperCol={{ span: 24 }}
               labelAlign='left'
             >
-              <Input />
+              <Input className='p-2' />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -264,7 +278,7 @@ export default function CreateMember() {
               wrapperCol={{ span: 24 }}
               labelAlign='left'
             >
-              <Input />
+              <Input className='p-2' />
             </Form.Item>
           </Col>
         </Row>
@@ -277,7 +291,11 @@ export default function CreateMember() {
               wrapperCol={{ span: 24 }}
               labelAlign='left'
             >
-              <PositionsSelector />
+              <CustomSelector<Position>
+                data={genDataPosition.data?.data}
+                isLoading={genDataPosition.isLoading}
+                placeholder='Select position'
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -288,7 +306,11 @@ export default function CreateMember() {
               wrapperCol={{ span: 24 }}
               labelAlign='left'
             >
-              <DepartmentsSelector />
+              <CustomSelector<Department>
+                data={genDataDepartment.data?.data}
+                isLoading={genDataDepartment.isLoading}
+                placeholder='Select department'
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -301,7 +323,7 @@ export default function CreateMember() {
           wrapperCol={{ span: 24 }}
           labelAlign='left'
         >
-          <Input />
+          <Input className='p-2' />
         </Form.Item>
         <Form.Item
           label='Motto/ Favorite Saying'
@@ -311,7 +333,7 @@ export default function CreateMember() {
           wrapperCol={{ span: 24 }}
           labelAlign='left'
         >
-          <Input.TextArea />
+          <Input.TextArea className='p-2' />
         </Form.Item>
 
         <Form.Item
@@ -334,12 +356,12 @@ export default function CreateMember() {
                     type='default'
                     htmlType='reset'
                     onClick={() => {
-                       if (!isEdit) {
-                         form.setFieldValue('image', null)
-                         uploadRef.current?.onReset()
-                       } else {
-                         fetchDetailMember()
-                       }
+                      if (!isEdit) {
+                        form.setFieldValue('image', null)
+                        uploadRef.current?.onReset()
+                      } else {
+                        fetchDetailMember()
+                      }
                     }}
                     className='mx-2'
                   >
@@ -347,7 +369,7 @@ export default function CreateMember() {
                   </Button>
                 </Col>
                 <Col className='text-center'>
-                  <Button type='primary' htmlType='submit' className='mx-2'>
+                  <Button type='primary' htmlType='submit' className='mx-2' loading={confirmLoading}>
                     {idMember ? 'Edit' : 'Submit'}
                   </Button>
                 </Col>
