@@ -1,0 +1,27 @@
+{
+  "main": [
+    "products.id",
+    "products.name",
+    "products.description",
+    "products.infor_url",
+    "products.created_at",
+    "products.updated_at",
+    { "image_url": "images.url" }
+  ],
+  "associates": [
+    ["images", "products.image_id", "images.id"],
+    ["members_gens", "products.id", "members_gens.product_id"]
+  ],
+  "groupBy": ["products.id", "images.url"],
+  "notDeleted": ["products"],
+  "locks": {
+    "filters": [{ "gen": "members_gens.gen_id" }],
+    "sorts": [
+      { "id": "products.id" },
+      { "name": "products.name" },
+      { "created_at": "products.created_at" },
+      { "updated_at": "products.updated_at" }
+    ]
+  },
+  "searchCriteria": ["products.name"]
+}

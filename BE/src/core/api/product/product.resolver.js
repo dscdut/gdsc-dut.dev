@@ -4,6 +4,7 @@ import {
     CreateProductInterceptor,
     UpdateProductInterceptor,
 } from 'core/modules/product/interceptor';
+import { DefaultQueryCriteriaDocument } from 'core/common/swagger';
 import { RecordId } from '../../common/swagger/record-id';
 import { ProductController } from './product.controller';
 
@@ -46,6 +47,7 @@ export const ProductResolver = Module.builder()
         {
             route: '/',
             method: 'get',
+            params: DefaultQueryCriteriaDocument,
             controller: ProductController.findAll,
         },
     ]);

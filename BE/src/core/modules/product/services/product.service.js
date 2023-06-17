@@ -1,3 +1,4 @@
+import { DataPersistenceService } from 'packages/restBuilder/core/dataHandler/data.persistence.service';
 import { Optional } from '../../../utils';
 import {
     NotFoundException,
@@ -5,9 +6,9 @@ import {
 import { ProductRepository } from '../product.repository';
 import { MemberService } from '../../member/services/member.service';
 
-class Service {
+class Service extends DataPersistenceService {
     constructor() {
-        this.repository = ProductRepository;
+        super(ProductRepository);
         this.memberService = MemberService;
     }
 
