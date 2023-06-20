@@ -70,15 +70,8 @@ export default function CreateMember() {
           const blob = response.data
 
           const values: Member = {
+            ...data,
             image: blob,
-            full_name: data.full_name,
-            birthday: data.birthday,
-            phone: data.phone,
-            email: data.email,
-            infor_url: data.infor_url,
-            horoscope_sign: data.horoscope_sign,
-            philosophy: data.philosophy,
-            feelings: data.feelings,
             gen_id: data.gen?.id,
             department_id: data.department?.id,
             position_id: data.position?.id
@@ -129,9 +122,7 @@ export default function CreateMember() {
       const data: MemberType = getMember.data?.data
       let imageData
       if (uploadRef?.current && previewImage !== uploadRef?.current?.imageUrl) {
-        console.log('UPDATE')
         imageData = await uploadImage.mutateAsync(value.image)
-        console.log('gone')
       }
       const imageId = imageData ? imageData?.data[0]?.id : data.image.id
       const member: MemberBody = {
