@@ -135,18 +135,8 @@ export default function CreateMember() {
       }
       const imageId = imageData ? imageData?.data[0]?.id : data.image.id
       const member: MemberBody = {
-        image_id: imageId,
-        full_name: value.full_name,
-        birthday: value.birthday,
-        phone: value.phone,
-        email: value.email,
-        infor_url: value.infor_url,
-        gen_id: value.gen_id,
-        department_id: value.department_id,
-        position_id: value.position_id,
-        horoscope_sign: value.horoscope_sign,
-        philosophy: value.philosophy,
-        feelings: value.feelings
+        ...value,
+        image_id: imageId
       }
       if (isEdit) {
         await updateMember.mutateAsync(member)
