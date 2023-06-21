@@ -71,6 +71,9 @@ const ImageUpload = (props: Props, ref: Ref) => {
           }
         }
       ]}
+      labelCol={{ span: 24 }}
+      wrapperCol={{ span: 24 }}
+      labelAlign='left'
       validateTrigger='onChange'
       validateFirst
     >

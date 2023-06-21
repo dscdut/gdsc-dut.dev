@@ -52,7 +52,21 @@ export const PRIVATE_ROUTE: Route[] = [
   },
   {
     path: PATH_URL.members,
-    element: () => import('src/pages/admin/members')
+    element: () => import('src/pages/admin/members'),
+    children: [
+      {
+        path: '',
+        element: () => import('src/pages/admin/members/Members')
+      },
+      {
+        path: 'form',
+        element: () => import('src/pages/admin/members/AddMember')
+      },
+      {
+        path: ':id',
+        element: () => import('src/pages/admin/members/AddMember')
+      }
+    ]
   },
   {
     path: PATH_URL.products,
