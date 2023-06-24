@@ -97,7 +97,7 @@ class Repository extends DataRepository {
                     } = obj;
                     return rest;
                 });
-                return finalResult[0];
+                return finalResult;
             });
     }
 
