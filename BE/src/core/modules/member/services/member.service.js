@@ -14,6 +14,7 @@ class Service extends DataPersistenceService {
         this.departmentService = DepartmentService;
         this.genService = GenService;
         this.mediaService = MediaService;
+        this.repository = MemberRepository;
     }
 
     async createOne(createMemberDto) {
