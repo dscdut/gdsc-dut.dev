@@ -10,8 +10,8 @@ ApiDocument.addModel('CreateMemberDto', {
     philosophy: SwaggerDocument.ApiProperty({ type: 'string' }),
     feelings: SwaggerDocument.ApiProperty({ type: 'string' }),
     infor_url: SwaggerDocument.ApiProperty({ type: 'string' }),
-    department_id: SwaggerDocument.ApiProperty({ type: 'int' }),
-    position_id: SwaggerDocument.ApiProperty({ type: 'int' }),
+    department_ids: SwaggerDocument.ApiProperty({ type: 'array', model: 'int' }),
+    position_ids: SwaggerDocument.ApiProperty({ type: 'array', model: 'int' }),
     gen_ids: SwaggerDocument.ApiProperty({ type: 'array', model: 'int' }),
     image_id: SwaggerDocument.ApiProperty({ type: 'int' }),
 });
@@ -25,8 +25,8 @@ export const CreateMemberDto = body => ({
     philosophy: body.philosophy,
     feelings: body.feelings,
     inforUrl: body.infor_url,
-    departmentId: body.department_id,
-    positionId: body.position_id,
+    departmentIds: body.department_ids,
+    positionIds: body.position_ids,
     genIds: body.gen_ids,
     imageId: body.image_id,
 });

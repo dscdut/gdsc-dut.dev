@@ -32,6 +32,19 @@ class Service {
     async findAll() {
         return this.repository.findAll();
     }
+
+    async findMany(ids) {
+        const uniqueIds = [...new Set(ids)];
+        const departments = await this.repository.findMany(uniqueIds);
+        const departmentIds = departments.map(department => department.id);
+        const idsNotFound = ids.filter(item => !departmentIds.includes(item));
+
+        if (departmentIds.length !== uniqueIds.length) {
+            throw new NotFoundException(`Department with id ${idsNotFound} not found`);
+        }
+
+        return departments;
+    }
 }
 
 export const DepartmentService = new Service();

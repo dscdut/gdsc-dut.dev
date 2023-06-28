@@ -4,3 +4,14 @@ export const convertToSnakeCase = obj => Object.keys(obj).reduce((acc, key) => {
 }, {});
 
 export const getUniqueElements = (arrA, arrB) => arrB.filter(item => !arrA.includes(item));
+
+export const checkDuplicateElements = arr => {
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+            if (arr[i] === arr[j]) {
+                return true;
+            }
+        }
+    }
+    return false;
+};

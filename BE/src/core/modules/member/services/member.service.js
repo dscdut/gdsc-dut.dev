@@ -6,6 +6,7 @@ import { PositionService } from '../../position/services/position.service';
 import { DepartmentService } from '../../department/services/department.service';
 import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document';
+import { checkDuplicateElements } from '../../../helpers/convert.helper';
 
 class Service extends DataPersistenceService {
     constructor() {
@@ -19,10 +20,16 @@ class Service extends DataPersistenceService {
 
     async createOne(createMemberDto) {
         const {
-            genIds, positionId, departmentId, imageId, ...member
+            genIds, positionIds, departmentIds, imageId, ...member
         } = createMemberDto;
-        const department = await this.departmentService.findById(departmentId);
-        const position = await this.positionService.findById(positionId);
+        if (genIds.length < positionIds.length || genIds.length < departmentIds.length) {
+            throw new NotFoundException('Gen must greater equal to department, position');
+        }
+        if (checkDuplicateElements(genIds) === true) {
+            throw new NotFoundException('Gen must not coincide');
+        }
+        await this.departmentService.findMany(departmentIds);
+        await this.positionService.findMany(positionIds);
         await this.genService.findMany(genIds);
         const image = await this.mediaService.findById(imageId);
 
@@ -30,8 +37,8 @@ class Service extends DataPersistenceService {
             await this.repository.createOne(
                 { ...member, image_id: image.id },
                 genIds,
-                department.id,
-                position.id,
+                departmentIds,
+                positionIds
             ),
         ).get();
     }

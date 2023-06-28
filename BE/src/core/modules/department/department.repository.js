@@ -28,6 +28,10 @@ class Repository extends DataRepository {
     updateOne(id, data) {
         return this.query().where('id', id).update(data);
     }
+
+    async findMany(ids) {
+        return this.query().select('*').from('departments').whereIn('id', ids);
+    }
 }
 
 export const DepartmentRepository = new Repository('departments');
