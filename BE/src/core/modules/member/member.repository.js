@@ -4,72 +4,80 @@ import { convertToSnakeCase } from '../../helpers/convert.helper';
 class Repository extends DataRepository {
     findById(id) {
         return this.query()
-            .where('members.id', id)
-            .select([
+            .select('members.*', 'members_gens.gen_id as gen_id', 'gens.name as gen_name', 'members_gens.department_id as department_id',
+                'departments.name as department_name', 'members_gens.position_id as position_id', 'positions.name as position_name', 'images.url as image_url')
+            .from('members')
+            .innerJoin(
+                'members_gens',
                 'members.id',
-                'images.id as image_id',
-                'images.url as image_url',
-                'members.full_name',
-                'members.email',
-                'members.phone',
-                'members.birthday',
-                'members.horoscope_sign',
-                'members.philosophy',
-                'members.feelings',
-                'members.infor_url',
-                'gens.id as gen_id',
-                'gens.name as gen_name',
-                'positions.id as position_id',
-                'positions.name as position_name',
-                'departments.id as department_id',
-                'departments.name as department_name',
-                'members.deleted_at',
-                'members.created_at',
-                'members.updated_at',
-            ])
-            .innerJoin('images', 'members.image_id', 'images.id')
-            .innerJoin('members_gens', 'members.id', 'members_gens.member_id')
-            .innerJoin('gens', 'members_gens.gen_id', 'gens.id')
-            .innerJoin('positions', 'members_gens.position_id', 'positions.id')
-            .innerJoin('departments', 'members_gens.department_id', 'departments.id')
-            .first()
-            .then(result => {
-                const {
-                    image_id, image_url, gen_id, gen_name, position_id, position_name, department_id, department_name, ...rest
-                } = result;
-                return {
-                    ...rest,
-                    image: { id: image_id, url: image_url },
-                    gen: { id: gen_id, name: gen_name },
-                    position: { id: position_id, name: position_name },
-                    department: { id: department_id, name: department_name }
-                };
-            });
+                'members_gens.member_id',
+            )
+            .innerJoin(
+                'gens',
+                'members_gens.gen_id',
+                'gens.id',
+            )
+            .innerJoin(
+                'positions',
+                'members_gens.position_id',
+                'positions.id',
+            )
+            .innerJoin(
+                'departments',
+                'members_gens.department_id',
+                'departments.id',
+            )
+            .innerJoin(
+                'images',
+                'members.image_id',
+                'images.id',
+            )
+            .where('members.id', id);
     }
 
-    createOne(member, genIds, departmentId, positionId) {
+    async createOne(member, genIds, departmentIds, positionIds) {
         let memberId;
         return this.query()
             .insert(convertToSnakeCase(member))
             .returning('id')
             .then(([result]) => {
                 memberId = result.id;
-                const genIdValues = genIds.map(genId => ({
-                    member_id: memberId,
-                    gen_id: genId,
-                    department_id: departmentId,
-                    position_id: positionId,
-                }));
-
-                return this.query().insert(genIdValues).into('members_gens');
+                const memberGens = [];
+                for (let i = 0; i < genIds.length; i++) {
+                    memberGens.push({
+                        member_id: memberId, gen_id: genIds[i], department_id: departmentIds[i], position_id: positionIds[i]
+                    });
+                }
+                return this.query().insert(memberGens).into('members_gens');
             })
             .then(() => this.query()
-                .select('members.*', 'members_gens.gen_id as gen_id')
+                .select('members.*', 'members_gens.gen_id as gen_id', 'gens.name as gen_name', 'members_gens.department_id as department_id',
+                    'departments.name as department_name', 'members_gens.position_id as position_id', 'positions.name as position_name', 'images.url as image_url')
                 .from('members')
                 .innerJoin(
                     'members_gens',
                     'members.id',
                     'members_gens.member_id',
+                )
+                .innerJoin(
+                    'gens',
+                    'members_gens.gen_id',
+                    'gens.id',
+                )
+                .innerJoin(
+                    'positions',
+                    'members_gens.position_id',
+                    'positions.id',
+                )
+                .innerJoin(
+                    'departments',
+                    'members_gens.department_id',
+                    'departments.id',
+                )
+                .innerJoin(
+                    'images',
+                    'members.image_id',
+                    'images.id',
                 )
                 .where('members.id', memberId));
     }

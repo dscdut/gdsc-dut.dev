@@ -23,6 +23,10 @@ class Repository extends DataRepository {
     updateOne(id, data) {
         return this.query().where('id', id).update(data);
     }
+
+    async findMany(ids) {
+        return this.query().select('*').from('positions').whereIn('id', ids);
+    }
 }
 
 export const PositionRepository = new Repository('positions');

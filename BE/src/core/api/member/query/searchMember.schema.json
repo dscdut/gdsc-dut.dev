@@ -9,7 +9,10 @@
       "members.philosophy",
       "members.feelings",
       "members.infor_url",
-      { "avatar_url": "images.url" },
+      {
+        "image_id": "members.image_id",
+        "image_url": "images.url" 
+      },
       {
         "gen_id": "members_gens.gen_id",
         "gen_name": "gens.name"
