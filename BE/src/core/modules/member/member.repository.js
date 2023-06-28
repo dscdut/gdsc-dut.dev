@@ -2,7 +2,7 @@ import { DataRepository } from 'packages/restBuilder/core/dataHandler/data.repos
 import { convertToSnakeCase } from '../../helpers/convert.helper';
 
 class Repository extends DataRepository {
-    findById(id) {
+    async findById(id) {
         return this.query()
             .where('members.id', id)
             .select([

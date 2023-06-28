@@ -8,5 +8,7 @@ export const UpdateProductInterceptor = new DefaultValidatorInterceptor(
         image_id: JoiUtils.positiveNumber(),
         description: JoiUtils.requiredString(),
         infor_url: JoiUtils.requiredString(),
+        gen_id: JoiUtils.positiveNumber(),
+        member_ids: Joi.array().items(Joi.number().integer()),
     }),
 );
