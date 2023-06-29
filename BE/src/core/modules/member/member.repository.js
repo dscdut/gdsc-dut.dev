@@ -35,7 +35,7 @@ class Repository extends DataRepository {
             .where('members.id', id);
     }
 
-    async createOne(member, genIds, departmentIds, positionIds) {
+    async createOne(member, gens) {
         let memberId;
         return this.query()
             .insert(convertToSnakeCase(member))
@@ -43,9 +43,9 @@ class Repository extends DataRepository {
             .then(([result]) => {
                 memberId = result.id;
                 const memberGens = [];
-                for (let i = 0; i < genIds.length; i++) {
+                for (let i = 0; i < gens.length; i++) {
                     memberGens.push({
-                        member_id: memberId, gen_id: genIds[i], department_id: departmentIds[i], position_id: positionIds[i]
+                        member_id: memberId, gen_id: gens[i].gen_id, department_id: gens[i].department_id, position_id: gens[i].position_id
                     });
                 }
                 return this.query().insert(memberGens).into('members_gens');
@@ -89,8 +89,22 @@ class Repository extends DataRepository {
                 .del());
     }
 
-    updateOne(id, data) {
-        return this.query().where('id', id).update(convertToSnakeCase(data));
+    async updateOne(id, member, gens) {
+        let memberId;
+        return this.query().where('id', id).update(convertToSnakeCase(member))
+            .then(() => {
+                memberId = parseInt(id);
+                const memberGens = [];
+                for (let i = 0; i < gens.length; i++) {
+                    memberGens.push({
+                        gen_id: gens[i].gen_id, department_id: gens[i].department_id, position_id: gens[i].position_id
+                    });
+                }
+                for (let i = 0; i < memberGens.length; i++) {
+                    console.log(memberGens[i]);
+                    this.query().where('member_id', memberId).update(memberGens[i]).into('members_gens');
+                }
+            });
     }
 
     findMany(ids) {
