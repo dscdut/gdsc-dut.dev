@@ -6,7 +6,6 @@ import { PositionService } from '../../position/services/position.service';
 import { DepartmentService } from '../../department/services/department.service';
 import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document';
-import { checkDuplicateElements } from '../../../helpers/convert.helper';
 
 class Service extends DataPersistenceService {
     constructor() {
@@ -20,31 +19,30 @@ class Service extends DataPersistenceService {
 
     async createOne(createMemberDto) {
         const {
-            genIds, positionIds, departmentIds, imageId, ...member
+            gens, imageId, ...member
         } = createMemberDto;
-        if (genIds.length < positionIds.length || genIds.length < departmentIds.length) {
-            throw new NotFoundException('Gen must greater equal to department, position');
+        for (let i = 0; i < gens.length; i++) {
+            await this.genService.findById(gens[i].gen_id);
+            await this.departmentService.findById(gens[i].department_id);
+            await this.positionService.findById(gens[i].position_id);
         }
-        if (checkDuplicateElements(genIds) === true) {
-            throw new NotFoundException('Gen must not coincide');
-        }
-        await this.departmentService.findMany(departmentIds);
-        await this.positionService.findMany(positionIds);
-        await this.genService.findMany(genIds);
         const image = await this.mediaService.findById(imageId);
 
         return Optional.of(
             await this.repository.createOne(
                 { ...member, image_id: image.id },
-                genIds,
-                departmentIds,
-                positionIds
+                gens
             ),
         ).get();
     }
 
     async updateOne(id, updateMemberDto) {
-        return this.repository.updateOne(id, updateMemberDto);
+        await this.findById(id);
+        const {
+            gens, imageId, ...member
+        } = updateMemberDto;
+        const image = await this.mediaService.findById(imageId);
+        return this.repository.updateOne(id, { ...member, image_id: image.id }, gens);
     }
 
     async deleteOne(id) {

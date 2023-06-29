@@ -17,9 +17,7 @@ class Controller {
     createOne = async req => {
         const data = await this.service.createOne(CreateMemberDto(req.body));
         const result = {};
-        const genMap = new Map();
-        const departmentArr = [];
-        const positionArr = [];
+        const gensArr = [];
 
         for (const item of data) {
             const genId = item.gen_id;
@@ -28,11 +26,11 @@ class Controller {
             const departmentName = item.department_name;
             const positionId = item.position_id;
             const positionName = item.position_name;
-            if (!genMap.has(genId)) {
-                genMap.set(genId, { id: genId, name: genName });
-            }
-            departmentArr.push({ id: departmentId, name: departmentName });
-            positionArr.push({ id: positionId, name: positionName });
+            gensArr.push({
+                gen: { gen_id: genId, gen_name: genName },
+                department: { department_id: departmentId, department_name: departmentName },
+                position: { position_id: positionId, position_name: positionName }
+            });
         }
 
         result.id = data[0].id;
@@ -48,9 +46,7 @@ class Controller {
         result.created_at = data[0].created_at;
         result.updated_at = data[0].updated_at;
         result.image_id = { id: data[0].image_id, url: data[0].image_url };
-        result.gen = Array.from(genMap.values());
-        result.department = departmentArr;
-        result.position = positionArr;
+        result.gens = gensArr;
 
         return data && ValidHttpResponse.toCreatedResponse(result);
     };
@@ -58,9 +54,7 @@ class Controller {
     findById = async req => {
         const data = await this.service.findById(req.params.id);
         const result = {};
-        const genMap = new Map();
-        const departmentArr = [];
-        const positionArr = [];
+        const gensArr = [];
 
         for (const item of data) {
             const genId = item.gen_id;
@@ -69,11 +63,11 @@ class Controller {
             const departmentName = item.department_name;
             const positionId = item.position_id;
             const positionName = item.position_name;
-            if (!genMap.has(genId)) {
-                genMap.set(genId, { id: genId, name: genName });
-            }
-            departmentArr.push({ id: departmentId, name: departmentName });
-            positionArr.push({ id: positionId, name: positionName });
+            gensArr.push({
+                gen: { gen_id: genId, gen_name: genName },
+                department: { department_id: departmentId, department_name: departmentName },
+                position: { position_id: positionId, position_name: positionName }
+            });
         }
 
         result.id = data[0].id;
@@ -89,9 +83,7 @@ class Controller {
         result.created_at = data[0].created_at;
         result.updated_at = data[0].updated_at;
         result.image_id = { id: data[0].image_id, url: data[0].image_url };
-        result.gen = Array.from(genMap.values());
-        result.department = departmentArr;
-        result.position = positionArr;
+        result.gens = gensArr;
 
         return data && ValidHttpResponse.toOkResponse(result);
     };
@@ -108,43 +100,27 @@ class Controller {
             if (acc[current.id]) {
                 if (Array.isArray(acc[current.id].gens)) {
                     acc[current.id].gens.push({
-                        id: current.gen_id,
-                        name: current.gen_name,
+                        gen: { gen_id: current.gen_id, gen_name: current.gen_name },
+                        department: { department_id: current.department_id, department_name: current.department_name },
+                        position: { position_id: current.position_id, position_name: current.position_name }
                     });
                 } else {
                     acc[current.id].gens = [
-                        { id: current.gen_id, name: current.gen_name },
-                    ];
-                }
-
-                if (Array.isArray(acc[current.id].departments)) {
-                    acc[current.id].departments.push({
-                        id: current.department_id,
-                        name: current.department_name,
-                    });
-                } else {
-                    acc[current.id].departments = [
-                        { id: current.department_id, name: current.department_name },
-                    ];
-                }
-
-                if (Array.isArray(acc[current.id].positions)) {
-                    acc[current.id].positions.push({
-                        id: current.position_id,
-                        name: current.position_name,
-                    });
-                } else {
-                    acc[current.id].positions = [
-                        { id: current.position_id, name: current.position_name },
+                        {
+                            gen: { gen_id: current.gen_id, gen_name: current.gen_name },
+                            department: { department_id: current.department_id, department_name: current.department_name },
+                            position: { position_id: current.position_id, position_name: current.position_name }
+                        },
                     ];
                 }
             } else {
                 acc[current.id] = {
                     ...current,
-                    gens: [{ id: current.gen_id, name: current.gen_name }],
-                    departments: [{ id: current.department_id, name: current.department_name }],
-                    positions: [{ id: current.position_id, name: current.position_name }],
-                    image: { id: current.image_id, url: current.image_url },
+                    gens: [{
+                        gen: { gen_id: current.gen_id, gen_name: current.gen_name },
+                        department: { department_id: current.department_id, department_name: current.department_name },
+                        position: { position_id: current.position_id, position_name: current.position_name }
+                    }],
                 };
 
                 delete acc[current.id].image_id;
