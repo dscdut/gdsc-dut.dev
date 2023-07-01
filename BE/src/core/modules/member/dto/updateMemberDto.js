@@ -13,12 +13,11 @@ ApiDocument.addModel('UpdateMemberDto', {
     image_id: SwaggerDocument.ApiProperty({ type: 'int' }),
     gens: SwaggerDocument.ApiProperty({
         type: 'array',
-        model: 'object',
-        properties: {
-            gen_id: SwaggerDocument.ApiProperty({ type: 'string' }),
-            department_id: SwaggerDocument.ApiProperty({ type: 'int' }),
-            position_id: SwaggerDocument.ApiProperty({ type: 'int' }),
-        }
+        example: [{
+            gen_id: 0,
+            departments_id: 0,
+            positions_id: 0
+        }]
     })
 });
 

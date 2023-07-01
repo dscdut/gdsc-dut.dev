@@ -27,9 +27,9 @@ class Controller {
             const positionId = item.position_id;
             const positionName = item.position_name;
             gensArr.push({
-                gen: { gen_id: genId, gen_name: genName },
-                department: { department_id: departmentId, department_name: departmentName },
-                position: { position_id: positionId, position_name: positionName }
+                gens: { gen_id: genId, gen_name: genName },
+                departments: { department_id: departmentId, department_name: departmentName },
+                positions: { position_id: positionId, position_name: positionName }
             });
         }
 
@@ -45,7 +45,7 @@ class Controller {
         result.deleted_at = data[0].deleted_at;
         result.created_at = data[0].created_at;
         result.updated_at = data[0].updated_at;
-        result.image_id = { id: data[0].image_id, url: data[0].image_url };
+        result.image = { id: data[0].image_id, url: data[0].image_url };
         result.gens = gensArr;
 
         return data && ValidHttpResponse.toCreatedResponse(result);
@@ -82,7 +82,7 @@ class Controller {
         result.deleted_at = data[0].deleted_at;
         result.created_at = data[0].created_at;
         result.updated_at = data[0].updated_at;
-        result.image_id = { id: data[0].image_id, url: data[0].image_url };
+        result.image = { id: data[0].image_id, url: data[0].image_url };
         result.gens = gensArr;
 
         return data && ValidHttpResponse.toOkResponse(result);
@@ -116,6 +116,10 @@ class Controller {
             } else {
                 acc[current.id] = {
                     ...current,
+                    image: {
+                        id: current.image_id,
+                        url: current.image_url
+                    },
                     gens: [{
                         gen: { gen_id: current.gen_id, gen_name: current.gen_name },
                         department: { department_id: current.department_id, department_name: current.department_name },

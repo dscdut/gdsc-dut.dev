@@ -45,7 +45,7 @@ class Repository extends DataRepository {
                 const memberGens = [];
                 for (let i = 0; i < gens.length; i++) {
                     memberGens.push({
-                        member_id: memberId, gen_id: gens[i].gen_id, department_id: gens[i].department_id, position_id: gens[i].position_id
+                        member_id: memberId, gen_id: gens[i].gen_id, department_id: gens[i].departments_id, position_id: gens[i].positions_id
                     });
                 }
                 return this.query().insert(memberGens).into('members_gens');
@@ -97,11 +97,10 @@ class Repository extends DataRepository {
                 const memberGens = [];
                 for (let i = 0; i < gens.length; i++) {
                     memberGens.push({
-                        gen_id: gens[i].gen_id, department_id: gens[i].department_id, position_id: gens[i].position_id
+                        gen_id: gens[i].gen_id, department_id: gens[i].departments_id, position_id: gens[i].positions_id
                     });
                 }
                 for (let i = 0; i < memberGens.length; i++) {
-                    console.log(memberGens[i]);
                     this.query().where('member_id', memberId).update(memberGens[i]).into('members_gens');
                 }
             });

@@ -11,6 +11,18 @@ class Repository extends DataRepository {
         return this.query().where(memberGenId).select('product_id').from('members_gens');
     }
 
+    async findProduct(member_id) {
+        return this.query().where('member_id', member_id).select('product_id').from('members_gens');
+    }
+
+    async findAllMembersGens(member_id) {
+        return this.query().where('member_id', member_id).select('member_id', 'gen_id', 'department_id', 'position_id', 'product_id').from('members_gens');
+    }
+
+    async deleteAllMembersGens(member_id) {
+        return this.query().where('member_id', member_id).delete('').from('members_gens');
+    }
+
     async findDepPos(memberGen) {
         return this.query()
             .select('department_id', 'position_id')
