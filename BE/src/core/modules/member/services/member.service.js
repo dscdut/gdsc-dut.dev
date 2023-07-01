@@ -4,6 +4,7 @@ import { NotFoundException } from '../../../../packages/httpException';
 import { MemberRepository } from '../member.repository';
 import { PositionService } from '../../position/services/position.service';
 import { DepartmentService } from '../../department/services/department.service';
+import { MemberGenService } from '../../member_gen/service/member_gen.service';
 import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document';
 
@@ -15,6 +16,7 @@ class Service extends DataPersistenceService {
         this.genService = GenService;
         this.mediaService = MediaService;
         this.repository = MemberRepository;
+        this.memberGenService = MemberGenService;
     }
 
     async createOne(createMemberDto) {
@@ -23,8 +25,8 @@ class Service extends DataPersistenceService {
         } = createMemberDto;
         for (let i = 0; i < gens.length; i++) {
             await this.genService.findById(gens[i].gen_id);
-            await this.departmentService.findById(gens[i].department_id);
-            await this.positionService.findById(gens[i].position_id);
+            await this.departmentService.findById(gens[i].departments_id);
+            await this.positionService.findById(gens[i].positions_id);
         }
         const image = await this.mediaService.findById(imageId);
 
