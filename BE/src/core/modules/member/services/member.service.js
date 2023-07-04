@@ -44,7 +44,20 @@ class Service extends DataPersistenceService {
             gens, imageId, ...member
         } = updateMemberDto;
         const image = await this.mediaService.findById(imageId);
-        return this.repository.updateOne(id, { ...member, image_id: image.id }, gens);
+        const membersGensIds = [];
+        gens.map(gen => {
+            gen.products.map(product => {
+                membersGensIds.push({
+                    member_id: parseInt(id),
+                    gen_id: gen.gen.gen_id,
+                    department_id: gen.department.department_id,
+                    position_id: gen.position.position_id,
+                    product_id: product.product_id
+                });
+            });
+        });
+        await this.memberGenService.deleteMembersGens(id);
+        return this.repository.updateOne(id, { ...member, image_id: image.id }, membersGensIds);
     }
 
     async deleteOne(id) {
