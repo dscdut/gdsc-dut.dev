@@ -5,7 +5,8 @@ class Repository extends DataRepository {
     async findById(id) {
         return this.query()
             .select('members.*', 'members_gens.gen_id as gen_id', 'gens.name as gen_name', 'members_gens.department_id as department_id',
-                'departments.name as department_name', 'members_gens.position_id as position_id', 'positions.name as position_name', 'images.url as image_url')
+                'departments.name as department_name', 'members_gens.position_id as position_id', 'positions.name as position_name', 'images.url as image_url',
+                'products.id as product_id', 'products.name as product_name')
             .from('members')
             .innerJoin(
                 'members_gens',
@@ -31,6 +32,11 @@ class Repository extends DataRepository {
                 'images',
                 'members.image_id',
                 'images.id',
+            )
+            .leftJoin(
+                'products',
+                'members_gens.product_id',
+                'products.id',
             )
             .where('members.id', id);
     }
@@ -89,21 +95,10 @@ class Repository extends DataRepository {
                 .del());
     }
 
-    async updateOne(id, member, gens) {
-        let memberId;
+    async updateOne(id, member, membersGensIds) {
         return this.query().where('id', id).update(convertToSnakeCase(member))
-            .then(() => {
-                memberId = parseInt(id);
-                const memberGens = [];
-                for (let i = 0; i < gens.length; i++) {
-                    memberGens.push({
-                        gen_id: gens[i].gen_id, department_id: gens[i].departments_id, position_id: gens[i].positions_id
-                    });
-                }
-                for (let i = 0; i < memberGens.length; i++) {
-                    this.query().where('member_id', memberId).update(memberGens[i]).into('members_gens');
-                }
-            });
+            .then(() => this.query().insert(membersGensIds).into('members_gens'))
+            .then(() => this.findById(id));
     }
 
     findMany(ids) {

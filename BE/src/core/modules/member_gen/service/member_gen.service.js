@@ -20,6 +20,10 @@ class Service {
     async findAllMembersGens(member_id) {
         return this.repository.findAllMembersGens(member_id);
     }
+
+    async deleteMembersGens(member_id) {
+        return this.repository.deleteMembersGens(member_id);
+    }
 }
 
 export const MemberGenService = new Service();

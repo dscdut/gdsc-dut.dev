@@ -42,6 +42,10 @@ class Repository extends DataRepository {
             .insert(mergedObject)
             .into('members_gens');
     }
+
+    async deleteMembersGens(member_id) {
+        return this.query().where('member_id', member_id).del().from('members_gens');
+    }
 }
 
 export const MemberGenRepository = new Repository('members_gens');
