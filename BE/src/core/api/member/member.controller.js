@@ -65,6 +65,13 @@ class Controller {
             const positionName = item.position_name;
             const productId = item.product_id;
             const productName = item.product_name;
+            // gensArr.push({
+            //     gen: { gen_id: genId, gen_name: genName },
+            //     department: { department_id: departmentId, department_name: departmentName },
+            //     position: { position_id: positionId, position_name: positionName },
+            //     product: { product_id: productId, product_name: productName }
+            // });
+
             if (!gensObj[genId]) {
                 gensObj[genId] = {
                     gen: { gen_id: genId, gen_name: genName },
