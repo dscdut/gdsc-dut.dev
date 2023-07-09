@@ -1,5 +1,5 @@
 import { RouteObject, useRoutes } from 'react-router-dom'
-import { PRIVATE_ROUTE } from './shared/path'
+import { PRIVATE_ROUTE, PUBLIC_ROUTE } from './shared/path'
 
 // component
 import { Row, Spin } from 'antd'
@@ -7,16 +7,15 @@ import { Suspense, lazy } from 'react'
 import { Route } from './interface/app'
 import NotFoundPage from './pages/NotFoundPage'
 import PrivateRoute from './routes/PrivateRoutes'
+import PublicRoute from './routes/PublicRoutes'
 
 interface RouteElement {
   routeElement: () => Promise<any>
   isPrivate?: boolean
 }
-
 interface LazyRouteProps {
   routes: Route[]
 }
-
 function LazyElement({ routeElement, isPrivate = false }: RouteElement) {
   const LazyComponent = lazy(routeElement)
   return (
@@ -31,7 +30,6 @@ function LazyElement({ routeElement, isPrivate = false }: RouteElement) {
     </Suspense>
   )
 }
-
 function wrapRoutesWithLazy({ routes }: LazyRouteProps): RouteObject[] {
   return routes?.map((route: Route) => ({
     path: route.path,
@@ -39,12 +37,12 @@ function wrapRoutesWithLazy({ routes }: LazyRouteProps): RouteObject[] {
     ...(route.children && { children: wrapRoutesWithLazy({ routes: route.children }) })
   }))
 }
-
 export default function useRouteElements() {
   const routeElements = [
     {
       path: '/',
-      element: <LazyElement routeElement={() => import('./pages/Home')} />
+      element: <PublicRoute />,
+      children: wrapRoutesWithLazy({ routes: PUBLIC_ROUTE })
     },
     {
       path: '*',
