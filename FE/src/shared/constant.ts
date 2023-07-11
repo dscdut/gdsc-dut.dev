@@ -13,8 +13,6 @@ export const urlRegex =
 
 export const phoneRegex = /^\+?\d{1,3}[- .]?\d{1,10}$/
 
-export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
 export const SECONDS_IN_DAY = 86400
 
 export const SIZEBAR_OPTIONS = [
@@ -53,6 +51,34 @@ export const SIZEBAR_OPTIONS = [
     label: 'Products',
     path: PATH_URL.products,
     icon: ProjectOutlined
+  }
+]
+
+export const HEADER_OPTIONS = [
+  {
+    key: 'home',
+    label: 'Home',
+    path: PATH_URL.home
+  },
+  {
+    key: 'department',
+    label: 'Department',
+    path: PATH_URL.homeDepartment
+  },
+  {
+    key: 'events',
+    label: 'Events',
+    path: PATH_URL.homeEvents
+  },
+  {
+    key: 'products',
+    label: 'Products',
+    path: PATH_URL.homeProducts
+  },
+  {
+    key: 'activities',
+    label: 'Activities',
+    path: PATH_URL.homeActivities
   }
 ]
 
