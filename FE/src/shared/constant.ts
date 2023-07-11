@@ -11,6 +11,8 @@ import PATH_URL from './path'
 export const urlRegex =
   /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi
 
+export const phoneRegex = /^\+?\d{1,3}[- .]?\d{1,10}$/
+
 export const SECONDS_IN_DAY = 86400
 
 export const SIZEBAR_OPTIONS = [

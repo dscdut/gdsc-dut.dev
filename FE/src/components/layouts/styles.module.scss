@@ -12,6 +12,12 @@
   border-radius: 0 0 12px 12px;
 }
 
+.content {
+  padding: 100px;
+  margin: 0;
+  min-height: 500px;
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -35,30 +41,60 @@
   color: white;
 }
 
-.content {
+.footerContent {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   border-bottom: 1px solid #ccc;
 }
 
-.menu,
-ul {
+.menu {
   margin-bottom: 24px;
 }
 
-.menu ul {
-  list-style: none;
-  padding: 0;
+.menuRow {
+  justify-content: flex-end;
 }
 
-.menu ul li {
+.menuTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.menuList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuList li {
   margin-bottom: 8px;
+  color: #ccc;
 }
 
 .footerBottom {
   display: flex;
   align-items: center;
   padding-top: 24px;
+  color: white;
+}
+
+.socialIcons {
+  text-align: center;
+}
+
+.socialLink {
+  color: #ccc;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.emailLink {
+  text-align: end;
+}
+
+.emailLinkText {
   color: white;
 }

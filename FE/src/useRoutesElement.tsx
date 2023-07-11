@@ -7,7 +7,8 @@ import { Suspense, lazy } from 'react'
 import { Route } from './interface/app'
 import NotFoundPage from './pages/NotFoundPage'
 import PrivateRoute from './routes/PrivateRoutes'
-import PublicRoute from './routes/PublicRoutes'
+import { Outlet } from 'react-router-dom'
+import PublicLayout from 'src/components/layouts/PublicLayout'
 
 interface RouteElement {
   routeElement: () => Promise<any>
@@ -41,7 +42,11 @@ export default function useRouteElements() {
   const routeElements = [
     {
       path: '/',
-      element: <PublicRoute />,
+      element: (
+        <PublicLayout>
+          <Outlet />
+        </PublicLayout>
+      ),
       children: wrapRoutesWithLazy({ routes: PUBLIC_ROUTE })
     },
     {

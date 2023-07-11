@@ -1,6 +1,6 @@
 import { Button, Dropdown, Image, Layout, Menu, MenuRef } from 'antd'
 
-import { Content, Header } from 'antd/es/layout/layout'
+import { Header } from 'antd/es/layout/layout'
 
 import { useEffect, useRef, useState } from 'react'
 
@@ -12,7 +12,7 @@ import { HEADER_OPTIONS } from 'src/shared/constant'
 
 import { useResponsive } from 'src/shared/hook'
 
-import { DownOutlined, MenuOutlined } from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons'
 
 import styles from './styles.module.scss'
 
@@ -66,12 +66,7 @@ export default function HeaderLayout({ children }: ReactWithChild) {
         </div>
 
         {isDesktop ? (
-          <Menu
-            mode='horizontal'
-            defaultSelectedKeys={['home']}
-            selectedKeys={[selectedKey]}
-            style={{ lineHeight: '64px' }}
-          >
+          <Menu mode='horizontal' defaultSelectedKeys={['home']} selectedKeys={[selectedKey]}>
             {menuItems.map((item, index) => (
               <Menu.Item key={item.key}>{item.label}</Menu.Item>
             ))}
@@ -79,7 +74,7 @@ export default function HeaderLayout({ children }: ReactWithChild) {
         ) : (
           <Dropdown
             overlay={
-              <Menu>
+              <Menu defaultSelectedKeys={['home']} selectedKeys={[selectedKey]}>
                 {menuItems.map((item, index) => (
                   <Menu.Item key={item.key}>
                     <Link to={item.path}>{item.label}</Link>
