@@ -30,7 +30,9 @@ class Service extends DataPersistenceService {
             await this.genService.findById(gens[i].gen_id);
             await this.departmentService.findById(gens[i].departments_id);
             await this.positionService.findById(gens[i].positions_id);
-            await this.productService.findById(gens[i].products_id);
+            for (let j = 0; j < gens[i].products_id.length; j++) {
+                await this.productService.findById(gens[i].products_id[j]);
+            }
         }
         const image = await this.mediaService.findById(imageId);
 

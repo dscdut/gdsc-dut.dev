@@ -17,7 +17,7 @@ ApiDocument.addModel('CreateMemberDto', {
             gen_id: 0,
             departments_id: 0,
             positions_id: 0,
-            products_id: 0,
+            products_id: [0]
         }]
     })
 });

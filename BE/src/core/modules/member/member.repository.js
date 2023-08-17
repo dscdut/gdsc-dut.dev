@@ -50,13 +50,15 @@ class Repository extends DataRepository {
                 memberId = result.id;
                 const memberGens = [];
                 for (let i = 0; i < gens.length; i++) {
-                    memberGens.push({
-                        member_id: memberId,
-                        gen_id: gens[i].gen_id,
-                        department_id: gens[i].departments_id,
-                        position_id: gens[i].positions_id,
-                        product_id: gens[i].products_id
-                    });
+                    for (let j = 0; j < gens[i].products_id.length; j++) {
+                        memberGens.push({
+                            member_id: memberId,
+                            gen_id: gens[i].gen_id,
+                            department_id: gens[i].departments_id,
+                            position_id: gens[i].positions_id,
+                            product_id: gens[i].products_id[j]
+                        });
+                    }
                 }
                 return this.query().insert(memberGens).into('members_gens');
             })
