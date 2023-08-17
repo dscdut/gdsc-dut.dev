@@ -76,6 +76,7 @@ class Controller {
             const positionName = item.position_name;
             const productId = item.product_id;
             const productName = item.product_name;
+            
             if (!gensObj[genId]) {
                 gensObj[genId] = {
                     gen: { gen_id: genId, gen_name: genName },
