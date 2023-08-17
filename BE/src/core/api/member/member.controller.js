@@ -65,13 +65,6 @@ class Controller {
             const positionName = item.position_name;
             const productId = item.product_id;
             const productName = item.product_name;
-            // gensArr.push({
-            //     gen: { gen_id: genId, gen_name: genName },
-            //     department: { department_id: departmentId, department_name: departmentName },
-            //     position: { position_id: positionId, position_name: positionName },
-            //     product: { product_id: productId, product_name: productName }
-            // });
-
             if (!gensObj[genId]) {
                 gensObj[genId] = {
                     gen: { gen_id: genId, gen_name: genName },
@@ -117,20 +110,14 @@ class Controller {
         const data = await this.service.getAndCount(reqTransformed);
         const groupByResults = data.content.reduce((acc, current) => {
             if (acc[current.id]) {
-                if (Array.isArray(acc[current.id].gens)) {
+                const existingGen = acc[current.id].gens.find(gen => gen.gen.gen_id === current.gen_id);
+                if (!existingGen) {
                     acc[current.id].gens.push({
                         gen: { gen_id: current.gen_id, gen_name: current.gen_name },
                         department: { department_id: current.department_id, department_name: current.department_name },
-                        position: { position_id: current.position_id, position_name: current.position_name }
+                        position: { position_id: current.position_id, position_name: current.position_name },
+                        products: []
                     });
-                } else {
-                    acc[current.id].gens = [
-                        {
-                            gen: { gen_id: current.gen_id, gen_name: current.gen_name },
-                            department: { department_id: current.department_id, department_name: current.department_name },
-                            position: { position_id: current.position_id, position_name: current.position_name }
-                        },
-                    ];
                 }
             } else {
                 acc[current.id] = {
@@ -142,18 +129,34 @@ class Controller {
                     gens: [{
                         gen: { gen_id: current.gen_id, gen_name: current.gen_name },
                         department: { department_id: current.department_id, department_name: current.department_name },
-                        position: { position_id: current.position_id, position_name: current.position_name }
+                        position: { position_id: current.position_id, position_name: current.position_name },
+                        products: []
                     }],
                 };
-
                 delete acc[current.id].image_id;
                 delete acc[current.id].image_url;
             }
             return acc;
         }, {});
-        const finalResult = Object.values(groupByResults).map(obj => {
+        const newData = data.content;
+        const inforMember = Object.values(groupByResults);
+        console.log(inforMember);
+        inforMember.map(item => {
+            const idMember = parseInt(item.id);
+            if (inforMember.gens !== undefined) {
+                inforMember.gens.map(gen => {
+                    const genId = gen.gen_id;
+                    newData.map(data => {
+                        if (idMember === data.id && genId === data.gen_id) {
+                            item.gens[0].products.push({ product_id: data.product_id, product_name: data.product_name });
+                        }
+                    });
+                });
+            }
+        });
+        const finalResult = Object.values(inforMember).map(obj => {
             const {
-                gen_id, gen_name, department_id, department_name, position_id, position_name, ...rest
+                gen_id, gen_name, department_id, department_name, position_id, position_name, product_id, product_name, ...rest
             } = obj;
             return rest;
         });
