@@ -19,23 +19,6 @@ class Controller {
         const result = {};
         const gensObj = {};
 
-        // for (const item of data) {
-        //     const genId = item.gen_id;
-        //     const genName = item.gen_name;
-        //     const departmentId = item.department_id;
-        //     const departmentName = item.department_name;
-        //     const positionId = item.position_id;
-        //     const positionName = item.position_name;
-        //     const productId = item.product_id;
-        //     const productName = item.product_name;
-        //     gensArr.push({
-        //         gens: { gen_id: genId, gen_name: genName },
-        //         departments: { department_id: departmentId, department_name: departmentName },
-        //         positions: { position_id: positionId, position_name: positionName },
-        //         products: { product_id: productId, product_name: productName }
-        //     });
-        // }
-
         for (const item of data) {
             const genId = item.gen_id;
             const genName = item.gen_name;
