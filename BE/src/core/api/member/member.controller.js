@@ -117,20 +117,22 @@ class Controller {
         const data = await this.service.getAndCount(reqTransformed);
         const groupByResults = data.content.reduce((acc, current) => {
             if (acc[current.id]) {
-                if (Array.isArray(acc[current.id].gens)) {
+                const existingGen = acc[current.id].gens.find(gen => gen.gen.gen_id === current.gen_id);
+                if (existingGen) {
+                    existingGen.products.push({
+                        product_id: current.product_id,
+                        product_name: current.product_name
+                    });
+                } else {
                     acc[current.id].gens.push({
                         gen: { gen_id: current.gen_id, gen_name: current.gen_name },
                         department: { department_id: current.department_id, department_name: current.department_name },
-                        position: { position_id: current.position_id, position_name: current.position_name }
+                        position: { position_id: current.position_id, position_name: current.position_name },
+                        products: [{
+                            product_id: current.product_id,
+                            product_name: current.product_name
+                        }]
                     });
-                } else {
-                    acc[current.id].gens = [
-                        {
-                            gen: { gen_id: current.gen_id, gen_name: current.gen_name },
-                            department: { department_id: current.department_id, department_name: current.department_name },
-                            position: { position_id: current.position_id, position_name: current.position_name }
-                        },
-                    ];
                 }
             } else {
                 acc[current.id] = {
@@ -142,10 +144,13 @@ class Controller {
                     gens: [{
                         gen: { gen_id: current.gen_id, gen_name: current.gen_name },
                         department: { department_id: current.department_id, department_name: current.department_name },
-                        position: { position_id: current.position_id, position_name: current.position_name }
+                        position: { position_id: current.position_id, position_name: current.position_name },
+                        products: [{
+                            product_id: current.product_id,
+                            product_name: current.product_name
+                        }]
                     }],
                 };
-
                 delete acc[current.id].image_id;
                 delete acc[current.id].image_url;
             }
