@@ -50,15 +50,22 @@ class Repository extends DataRepository {
                 memberId = result.id;
                 const memberGens = [];
                 for (let i = 0; i < gens.length; i++) {
-                    memberGens.push({
-                        member_id: memberId, gen_id: gens[i].gen_id, department_id: gens[i].departments_id, position_id: gens[i].positions_id
-                    });
+                    for (let j = 0; j < gens[i].products_id.length; j++) {
+                        memberGens.push({
+                            member_id: memberId,
+                            gen_id: gens[i].gen_id,
+                            department_id: gens[i].departments_id,
+                            position_id: gens[i].positions_id,
+                            product_id: gens[i].products_id[j]
+                        });
+                    }
                 }
                 return this.query().insert(memberGens).into('members_gens');
             })
             .then(() => this.query()
                 .select('members.*', 'members_gens.gen_id as gen_id', 'gens.name as gen_name', 'members_gens.department_id as department_id',
-                    'departments.name as department_name', 'members_gens.position_id as position_id', 'positions.name as position_name', 'images.url as image_url')
+                    'departments.name as department_name', 'members_gens.position_id as position_id', 'positions.name as position_name', 'images.url as image_url',
+                    'products.id as product_id', 'products.name as product_name')
                 .from('members')
                 .innerJoin(
                     'members_gens',
@@ -84,6 +91,11 @@ class Repository extends DataRepository {
                     'images',
                     'members.image_id',
                     'images.id',
+                )
+                .innerJoin(
+                    'products',
+                    'members_gens.product_id',
+                    'products.id',
                 )
                 .where('members.id', memberId));
     }

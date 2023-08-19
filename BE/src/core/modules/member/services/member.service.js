@@ -1,10 +1,12 @@
 import { DataPersistenceService } from 'packages/restBuilder/core/dataHandler/data.persistence.service';
+import { times } from 'lodash';
 import { Optional } from '../../../utils';
 import { NotFoundException } from '../../../../packages/httpException';
 import { MemberRepository } from '../member.repository';
 import { PositionService } from '../../position/services/position.service';
 import { DepartmentService } from '../../department/services/department.service';
 import { MemberGenService } from '../../member_gen/service/member_gen.service';
+import { ProductService } from '../../product/services/product.service';
 import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document';
 
@@ -17,6 +19,7 @@ class Service extends DataPersistenceService {
         this.mediaService = MediaService;
         this.repository = MemberRepository;
         this.memberGenService = MemberGenService;
+        this.productService = ProductService;
     }
 
     async createOne(createMemberDto) {
@@ -27,6 +30,9 @@ class Service extends DataPersistenceService {
             await this.genService.findById(gens[i].gen_id);
             await this.departmentService.findById(gens[i].departments_id);
             await this.positionService.findById(gens[i].positions_id);
+            for (let j = 0; j < gens[i].products_id.length; j++) {
+                await this.productService.findById(gens[i].products_id[j]);
+            }
         }
         const image = await this.mediaService.findById(imageId);
 

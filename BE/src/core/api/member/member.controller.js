@@ -17,7 +17,7 @@ class Controller {
     createOne = async req => {
         const data = await this.service.createOne(CreateMemberDto(req.body));
         const result = {};
-        const gensArr = [];
+        const gensObj = {};
 
         for (const item of data) {
             const genId = item.gen_id;
@@ -26,12 +26,23 @@ class Controller {
             const departmentName = item.department_name;
             const positionId = item.position_id;
             const positionName = item.position_name;
-            gensArr.push({
-                gens: { gen_id: genId, gen_name: genName },
-                departments: { department_id: departmentId, department_name: departmentName },
-                positions: { position_id: positionId, position_name: positionName }
+            const productId = item.product_id;
+            const productName = item.product_name;
+            if (!gensObj[genId]) {
+                gensObj[genId] = {
+                    gen: { gen_id: genId, gen_name: genName },
+                    department: { department_id: departmentId, department_name: departmentName },
+                    position: { position_id: positionId, position_name: positionName },
+                    products: []
+                };
+            }
+
+            gensObj[genId].products.push({
+                product_id: productId,
+                product_name: productName
             });
         }
+        const gensArr = Object.values(gensObj);
 
         result.id = data[0].id;
         result.full_name = data[0].full_name;
@@ -65,13 +76,7 @@ class Controller {
             const positionName = item.position_name;
             const productId = item.product_id;
             const productName = item.product_name;
-            // gensArr.push({
-            //     gen: { gen_id: genId, gen_name: genName },
-            //     department: { department_id: departmentId, department_name: departmentName },
-            //     position: { position_id: positionId, position_name: positionName },
-            //     product: { product_id: productId, product_name: productName }
-            // });
-
+            
             if (!gensObj[genId]) {
                 gensObj[genId] = {
                     gen: { gen_id: genId, gen_name: genName },
