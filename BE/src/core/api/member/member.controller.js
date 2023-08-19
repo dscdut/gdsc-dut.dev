@@ -111,12 +111,20 @@ class Controller {
         const groupByResults = data.content.reduce((acc, current) => {
             if (acc[current.id]) {
                 const existingGen = acc[current.id].gens.find(gen => gen.gen.gen_id === current.gen_id);
-                if (!existingGen) {
+                if (existingGen) {
+                    existingGen.products.push({
+                        product_id: current.product_id,
+                        product_name: current.product_name
+                    });
+                } else {
                     acc[current.id].gens.push({
                         gen: { gen_id: current.gen_id, gen_name: current.gen_name },
                         department: { department_id: current.department_id, department_name: current.department_name },
                         position: { position_id: current.position_id, position_name: current.position_name },
-                        products: []
+                        products: [{
+                            product_id: current.product_id,
+                            product_name: current.product_name
+                        }]
                     });
                 }
             } else {
@@ -130,7 +138,10 @@ class Controller {
                         gen: { gen_id: current.gen_id, gen_name: current.gen_name },
                         department: { department_id: current.department_id, department_name: current.department_name },
                         position: { position_id: current.position_id, position_name: current.position_name },
-                        products: []
+                        products: [{
+                            product_id: current.product_id,
+                            product_name: current.product_name
+                        }]
                     }],
                 };
                 delete acc[current.id].image_id;
@@ -138,25 +149,9 @@ class Controller {
             }
             return acc;
         }, {});
-        const newData = data.content;
-        const inforMember = Object.values(groupByResults);
-        console.log(inforMember);
-        inforMember.map(item => {
-            const idMember = parseInt(item.id);
-            if (inforMember.gens !== undefined) {
-                inforMember.gens.map(gen => {
-                    const genId = gen.gen_id;
-                    newData.map(data => {
-                        if (idMember === data.id && genId === data.gen_id) {
-                            item.gens[0].products.push({ product_id: data.product_id, product_name: data.product_name });
-                        }
-                    });
-                });
-            }
-        });
-        const finalResult = Object.values(inforMember).map(obj => {
+        const finalResult = Object.values(groupByResults).map(obj => {
             const {
-                gen_id, gen_name, department_id, department_name, position_id, position_name, product_id, product_name, ...rest
+                gen_id, gen_name, department_id, department_name, position_id, position_name, ...rest
             } = obj;
             return rest;
         });
