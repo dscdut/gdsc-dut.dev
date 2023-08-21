@@ -10,8 +10,52 @@ class Controller {
     }
 
     updateOne = async req => {
-        await this.service.updateOne(req.params.id, UpdateMemberDto(req.body));
-        return ValidHttpResponse.toNoContentResponse();
+        const data = await this.service.updateOne(req.params.id, UpdateMemberDto(req.body));
+        const result = {};
+        const gensObj = {};
+
+        for (const item of data) {
+            const genId = item.gen_id;
+            const genName = item.gen_name;
+            const departmentId = item.department_id;
+            const departmentName = item.department_name;
+            const positionId = item.position_id;
+            const positionName = item.position_name;
+            const productId = item.product_id;
+            const productName = item.product_name;
+            if (!gensObj[genId]) {
+                gensObj[genId] = {
+                    gen: { gen_id: genId, gen_name: genName },
+                    department: { department_id: departmentId, department_name: departmentName },
+                    position: { position_id: positionId, position_name: positionName },
+                    products: []
+                };
+            }
+
+            gensObj[genId].products.push({
+                product_id: productId,
+                product_name: productName
+            });
+        }
+
+        const gensArr = Object.values(gensObj);
+
+        result.id = data[0].id;
+        result.full_name = data[0].full_name;
+        result.birthday = data[0].birthday;
+        result.phone = data[0].phone;
+        result.email = data[0].email;
+        result.horoscope_sign = data[0].horoscope_sign;
+        result.philosophy = data[0].philosophy;
+        result.feelings = data[0].feelings;
+        result.infor_url = data[0].infor_url;
+        result.deleted_at = data[0].deleted_at;
+        result.created_at = data[0].created_at;
+        result.updated_at = data[0].updated_at;
+        result.image = { id: data[0].image_id, url: data[0].image_url };
+        result.gens = gensArr;
+
+        return data && ValidHttpResponse.toOkResponse(result);
     };
 
     createOne = async req => {
@@ -76,7 +120,7 @@ class Controller {
             const positionName = item.position_name;
             const productId = item.product_id;
             const productName = item.product_name;
-            
+
             if (!gensObj[genId]) {
                 gensObj[genId] = {
                     gen: { gen_id: genId, gen_name: genName },
