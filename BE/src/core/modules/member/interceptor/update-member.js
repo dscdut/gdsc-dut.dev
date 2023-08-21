@@ -16,6 +16,7 @@ export const UpdateMemberInterceptor = new DefaultValidatorInterceptor(
         gens: JoiUtils.requiredArrayObject(),
         gen_id: JoiUtils.positiveNumber(),
         departments_id: JoiUtils.positiveNumber(),
-        positions_id: JoiUtils.positiveNumber()
+        positions_id: JoiUtils.positiveNumber(),
+        product_id: JoiUtils.positiveNumber(),
     }),
 );

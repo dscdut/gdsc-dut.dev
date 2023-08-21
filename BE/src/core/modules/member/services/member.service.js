@@ -53,13 +53,13 @@ class Service extends DataPersistenceService {
         const image = await this.mediaService.findById(imageId);
         const membersGensIds = [];
         gens.map(gen => {
-            gen.products.map(product => {
+            gen.products_id.map(productId => {
                 membersGensIds.push({
                     member_id: parseInt(id),
-                    gen_id: gen.gen.gen_id,
-                    department_id: gen.department.department_id,
-                    position_id: gen.position.position_id,
-                    product_id: product.product_id
+                    gen_id: gen.gen_id,
+                    department_id: gen.departments_id,
+                    position_id: gen.positions_id,
+                    product_id: productId
                 });
             });
         });
