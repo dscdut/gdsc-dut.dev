@@ -1,5 +1,4 @@
 import { DataPersistenceService } from 'packages/restBuilder/core/dataHandler/data.persistence.service';
-import { times } from 'lodash';
 import { Optional } from '../../../utils';
 import { NotFoundException } from '../../../../packages/httpException';
 import { MemberRepository } from '../member.repository';
@@ -30,8 +29,10 @@ class Service extends DataPersistenceService {
             await this.genService.findById(gens[i].gen_id);
             await this.departmentService.findById(gens[i].departments_id);
             await this.positionService.findById(gens[i].positions_id);
-            for (let j = 0; j < gens[i].products_id.length; j++) {
-                await this.productService.findById(gens[i].products_id[j]);
+            if (gens[i].products_id.length !== 1 && gens[i].products_id[0] !== 0) {
+                for (let j = 0; j < gens[i].products_id.length; j++) {
+                    await this.productService.findById(gens[i].products_id[j]);
+                }
             }
         }
         const image = await this.mediaService.findById(imageId);
