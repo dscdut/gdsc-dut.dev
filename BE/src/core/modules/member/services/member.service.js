@@ -4,10 +4,10 @@ import { NotFoundException } from '../../../../packages/httpException';
 import { MemberRepository } from '../member.repository';
 import { PositionService } from '../../position/services/position.service';
 import { DepartmentService } from '../../department/services/department.service';
-import { MemberGenService } from '../../member_gen/service/member_gen.service';
-import { ProductService } from '../../product/services/product.service';
 import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document';
+import { MemberGenService } from '../../member_gen/service/member_gen.service';
+import { ProductService } from '../../product/services/product.service';
 
 class Service extends DataPersistenceService {
     constructor() {
@@ -25,16 +25,23 @@ class Service extends DataPersistenceService {
         const {
             gens, imageId, ...member
         } = createMemberDto;
-        for (let i = 0; i < gens.length; i++) {
-            await this.genService.findById(gens[i].gen_id);
-            await this.departmentService.findById(gens[i].departments_id);
-            await this.positionService.findById(gens[i].positions_id);
-            if (gens[i].products_id.length !== 1 && gens[i].products_id[0] !== 0) {
-                for (let j = 0; j < gens[i].products_id.length; j++) {
-                    await this.productService.findById(gens[i].products_id[j]);
-                }
+        const promises = [];
+        gens.forEach(gen => {
+            promises.push(
+                this.genService.findById(gen.gen_id),
+                this.departmentService.findById(gen.departments_id),
+                this.positionService.findById(gen.positions_id)
+            );
+
+            if (gen.products_id.length !== 1 && gen.products_id[0] !== 0) {
+                gen.products_id.forEach(productId => {
+                    promises.push(this.productService.findById(productId));
+                });
             }
-        }
+        });
+
+        await Promise.all(promises);
+
         const image = await this.mediaService.findById(imageId);
 
         return Optional.of(
@@ -52,17 +59,16 @@ class Service extends DataPersistenceService {
         } = updateMemberDto;
         const image = await this.mediaService.findById(imageId);
         const membersGensIds = [];
-        gens.map(gen => {
-            gen.products_id.map(productId => {
-                membersGensIds.push({
-                    member_id: parseInt(id),
-                    gen_id: gen.gen_id,
-                    department_id: gen.departments_id,
-                    position_id: gen.positions_id,
-                    product_id: productId
-                });
+        gens.map(gen => gen.products_id.map(productId => {
+            membersGensIds.push({
+                member_id: parseInt(id, 10),
+                gen_id: gen.gen_id,
+                department_id: gen.departments_id,
+                position_id: gen.positions_id,
+                product_id: productId
             });
-        });
+            return null;
+        }));
         await this.memberGenService.deleteMembersGens(id);
         return this.repository.updateOne(id, { ...member, image_id: image.id }, membersGensIds);
     }

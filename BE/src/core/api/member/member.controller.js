@@ -12,9 +12,7 @@ class Controller {
     updateOne = async req => {
         const data = await this.service.updateOne(req.params.id, UpdateMemberDto(req.body));
         const result = {};
-        const gensObj = {};
-
-        for (const item of data) {
+        const gensObj = data.reduce((acc, item) => {
             const genId = item.gen_id;
             const genName = item.gen_name;
             const departmentId = item.department_id;
@@ -23,8 +21,9 @@ class Controller {
             const positionName = item.position_name;
             const productId = item.product_id;
             const productName = item.product_name;
-            if (!gensObj[genId]) {
-                gensObj[genId] = {
+
+            if (!acc[genId]) {
+                acc[genId] = {
                     gen: { gen_id: genId, gen_name: genName },
                     department: { department_id: departmentId, department_name: departmentName },
                     position: { position_id: positionId, position_name: positionName },
@@ -32,11 +31,13 @@ class Controller {
                 };
             }
 
-            gensObj[genId].products.push({
+            acc[genId].products.push({
                 product_id: productId,
                 product_name: productName
             });
-        }
+
+            return acc;
+        }, {});
 
         const gensArr = Object.values(gensObj);
 
@@ -61,9 +62,7 @@ class Controller {
     createOne = async req => {
         const data = await this.service.createOne(CreateMemberDto(req.body));
         const result = {};
-        const gensObj = {};
-
-        for (const item of data) {
+        const gensObj = data.reduce((acc, item) => {
             const genId = item.gen_id;
             const genName = item.gen_name;
             const departmentId = item.department_id;
@@ -72,8 +71,9 @@ class Controller {
             const positionName = item.position_name;
             const productId = item.product_id;
             const productName = item.product_name;
-            if (!gensObj[genId]) {
-                gensObj[genId] = {
+
+            if (!acc[genId]) {
+                acc[genId] = {
                     gen: { gen_id: genId, gen_name: genName },
                     department: { department_id: departmentId, department_name: departmentName },
                     position: { position_id: positionId, position_name: positionName },
@@ -81,11 +81,14 @@ class Controller {
                 };
             }
 
-            gensObj[genId].products.push({
+            acc[genId].products.push({
                 product_id: productId,
                 product_name: productName
             });
-        }
+
+            return acc;
+        }, {});
+
         const gensArr = Object.values(gensObj);
 
         result.id = data[0].id;
@@ -109,9 +112,7 @@ class Controller {
     findById = async req => {
         const data = await this.service.findById(req.params.id);
         const result = {};
-        const gensObj = {};
-
-        for (const item of data) {
+        const gensObj = data.reduce((acc, item) => {
             const genId = item.gen_id;
             const genName = item.gen_name;
             const departmentId = item.department_id;
@@ -121,8 +122,8 @@ class Controller {
             const productId = item.product_id;
             const productName = item.product_name;
 
-            if (!gensObj[genId]) {
-                gensObj[genId] = {
+            if (!acc[genId]) {
+                acc[genId] = {
                     gen: { gen_id: genId, gen_name: genName },
                     department: { department_id: departmentId, department_name: departmentName },
                     position: { position_id: positionId, position_name: positionName },
@@ -130,11 +131,13 @@ class Controller {
                 };
             }
 
-            gensObj[genId].products.push({
+            acc[genId].products.push({
                 product_id: productId,
                 product_name: productName
             });
-        }
+
+            return acc;
+        }, {});
 
         const gensArr = Object.values(gensObj);
 
