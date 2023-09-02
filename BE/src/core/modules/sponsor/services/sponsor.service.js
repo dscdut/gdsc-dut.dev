@@ -1,3 +1,4 @@
+import { DataPersistenceService } from 'packages/restBuilder/core/dataHandler/data.persistence.service';
 import { Optional } from '../../../utils';
 import { NotFoundException } from '../../../../packages/httpException';
 import { SponsorRepository } from '../sponsor.repository';
@@ -5,8 +6,9 @@ import { GenService } from '../../gen/services/gen.service';
 import { MediaService } from '../../document/service/media.service';
 import { getUniqueElements } from '../../../helpers/convert.helper';
 
-class Service {
+class Service extends DataPersistenceService {
     constructor() {
+        super(SponsorRepository);
         this.repository = SponsorRepository;
         this.genService = GenService;
         this.mediaService = MediaService;

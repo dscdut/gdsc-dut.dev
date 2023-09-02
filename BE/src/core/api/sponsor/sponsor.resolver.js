@@ -4,6 +4,7 @@ import {
     CreateSponsorInterceptor,
     UpdateSponsorInterceptor,
 } from 'core/modules/sponsor/interceptor';
+import { DefaultQueryCriteriaDocument } from 'core/common/swagger';
 import { RecordId } from '../../common/swagger/record-id';
 import { SponsorController } from './sponsor.controller';
 
@@ -50,6 +51,7 @@ export const SponsorResolver = Module.builder()
         {
             route: '/',
             method: 'get',
+            params: DefaultQueryCriteriaDocument,
             controller: SponsorController.findAll,
             preAuthorization: true,
         },
