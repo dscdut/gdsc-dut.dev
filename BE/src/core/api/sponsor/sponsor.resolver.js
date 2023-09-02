@@ -21,6 +21,7 @@ export const SponsorResolver = Module.builder()
             interceptors: [UpdateSponsorInterceptor],
             body: 'UpdateSponsorDto',
             controller: SponsorController.updateOne,
+            preAuthorization: true,
         },
         {
             route: '/',
@@ -28,6 +29,7 @@ export const SponsorResolver = Module.builder()
             interceptors: [CreateSponsorInterceptor],
             body: 'CreateSponsorDto',
             controller: SponsorController.createOne,
+            preAuthorization: true,
         },
         {
             route: '/:id',
@@ -35,6 +37,7 @@ export const SponsorResolver = Module.builder()
             params: [RecordId],
             interceptors: [RecordIdInterceptor],
             controller: SponsorController.findById,
+            preAuthorization: true,
         },
         {
             route: '/:id',
@@ -42,10 +45,12 @@ export const SponsorResolver = Module.builder()
             params: [RecordId],
             interceptors: [RecordIdInterceptor],
             controller: SponsorController.deleteOne,
+            preAuthorization: true,
         },
         {
             route: '/',
             method: 'get',
             controller: SponsorController.findAll,
+            preAuthorization: true,
         },
     ]);

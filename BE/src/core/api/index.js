@@ -8,6 +8,7 @@ import { GenResolver } from './gen/gen.resolver';
 import { ProductResolver } from './product/product.resolver';
 import { SponsorResolver } from './sponsor/sponsor.resolver';
 import { EventResolver } from './event/event.resolver';
+import { AuthGoogleResolver } from './auth/auth.resolver';
 
 export const ModuleResolver = HandlerResolver.builder()
     .addSwaggerBuilder(ApiDocument)
@@ -20,4 +21,5 @@ export const ModuleResolver = HandlerResolver.builder()
         GenResolver,
         ProductResolver,
         EventResolver,
+        AuthGoogleResolver
     ]);
