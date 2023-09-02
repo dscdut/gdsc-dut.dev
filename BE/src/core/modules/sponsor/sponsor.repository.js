@@ -146,6 +146,10 @@ class Repository extends DataRepository {
             .into('gens_sponsors')
             .then(() => this.findById(id));
     }
+
+    async findMany(ids) {
+        return this.query().select('*').from('sponsors').whereIn('id', ids);
+    }
 }
 
 export const SponsorRepository = new Repository('sponsors');

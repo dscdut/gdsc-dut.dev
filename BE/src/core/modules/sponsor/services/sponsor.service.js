@@ -54,5 +54,17 @@ class Service {
     async findAll() {
         return this.repository.findAll();
     }
+
+    async findMany(ids) {
+        const sponsors = await this.repository.findMany(ids);
+        const sponsorIds = sponsors.map(sponsor => sponsor.id);
+        const idsNotFound = ids.filter(item => !sponsorIds.includes(item));
+
+        if (sponsorIds.length !== ids.length) {
+            throw new NotFoundException(`Sponsor with id ${idsNotFound} not found`);
+        }
+
+        return sponsors;
+    }
 }
 export const SponsorService = new Service();
