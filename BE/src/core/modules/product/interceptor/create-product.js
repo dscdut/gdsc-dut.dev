@@ -8,6 +8,7 @@ export const CreateProductInterceptor = new DefaultValidatorInterceptor(
         image_id: JoiUtils.positiveNumber(),
         description: JoiUtils.requiredString(),
         infor_url: JoiUtils.requiredString(),
-        member_ids: Joi.array().items(Joi.number().integer())
+        gen_id: JoiUtils.positiveNumber(),
+        member_ids: Joi.array().items(Joi.number().integer()),
     }),
 );

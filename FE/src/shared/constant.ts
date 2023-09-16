@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import {
   ApartmentOutlined,
   IdcardOutlined,
@@ -51,6 +52,34 @@ export const SIZEBAR_OPTIONS = [
     label: 'Products',
     path: PATH_URL.products,
     icon: ProjectOutlined
+  }
+]
+
+export const HEADER_OPTIONS = [
+  {
+    key: 'home',
+    label: 'Home',
+    path: PATH_URL.home
+  },
+  {
+    key: 'department',
+    label: 'Department',
+    path: PATH_URL.homeDepartment
+  },
+  {
+    key: 'events',
+    label: 'Events',
+    path: PATH_URL.homeEvents
+  },
+  {
+    key: 'products',
+    label: 'Products',
+    path: PATH_URL.homeProducts
+  },
+  {
+    key: 'activities',
+    label: 'Activities',
+    path: PATH_URL.homeActivities
   }
 ]
 

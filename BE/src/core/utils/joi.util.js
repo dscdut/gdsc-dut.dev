@@ -56,4 +56,8 @@ export class JoiUtils {
   static requiredArrayNumber() {
       return Joi.array().items(Joi.number().integer());
   }
+
+  static requiredArrayObject() {
+      return Joi.array().items(Joi.object());
+  }
 }

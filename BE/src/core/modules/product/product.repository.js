@@ -7,6 +7,7 @@ class Repository extends DataRepository {
             'products.id',
             'products.name',
             'images.url as image_url',
+            'images.id as image_id',
             'products.description',
             'products.infor_url',
             'products.deleted_at',
@@ -24,17 +25,16 @@ class Repository extends DataRepository {
             .then(results => {
                 const groupByResults = results.reduce((acc, current) => {
                     if (acc[current.id]) {
-                        if (Array.isArray(acc[current.id].gens)) {
-                            acc[current.id].gens.push({ id: current.gen_id, name: current.gen_name });
+                        if (Array.isArray(acc[current.id].members)) {
                             acc[current.id].members.push({ id: current.member_id, name: current.full_name });
                         } else {
-                            acc[current.id].gens = [{ id: current.gen_id, name: current.gen_name }];
                             acc[current.id].members = [{ id: current.member_id, name: current.full_name }];
                         }
                     } else {
                         acc[current.id] = {
                             ...current,
-                            gens: [{ id: current.gen_id, name: current.gen_name }],
+                            image: { id: current.image_id, url: current.image_url },
+                            gens: { id: current.gen_id, name: current.gen_name },
                             members: [{ id: current.member_id, name: current.full_name }]
                         };
                     }
@@ -43,7 +43,7 @@ class Repository extends DataRepository {
 
                 const finalResult = Object.values(groupByResults).map(obj => {
                     const {
-                        gen_id, gen_name, full_name, member_id, ...rest
+                        gen_id, gen_name, full_name, member_id, image_url, image_id, ...rest
                     } = obj;
                     return rest;
                 });
@@ -56,6 +56,7 @@ class Repository extends DataRepository {
             'products.id',
             'products.name',
             'images.url as image_url',
+            'images.id as image_id',
             'products.description',
             'products.infor_url',
             'products.deleted_at',
@@ -74,17 +75,16 @@ class Repository extends DataRepository {
             .then(results => {
                 const groupByResults = results.reduce((acc, current) => {
                     if (acc[current.id]) {
-                        if (Array.isArray(acc[current.id].gens)) {
-                            acc[current.id].gens.push({ id: current.gen_id, name: current.gen_name });
+                        if (Array.isArray(acc[current.id].members)) {
                             acc[current.id].members.push({ id: current.member_id, name: current.full_name });
                         } else {
-                            acc[current.id].gens = [{ id: current.gen_id, name: current.gen_name }];
                             acc[current.id].members = [{ id: current.member_id, name: current.full_name }];
                         }
                     } else {
                         acc[current.id] = {
                             ...current,
-                            gens: [{ id: current.gen_id, name: current.gen_name }],
+                            image: { id: current.image_id, url: current.image_url },
+                            gens: { id: current.gen_id, name: current.gen_name },
                             members: [{ id: current.member_id, name: current.full_name }]
                         };
                     }
@@ -93,26 +93,18 @@ class Repository extends DataRepository {
 
                 const finalResult = Object.values(groupByResults).map(obj => {
                     const {
-                        gen_id, gen_name, full_name, member_id, ...rest
+                        gen_id, gen_name, full_name, member_id, image_url, image_id, ...rest
                     } = obj;
                     return rest;
                 });
-                return finalResult[0];
+                return finalResult;
             });
     }
 
-    async createOne(product, memberId) {
-        let productId;
-
+    async createOne(product) {
         return this.query()
             .insert(convertToSnakeCase(product))
-            .returning('id')
-            .then(([result]) => {
-                productId = result.id;
-                const updateMemberGens = memberId.map(id => this.query().update({ product_id: productId }).where('member_id', id).into('members_gens'));
-                return Promise.all(updateMemberGens);
-            })
-            .then(() => this.findById(productId));
+            .returning('id');
     }
 
     async deleteOne(id) {

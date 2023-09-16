@@ -13,8 +13,10 @@ export const CreateMemberInterceptor = new DefaultValidatorInterceptor(
         philosophy: JoiUtils.requiredString(),
         feelings: JoiUtils.requiredString(),
         infor_url: JoiUtils.requiredString(),
-        department_id: JoiUtils.positiveNumber(),
-        position_id: JoiUtils.positiveNumber(),
-        gen_ids: JoiUtils.requiredArrayNumber(),
+        gens: JoiUtils.requiredArrayObject(),
+        gen_id: JoiUtils.positiveNumber(),
+        departments_id: JoiUtils.positiveNumber(),
+        positions_id: JoiUtils.positiveNumber(),
+        products_id: JoiUtils.requiredArrayNumber()
     }),
 );

@@ -31,6 +31,19 @@ class Service {
     async findAll() {
         return this.repository.findAll();
     }
+
+    async findMany(ids) {
+        const uniqueIds = [...new Set(ids)];
+        const positions = await this.repository.findMany(uniqueIds);
+        const positionIds = positions.map(position => position.id);
+        const idsNotFound = ids.filter(item => !positionIds.includes(item));
+
+        if (positionIds.length !== uniqueIds.length) {
+            throw new NotFoundException(`Position with id ${idsNotFound} not found`);
+        }
+
+        return positions;
+    }
 }
 
 export const PositionService = new Service();

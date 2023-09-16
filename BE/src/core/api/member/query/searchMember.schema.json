@@ -9,7 +9,10 @@
       "members.philosophy",
       "members.feelings",
       "members.infor_url",
-      { "avatar_url": "images.url" },
+      {
+        "image_id": "members.image_id",
+        "image_url": "images.url" 
+      },
       {
         "gen_id": "members_gens.gen_id",
         "gen_name": "gens.name"
@@ -22,6 +25,10 @@
         "position_id": "positions.id",
         "position_name": "positions.name"
       },
+      {
+        "product_id": "products.id",
+        "product_name": "products.name"
+      },
       { "createdAt": "members.created_at" },
       { "updatedAt": "members.updated_at" },
       { "deletedAt": "members.deleted_at" }
@@ -31,7 +38,8 @@
       ["members_gens", "members.id", "members_gens.member_id"],
       ["gens", "members_gens.gen_id", "gens.id"],
       ["departments", "members_gens.department_id", "departments.id"],
-      ["positions", "members_gens.position_id", "positions.id"]
+      ["positions", "members_gens.position_id", "positions.id"],
+      ["products", "members_gens.product_id", "products.id"]
     ],
     "notDeleted": ["members"],
     "locks": {
