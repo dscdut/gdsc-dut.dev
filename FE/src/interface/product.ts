@@ -3,6 +3,6 @@ export interface Product {
   description: string
   infor_url: string
   name: string
-  gen_ids: number[]
-  members: number[]
+  gen_id: number
+  member_ids: number[]
 }

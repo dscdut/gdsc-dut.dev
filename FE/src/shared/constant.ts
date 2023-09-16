@@ -11,9 +11,7 @@ import PATH_URL from './path'
 export const urlRegex =
   /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi
 
-export const phoneRegex = /^\+?\d{1,3}[- .]?\d{1,10}$/
-
-export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+export const phoneRegex = /^(0)(3[2-9]|5[2689]|7[06789]|8[1-9]|9[0-9])([0-9]{7})$/
 
 export const SECONDS_IN_DAY = 86400
 

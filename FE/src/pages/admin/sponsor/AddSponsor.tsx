@@ -22,7 +22,7 @@ import { GenType } from 'src/types/gens.type'
 import useGetData from 'src/shared/hook/useGetData'
 import { SponsorAPI } from 'src/apis/sponsor.api'
 import { useMutation, useQuery } from 'react-query'
-import { SponsorBody, SponsorType } from 'src/types/sponsor.type'
+import { SponsorBody, SponsorDetailType } from 'src/types/sponsor.type'
 import PATH_URL from 'src/shared/path'
 import { toast } from 'react-toastify'
 import axios from 'axios'
@@ -50,7 +50,7 @@ export default function CreateSponsor() {
   })
 
   const fetchDetailApi = () => {
-    const data: SponsorType = sponsorDetailsQuery.data?.data
+    const data: SponsorDetailType = sponsorDetailsQuery.data?.data
     if (data) {
       axios
         .get(data.image.url, { responseType: 'blob' })
@@ -101,7 +101,7 @@ export default function CreateSponsor() {
   const onSubmit = async (value: Sponsor) => {
     try {
       setConfirmLoading(true)
-      const data: SponsorType = sponsorDetailsQuery.data?.data
+      const data: SponsorDetailType = sponsorDetailsQuery.data?.data
       let imageData
       if (uploadRef?.current && previewImage !== uploadRef?.current?.imageUrl) {
         console.log('UPDATE')
@@ -120,6 +120,7 @@ export default function CreateSponsor() {
       } else {
         await createSponsor.mutateAsync(sponsor)
       }
+      navigate(`${PATH_URL.sponsors}`)
     } catch (error) {
       toast.error(TOAST_MESSAGE.ERROR)
     } finally {

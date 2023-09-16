@@ -1,8 +1,9 @@
 import { Image } from 'antd'
+import dayjs from 'dayjs'
 import { useMutation, useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { MemberAPI } from 'src/apis/member.api'
+import { MemberAPI } from 'src/apis/members.api'
 import CustomTable from 'src/components/common/CustomTable'
 import { TOAST_MESSAGE } from 'src/shared/constant'
 import PATH_URL from 'src/shared/path'
@@ -12,23 +13,24 @@ const columns = [
   {
     dataIndex: 'full_name',
     key: 'full_name',
-    title: 'Tên'
+    title: 'Name'
   },
   {
-    dataIndex: 'avatar_url',
-    key: 'avatar_url',
-    title: 'Ảnh',
-    render: (imgUrl: string) => <Image width={120} height={120} src={imgUrl} />
+    dataIndex: 'image',
+    key: 'image',
+    title: 'Avatar',
+    render: (image: { id: number; url: string }) => <Image width={120} height={120} src={image.url} />
   },
   {
     dataIndex: 'birthday',
     key: 'birthday',
-    title: 'Ngày sinh'
+    title: 'Birthday',
+    render: (date: string) => <span>{dayjs(date).format('DD/MM/YYYY')}</span>
   },
   {
     dataIndex: 'phone',
     key: 'phone',
-    title: 'Số điện thoại'
+    title: 'Phone'
   },
   {
     dataIndex: 'email',

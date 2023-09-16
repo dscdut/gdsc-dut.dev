@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Form, Upload } from 'antd'
+import { ColProps, Form, Upload } from 'antd'
 import { FormInstance, Rule } from 'antd/es/form'
-import { Store } from 'antd/es/form/interface'
+import { FormLabelAlign, Store } from 'antd/es/form/interface'
 import { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
 import { ReactNode, forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { ERROR_MESSAGE, IMAGE_FILETYPE, TOOLTIP_MESSAGE } from 'src/shared/constant'
@@ -19,12 +19,15 @@ interface Props {
   className?: string
   children?: ReactNode
   previewImage: string | null
+  labelCol?: ColProps
+  wrapperCol?: ColProps
+  labelAlign?: FormLabelAlign
 }
 
 type Ref = React.Ref<UploadRef>
 
 const ImageUpload = (props: Props, ref: Ref) => {
-  const { rules, label, name, className, form, previewImage } = props
+  const { rules, label, name, className, form, previewImage, labelCol, wrapperCol, labelAlign } = props
   const [imageUrl, setImageUrl] = useState<string | null>(previewImage)
 
   useEffect(() => {
@@ -71,9 +74,9 @@ const ImageUpload = (props: Props, ref: Ref) => {
           }
         }
       ]}
-      labelCol={{ span: 24 }}
-      wrapperCol={{ span: 24 }}
-      labelAlign='left'
+      labelCol={labelCol}
+      wrapperCol={wrapperCol}
+      labelAlign={labelAlign}
       validateTrigger='onChange'
       validateFirst
     >

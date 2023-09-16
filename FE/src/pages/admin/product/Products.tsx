@@ -1,6 +1,12 @@
 import { Image, Tag } from 'antd'
+import { useMutation, useQuery } from 'react-query'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { ProductAPI } from 'src/apis/products.api'
 import CustomTable from 'src/components/common/CustomTable'
 import { PRODUCTS } from 'src/data/products.dummy'
+import { TOAST_MESSAGE } from 'src/shared/constant'
+import PATH_URL from 'src/shared/path'
 import { Gen } from 'src/types/gens.type'
 import { Member } from 'src/types/member.type'
 import { ProductType } from 'src/types/products.type'
@@ -22,14 +28,11 @@ const columns = [
     dataIndex: 'gens',
     key: 'gens',
     title: 'Gens',
-    render: (gens: Gen[]) => {
-      const genRender = gens.map((gen) => (
-        <Tag color={getRandomColor()} className='mt-2' key={gen.id}>
-          {gen.name}
-        </Tag>
-      ))
-      return genRender
-    }
+    render: (gen: Gen) => (
+      <Tag color={getRandomColor()} className='mt-2' key={gen.id}>
+        {gen.name}
+      </Tag>
+    )
   },
   {
     dataIndex: 'description',
@@ -56,12 +59,32 @@ const columns = [
   }
 ]
 
-export default function Sponsors() {
+export default function Products() {
+  const navigate = useNavigate()
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['products'],
+    queryFn: () => ProductAPI.getProducts()
+  })
+
+  const deleteProduct = useMutation({
+    mutationFn: (id: string | number) => ProductAPI.deleteProduct(id),
+    onSuccess: () => {
+      toast.success(TOAST_MESSAGE.SUCCESS_DELETE)
+    }
+  })
+
   const handleEdit = (item: ProductType) => {
-    // handle edit here
+    navigate(`${PATH_URL.products}/${item.id}`)
   }
   const handleDelete = async (id: string | number) => {
-    // handle delete here!
+    try {
+      const deleteProductResults = await deleteProduct.mutateAsync(id)
+      if (deleteProductResults) {
+        refetch()
+      }
+    } catch (error) {
+      toast.error(TOAST_MESSAGE.ERROR)
+    }
   }
   const onChange = () => {
     // handle on change
@@ -71,13 +94,13 @@ export default function Sponsors() {
     <CustomTable<ProductType>
       columns={columns}
       currentPage={1}
-      dataSource={PRODUCTS}
+      dataSource={data?.data}
       onDelete={handleDelete}
       onEdit={handleEdit}
       pageSize={10}
       total={40}
       onChange={onChange}
-      loading={false}
+      loading={isLoading}
       primaryKey='id'
     />
   )
