@@ -41,8 +41,10 @@ class Service {
 
         let userId = '';
         const isUserExist = await this.userRepository.findByEmail(userInfo.email);
-        if (isUserExist) {
+        if (isUserExist.length > 0) {
             userId = isUserExist.id;
+        } else {
+            throw new UnAuthorizedException('Invalid email');
         }
         const accessToken = this.jwtService.sign({ email: userInfo.email, id: userId });
         return {
