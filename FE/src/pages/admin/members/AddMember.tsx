@@ -15,7 +15,7 @@ import { UploadRef } from 'src/interface/app'
 import { Member } from 'src/interface/member'
 import styles from './styles.module.scss'
 import { useMutation, useQuery } from 'react-query'
-import { MemberBody, MemberDetailType } from 'src/types/member.type'
+import { MemberBody, MemberType } from 'src/types/member.type'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import useMedia from 'src/shared/hook/useMedia'
@@ -45,7 +45,7 @@ export default function CreateMember() {
   })
 
   const fetchDetailMember = () => {
-    const data: MemberDetailType = getMember.data?.data
+    const data: MemberType = getMember.data?.data
     if (data) {
       axios
         .get(data.image.url, { responseType: 'blob' })
@@ -100,7 +100,7 @@ export default function CreateMember() {
   const onSubmit = async (value: Member) => {
     try {
       setConfirmLoading(true)
-      const data: MemberDetailType = getMember.data?.data
+      const data: MemberType = getMember.data?.data
       let imageData
       if (uploadRef?.current && previewImage !== uploadRef?.current?.imageUrl) {
         imageData = await uploadImage.mutateAsync(value.image)

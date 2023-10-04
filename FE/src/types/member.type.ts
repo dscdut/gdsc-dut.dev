@@ -1,6 +1,4 @@
-import { Position } from './positions.type'
-import { Department } from './department.type'
-import { Gen, GenMember } from './gens.type'
+import { GenMember } from './gens.type'
 
 export type Member = {
   id: number
@@ -9,7 +7,6 @@ export type Member = {
 
 export type MemberType = {
   id: number
-  avatar_url: string
   full_name: string
   birthday: string
   phone: string
@@ -18,6 +15,10 @@ export type MemberType = {
   philosophy: string
   feelings: string
   infor_url: string
+  image: {
+    id: number
+    url: string
+  }
   gens: {
     department: {
       department_id: number
@@ -36,16 +37,9 @@ export type MemberType = {
       product_name: string
     }[]
   }[]
-  deleted_at: string | null
-  created_at: string | null
-  updated_at: string | null
-}
-
-export type MemberDetailType = Omit<MemberType, 'avatar_url'> & {
-  image: {
-    id: number
-    url: string
-  }
+  deletedAt: string | null
+  createdAt: string | null
+  updatedAt: string | null
 }
 
 export type MemberBody = Pick<

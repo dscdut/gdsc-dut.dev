@@ -94,7 +94,7 @@ export default function Products() {
     <CustomTable<ProductType>
       columns={columns}
       currentPage={1}
-      dataSource={data?.data}
+      dataSource={data?.data.length > 0 ? data?.data : PRODUCTS}
       onDelete={handleDelete}
       onEdit={handleEdit}
       pageSize={10}

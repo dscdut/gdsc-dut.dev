@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { MemberAPI } from 'src/apis/members.api'
 import CustomTable from 'src/components/common/CustomTable'
+import { MEMBERS } from 'src/data/members.dummy'
 import { TOAST_MESSAGE } from 'src/shared/constant'
 import PATH_URL from 'src/shared/path'
 import { MemberType } from 'src/types/member.type'
@@ -72,7 +73,7 @@ export default function Members() {
     <CustomTable<MemberType>
       columns={columns}
       currentPage={1}
-      dataSource={data?.data}
+      dataSource={data?.data.length > 0 ? data?.data : MEMBERS}
       onDelete={handleDelete}
       onEdit={handleEdit}
       pageSize={10}
