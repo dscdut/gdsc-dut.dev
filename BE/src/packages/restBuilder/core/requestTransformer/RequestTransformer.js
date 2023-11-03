@@ -16,6 +16,7 @@ import { SearchFactory } from '../../modules/factory/search.factory';
         search,
         main,
         associates,
+        groupBy,
         notDeleted
      }
  */
@@ -33,6 +34,7 @@ export class RequestTransformer {
         search,
         main: string[],
         associates: string[],
+        groupBy: string[],
         notDeleted: string[]
      }}
      */
@@ -83,6 +85,7 @@ export class RequestTransformer {
         this.content.search = RequestTransformer.searchFactory.produce(req);
         this.content.main = relationSchema?.main;
         this.content.associates = relationSchema?.associates;
+        this.content.groupBy = relationSchema?.groupBy;
         this.content.notDeleted = relationSchema?.notDeleted;
         RequestTransformer.constructValidator(this.content, relationSchema?.locks);
         this.constructorConverter(relationSchema?.locks);

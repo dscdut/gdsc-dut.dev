@@ -28,6 +28,8 @@ export class QueryBuilder {
 
     #associates = [];
 
+    #groupBy = [];
+
     #notDeleted = [];
 
     constructor(query) {
@@ -42,6 +44,7 @@ export class QueryBuilder {
 
             newIntance.#main = queryDocument.main;
             newIntance.#associates = queryDocument.associates;
+            newIntance.#groupBy = queryDocument.groupBy;
             newIntance.#notDeleted = queryDocument.notDeleted;
             newIntance.#filterDocuments = queryDocument.filterDocument;
             newIntance.#sortDocument = queryDocument.sortDocument;
@@ -64,6 +67,7 @@ export class QueryBuilder {
         return {
             main: this.#main,
             associates: this.#associates,
+            groupBy: this.#groupBy,
             notDeleted: this.#notDeleted,
             limit: this.#limit,
             offset: this.#offset,
@@ -81,6 +85,13 @@ export class QueryBuilder {
     setAssociates(associates) {
         if (Array.isArray(associates) && associates.length > 0) {
             this.#associates = associates;
+        }
+        return this;
+    }
+
+    setGroupBy(groupBy) {
+        if (Array.isArray(groupBy) && groupBy.length > 0) {
+            this.#groupBy = groupBy;
         }
         return this;
     }
@@ -233,6 +244,10 @@ export class QueryBuilder {
             this.#associates.forEach(associate => {
                 this.#queryBuilder.innerJoin(associate[0], associate[1], associate[2]);
             });
+        }
+
+        if (this.#groupBy.length > 0) {
+            this.#queryBuilder.groupBy(...this.#groupBy);
         }
 
         if (this.#buildType === BUILDER_TYPE.COUNT) {

@@ -29,7 +29,7 @@ export class DataRepository {
      * @returns {import('../queryBuilder/queryBuilder').QueryBuilder}
      * @param {import('../../enum/buildType.enum').BUILDER_TYPE} querySelector
      */
-    getTemplateQuery(pagination, filter, sort, search, main, associates,
+    getTemplateQuery(pagination, filter, sort, search, main, associates, groupBy,
         notDeleted, querySelector = BUILDER_TYPE.SELECT) {
         return QueryBuilder
             .builder(this.query())[querySelector]()
@@ -39,11 +39,12 @@ export class DataRepository {
             .addSort(sort)
             .setMain(main)
             .setAssociates(associates)
+            .setGroupBy(groupBy)
             .setNotDeleted(notDeleted);
     }
 
-    getAndCount(pagination, filter, sort, search, main, associates, notDeleted) {
-        const baseQuery = this.getTemplateQuery(pagination, filter, sort, search, main, associates, notDeleted);
+    getAndCount(pagination, filter, sort, search, main, associates, groupBy, notDeleted) {
+        const baseQuery = this.getTemplateQuery(pagination, filter, sort, search, main, associates, groupBy, notDeleted);
         return parallel([
             baseQuery,
             QueryBuilder.builder(this.query(), baseQuery)

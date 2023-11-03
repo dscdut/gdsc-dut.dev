@@ -30,6 +30,7 @@ export class DataPersistenceService {
             new SearchQuery(requestTransformer.content.search),
             requestTransformer.content.main,
             requestTransformer.content.associates,
+            requestTransformer.content.groupBy,
             requestTransformer.content.notDeleted
         );
 
