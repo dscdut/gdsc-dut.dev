@@ -29,7 +29,7 @@ class Service {
             .throwIfNotPresent(new NotFoundException(`Event with id ${id} not found`))
             .get();
     }
-
+    
     async findAll() {
         return this.repository.findAll();
     }

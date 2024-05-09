@@ -39,8 +39,8 @@ export const EventResolver = Module.builder()
         {
             route: '/:id',
             method: 'delete',
-            params: [RecordId],
-            interceptors: [RecordIdInterceptor],
+            params: [RecordId], // xác định tham sô của rout mong muốn được truywwn vào gì đó
+            interceptors: [RecordIdInterceptor], //xử lý yêu cầu giống như midelwe rồi nó mới cho vào EventController
             controller: EventController.deleteOne,
         },
         {
@@ -48,4 +48,5 @@ export const EventResolver = Module.builder()
             method: 'get',
             controller: EventController.findAll,
         },
+        
     ]);
