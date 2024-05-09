@@ -13,4 +13,4 @@ class Repository extends DataRepository {
     }
 }
 
-export const MediaRepository = new Repository('images');
+export const MediaRepository = new Repository('demo');

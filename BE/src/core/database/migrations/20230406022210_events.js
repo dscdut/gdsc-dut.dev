@@ -13,7 +13,7 @@ exports.up = async knex => {
         table.dateTime('deleted_at').defaultTo(null);
         table.timestamps(false, true);
     });
-
+                                                 
     await knex.raw(`
          CREATE TRIGGER update_timestamp
          BEFORE UPDATE

@@ -44,6 +44,7 @@ class Service {
             return null;
         }
         trx.commit();
+        
         return createdUser[0];
     }
 
@@ -56,3 +57,5 @@ class Service {
 }
 
 export const UserService = new Service();
+
+  
